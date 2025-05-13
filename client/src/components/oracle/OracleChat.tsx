@@ -34,9 +34,11 @@ export default function OracleChat() {
   }, []);
   
   // Fetch messages for the current session
-  const { data: messages = [], isLoading: messagesLoading } = useQuery({
+  const { data: messages = [], isLoading: messagesLoading } = useQuery<OracleMessage[]>({
     queryKey: ["/api/oracle", session?.sessionId],
     enabled: !!session?.sessionId,
+    staleTime: 1000 * 60 * 60, // Keep data fresh for 1 hour
+    refetchOnWindowFocus: false, // Don't refetch when window gets focus
   });
   
   // Send message mutation
@@ -190,8 +192,8 @@ export default function OracleChat() {
           <Input
             type="text"
             placeholder="Ask your question..."
-            className="flex-grow bg-oracle-deep-purple/50 border-oracle-gold/40 rounded-l-lg py-3 px-4 font-garamond text-white placeholder:text-oracle-soft-gold/60 focus:outline-none focus:ring-2 focus:ring-oracle-gold/40"
-            style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.05rem", textShadow: "0 0 1px rgba(255,255,255,0.3)" }}
+            className="flex-grow bg-white border-oracle-gold/40 rounded-l-lg py-3 px-4 font-garamond text-oracle-deep-purple placeholder:text-oracle-navy/60 focus:outline-none focus:ring-2 focus:ring-oracle-gold/40"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.05rem" }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             disabled={sendMessageMutation.isPending}
