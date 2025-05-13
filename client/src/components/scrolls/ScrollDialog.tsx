@@ -33,7 +33,7 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
             <img 
               src={scroll.image} 
               alt={scroll.title} 
-              className="w-full h-auto rounded-lg shadow-md"
+              className="w-full h-auto rounded-lg shadow-md object-contain bg-gray-100 p-2"
             />
           </div>
           

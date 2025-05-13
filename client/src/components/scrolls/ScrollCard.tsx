@@ -43,7 +43,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
         <img 
           src={scroll.image} 
           alt={scroll.title} 
-          className={`w-full h-52 object-cover ${scroll.isLocked ? 'filter grayscale' : ''}`}
+          className={`w-full h-52 object-contain bg-gray-100 ${scroll.isLocked ? 'filter grayscale' : ''}`}
         />
         <div className="p-5">
           <div className="flex justify-between items-center mb-3">

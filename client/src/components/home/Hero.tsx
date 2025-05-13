@@ -102,24 +102,7 @@ export default function Hero() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5 }}
     >
-      {/* Custom cursor effect */}
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference"
-        style={{
-          x: cursorPosition.x - 16,
-          y: cursorPosition.y - 16,
-          backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.5)' : 'rgba(100, 150, 220, 0.2)',
-          boxShadow: isHovering ? '0 0 20px 10px rgba(255, 255, 255, 0.3)' : '0 0 10px 5px rgba(100, 150, 220, 0.1)',
-        }}
-        animate={{
-          scale: isHovering ? 1.5 : 1,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 28,
-        }}
-      />
+      {/* Disabled custom cursor effect to fix animation issue */}
       
       {/* Animated background with subtle movement */}
       <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
