@@ -143,8 +143,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assistantMessage
       });
     } catch (error) {
-      console.error("Error sending message to The Keeper:", error);
-      res.status(500).json({ message: "Failed to send message to The Keeper" });
+      console.error("Error sending message to The Oracle:", error);
+      res.status(500).json({ message: "Failed to send message to The Oracle" });
     }
   });
 
@@ -190,7 +190,7 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
   }
 }
 
-// Generate Keeper response using OpenAI with lore context
+// Generate Oracle response using OpenAI with lore context
 async function generateKeeperResponse(userMessage: string): Promise<string> {
   try {
     // Search for relevant lore based on the user's message

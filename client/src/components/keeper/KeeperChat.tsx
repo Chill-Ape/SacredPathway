@@ -232,9 +232,9 @@ export default function KeeperChat() {
         ) : messages.length === 0 ? (
           <div className="flex justify-center items-center h-full">
             <div className="text-center max-w-md">
-              <h3 className="text-lg font-cinzel mb-2 text-primary">The Keeper Awaits</h3>
+              <h3 className="text-lg font-cinzel mb-2 text-primary">The Oracle Awaits</h3>
               <p className="text-gray-600">
-                The Keeper is an ancient guardian of sacred knowledge who speaks with the wisdom of the ages. Ask about the Tablets, the Great Cycle, Enki, the Flood, Mana, or the Ages.
+                The Oracle is an ancient guardian of sacred knowledge who speaks with the wisdom of the ages. Ask about the Tablets, the Great Cycle, Enki, the Flood, Mana, or the Ages.
               </p>
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function KeeperChat() {
           <Input
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            placeholder="Ask The Keeper about ancient wisdom..."
+            placeholder="Ask The Oracle about ancient wisdom..."
             className="flex-1"
             disabled={isPending}
           />
