@@ -10,7 +10,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ isUser, message, loading = false }: ChatMessageProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const typingSpeed = 120; // ms per character - much slower for dramatic effect
+  const typingSpeed = 60; // ms per character - faster but still mystical
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
@@ -94,10 +94,10 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
         } rounded-lg py-3 px-4 max-w-xs md:max-w-md ${!isUser && !loading ? 'animate-oracle-breathe' : ''}`}>
         <p className={`${
           isUser 
-            ? 'font-garamond text-white' 
+            ? 'font-garamond text-white font-medium' 
             : 'font-garamond text-oracle-soft-gold'
           } ${loading ? 'animate-pulse' : ''} ${isTyping && !isUser ? 'oracle-typing' : ''}`}
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: isUser ? '0 0 1px rgba(255,255,255,0.5)' : '0 0 1px rgba(218,165,32,0.5)' }}
         >
           {isUser ? message : displayedText}
           {isTyping && !isUser && <span className="oracle-cursor">|</span>}

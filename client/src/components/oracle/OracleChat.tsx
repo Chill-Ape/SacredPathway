@@ -95,9 +95,13 @@ export default function OracleChat() {
       {/* Oracle header with mystical imagery */}
       <div className="relative h-48 overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80" 
+          src="/assets/oracle_header.jpg" 
           alt="Ancient temple with mystical light" 
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1507181080368-cc2195abcde1?q=80&w=1200';
+            e.currentTarget.alt = 'Mystical night sky with stars';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-oracle-navy/40 to-oracle-midnight/90 flex items-center justify-center">
           <div className="text-center text-oracle-soft-gold p-6 relative">
@@ -110,8 +114,8 @@ export default function OracleChat() {
                 <path d="M50 5 L50 95 M5 50 L95 50 M26 26 L74 74 M26 74 L74 26" strokeWidth="0.5" />
               </svg>
             </div>
-            <h3 className="font-cinzel text-2xl md:text-3xl mb-2 text-oracle-gold relative z-10">The Voice of Ancient Wisdom</h3>
-            <p className="font-garamond max-w-md mx-auto text-oracle-soft-gold/90" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h3 className="font-cinzel text-2xl md:text-3xl mb-2 text-oracle-gold relative z-10" style={{ textShadow: "0 0 10px rgba(255,215,0,0.4), 0 0 5px rgba(0,0,0,0.9)" }}>The Voice of Ancient Wisdom</h3>
+            <p className="font-garamond max-w-md mx-auto text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 0 5px rgba(0,0,0,0.9)" }}>
               Ask your question with reverence, and wisdom shall be revealed
             </p>
           </div>
@@ -186,8 +190,8 @@ export default function OracleChat() {
           <Input
             type="text"
             placeholder="Ask your question..."
-            className="flex-grow bg-oracle-deep-purple/20 border-oracle-gold/30 rounded-l-lg py-3 px-4 font-garamond text-white placeholder:text-oracle-soft-gold/60 focus:outline-none focus:ring-2 focus:ring-oracle-gold/30"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            className="flex-grow bg-oracle-deep-purple/50 border-oracle-gold/40 rounded-l-lg py-3 px-4 font-garamond text-white placeholder:text-oracle-soft-gold/60 focus:outline-none focus:ring-2 focus:ring-oracle-gold/40"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.05rem", textShadow: "0 0 1px rgba(255,255,255,0.3)" }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             disabled={sendMessageMutation.isPending}
