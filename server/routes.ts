@@ -1,10 +1,12 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema } from "@shared/schema";
+import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema, scrolls } from "@shared/schema";
 import OpenAI from "openai";
 import { PROMPTS } from "./config/prompts";
 import { getLoreContext } from "./utils/loreSearch";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -195,6 +197,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (!scroll) {
         return res.status(404).json({ message: "Scroll not found" });
+      }
+      
+      // Special case for Legacy of the Lost Age (id 37) - update image to ancient_tablet_dark.png
+      if (scroll.id === 37 && scroll.image !== "/assets/ancient_tablet_dark.png") {
+        try {
+          // Update the image in the database
+          await db.update(scrolls)
+            .set({ image: "/assets/ancient_tablet_dark.png" })
+            .where(eq(scrolls.id, 37));
+            
+          // Update the response object
+          scroll.image = "/assets/ancient_tablet_dark.png";
+          console.log("Updated Legacy scroll image to ancient_tablet_dark.png");
+        } catch (error) {
+          console.error("Error updating scroll image:", error);
+        }
       }
       
       res.json(scroll);
