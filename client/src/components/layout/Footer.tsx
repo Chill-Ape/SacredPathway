@@ -63,9 +63,9 @@ export default function Footer() {
               {navLinks.map((link) => (
                 <li key={link.path}>
                   <Link href={link.path}>
-                    <a className="hover:text-sacred-gold transition-colors">
+                    <span className="hover:text-sacred-gold transition-colors cursor-pointer">
                       {link.name}
-                    </a>
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -78,9 +78,9 @@ export default function Footer() {
               {resourceLinks.map((link, index) => (
                 <li key={index}>
                   <Link href={link.path}>
-                    <a className="hover:text-sacred-gold transition-colors">
+                    <span className="hover:text-sacred-gold transition-colors cursor-pointer">
                       {link.name}
-                    </a>
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -116,13 +116,13 @@ export default function Footer() {
           </p>
           <div className="flex space-x-6 text-sacred-white/70">
             <Link href="/privacy">
-              <a className="text-sm hover:text-sacred-white transition-colors">Privacy Policy</a>
+              <span className="text-sm hover:text-sacred-white transition-colors cursor-pointer">Privacy Policy</span>
             </Link>
             <Link href="/terms">
-              <a className="text-sm hover:text-sacred-white transition-colors">Terms of Service</a>
+              <span className="text-sm hover:text-sacred-white transition-colors cursor-pointer">Terms of Service</span>
             </Link>
             <Link href="/accessibility">
-              <a className="text-sm hover:text-sacred-white transition-colors">Accessibility</a>
+              <span className="text-sm hover:text-sacred-white transition-colors cursor-pointer">Accessibility</span>
             </Link>
           </div>
         </div>
