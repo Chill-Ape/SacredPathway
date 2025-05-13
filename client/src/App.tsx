@@ -12,6 +12,7 @@ import Oracle from "@/pages/Oracle";
 import Contact from "@/pages/Contact";
 import AuthPage from "@/pages/auth-page";
 import Profile from "@/pages/Profile";
+import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/contact" component={Contact} />
                 <Route path="/auth" component={AuthPage} />
                 <ProtectedRoute path="/profile" component={Profile} />
+                <ProtectedRoute path="/my-scrolls" component={MyScrolls} />
                 <ProtectedRoute path="/admin" component={Admin} />
                 <Route component={NotFound} />
               </Switch>
