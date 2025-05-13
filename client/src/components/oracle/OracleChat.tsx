@@ -18,7 +18,7 @@ type SessionState = {
 export default function OracleChat() {
   const [message, setMessage] = useState("");
   const [session, setSession] = useState<SessionState | null>(null);
-  const [lastMessageId, setLastMessageId] = useState<number>(0); // Track the last message ID
+  const [loadedPreviously, setLoadedPreviously] = useState<boolean>(false); // Track if messages have loaded before
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -46,7 +46,13 @@ export default function OracleChat() {
       if (!res.ok) {
         throw new Error("Failed to fetch messages");
       }
-      return res.json();
+      // When messages are loaded for the first time, don't animate them
+      const messages = await res.json();
+      if (!loadedPreviously) {
+        // This is the initial load - mark for next time but don't animate
+        setLoadedPreviously(false);
+      }
+      return messages;
     },
     enabled: !!session?.sessionId,
     staleTime: 1000 * 60 * 60, // Keep data fresh for 1 hour
@@ -67,16 +73,8 @@ export default function OracleChat() {
       return response.json();
     },
     onSuccess: (data) => {
-      // Update last message ID to track which messages are new
-      if (data && data.oracleMessage && data.oracleMessage.id) {
-        setLastMessageId(data.oracleMessage.id);
-      }
-      if (data && data.userMessage && data.userMessage.id) {
-        // If the user message ID is higher, use that instead
-        if (data.userMessage.id > lastMessageId) {
-          setLastMessageId(data.userMessage.id);
-        }
-      }
+      // Mark that new messages have been added - these need animation
+      setLoadedPreviously(true);
       
       queryClient.invalidateQueries({ queryKey: ["/api/oracle", session?.sessionId] });
     },
@@ -146,7 +144,7 @@ export default function OracleChat() {
       {/* Oracle chat interface */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <motion.div 
-          className={`bg-gradient-to-t from-[#0a2a45] to-[#184772] rounded-lg p-4 h-80 overflow-y-auto mb-4 border border-oracle-gold/20 ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
+          className={`bg-gradient-to-t from-[#0a2a45] to-[#184772] rounded-lg p-4 h-96 overflow-y-auto mb-4 border border-oracle-gold/20 ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -181,7 +179,7 @@ export default function OracleChat() {
               key={msg.id}
               isUser={msg.isUser}
               message={msg.message}
-              isNew={msg.id > lastMessageId - 2} // Consider only the newest messages as "new"
+              isNew={msg.id === messages[messages.length - 1]?.id && !messages[messages.length - 1]?.isUser} // Only animate the last Oracle message
             />
           ))}
           
