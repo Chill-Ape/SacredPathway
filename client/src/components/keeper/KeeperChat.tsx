@@ -12,6 +12,7 @@ interface Message {
   id: string;
   content: string;
   isUser: boolean;
+  loading?: boolean;
 }
 
 interface KeeperResponse {
@@ -82,42 +83,107 @@ export default function KeeperChat() {
   }, [data]);
 
   // Send message mutation
-  const { mutate: sendMessage, isPending } = useMutation<KeeperResponse, Error, string>({
+  const { mutate: sendMessage, isPending, isError } = useMutation<KeeperResponse, Error, string>({
     mutationFn: async (content: string) => {
-      const response = await apiRequest(
-        "POST", 
-        "/api/keeper/message",
-        {
-          userId: sessionId,
-          content,
-          isUser: true
-        }
-      );
-      return await response.json();
+      try {
+        const response = await apiRequest(
+          "POST", 
+          "/api/keeper/message",
+          {
+            userId: sessionId,
+            content,
+            isUser: true
+          }
+        );
+        
+        // Log the raw response for debugging
+        console.log("Keeper response:", response);
+        
+        // Parse the JSON response
+        const jsonData = await response.json();
+        
+        // Log the parsed data
+        console.log("Parsed Keeper response:", jsonData);
+        
+        return jsonData as KeeperResponse;
+      } catch (error) {
+        console.error("Error in Keeper chat mutation:", error);
+        
+        // Create a fallback response
+        const fallbackResponse: KeeperResponse = {
+          userMessage: {
+            id: Date.now(),
+            userId: sessionId,
+            content: content,
+            isUser: true,
+            createdAt: new Date().toISOString()
+          },
+          assistantMessage: {
+            id: Date.now() + 1,
+            userId: sessionId,
+            content: "The Archive's connection is momentarily obscured. Your question has been recorded, but the response awaits a clearer channel.",
+            isUser: false,
+            createdAt: new Date().toISOString()
+          }
+        };
+        
+        return fallbackResponse;
+      }
     },
     onSuccess: (data: KeeperResponse) => {
-      // Add the user message and assistant response to the chat
-      const newMessages: Message[] = [
-        {
-          id: `${data.userMessage.id}`,
-          content: data.userMessage.content,
-          isUser: true,
-        },
-        {
-          id: `${data.assistantMessage.id}`,
-          content: data.assistantMessage.content,
-          isUser: false,
-        },
-      ];
+      console.log("Mutation success with data:", data);
       
-      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+      // First remove any temporary/loading messages
+      setMessages((prevMessages) => 
+        prevMessages.filter(msg => 
+          !msg.id.startsWith('temp-') && 
+          !msg.id.startsWith('loading-')
+        )
+      );
       
-      // Clear the input field
-      setMessageInput("");
-      
-      // Invalidate the query to refetch the message history
-      queryClient.invalidateQueries({ queryKey: ["/api/keeper", sessionId] });
+      // Then add the actual messages from the response
+      setTimeout(() => {
+        const newMessages: Message[] = [
+          {
+            id: `${data.userMessage.id}`,
+            content: data.userMessage.content,
+            isUser: true,
+          },
+          {
+            id: `${data.assistantMessage.id}`,
+            content: data.assistantMessage.content,
+            isUser: false,
+          },
+        ];
+        
+        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        
+        // Invalidate the query to refetch the message history
+        queryClient.invalidateQueries({ queryKey: ["/api/keeper", sessionId] });
+      }, 100); // Small delay to ensure the loading message is removed first
     },
+    onError: (error) => {
+      console.error("Mutation error:", error);
+      
+      // First remove any temporary/loading messages
+      setMessages((prevMessages) => 
+        prevMessages.filter(msg => 
+          !msg.id.startsWith('temp-') && 
+          !msg.id.startsWith('loading-')
+        )
+      );
+      
+      // Add a fallback error message to the UI after a short delay
+      setTimeout(() => {
+        const errorMessage: Message = {
+          id: `error-${Date.now()}`,
+          content: "The Archive's connection has been temporarily severed. The stars are not aligned for communication at this moment.",
+          isUser: false,
+        };
+        
+        setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      }, 100);
+    }
   });
 
   // Handle form submission
@@ -126,18 +192,33 @@ export default function KeeperChat() {
     
     if (!messageInput.trim() || isPending) return;
     
+    // Store the message content before clearing input
+    const messageContent = messageInput;
+    
     // Optimistically add user message to UI
     const tempId = `temp-${Date.now()}`;
     const userMessage: Message = {
       id: tempId,
-      content: messageInput,
+      content: messageContent,
       isUser: true,
     };
     
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    // Also add a loading message for The Keeper
+    const loadingMessage: Message = {
+      id: `loading-${Date.now()}`,
+      content: "...",
+      isUser: false,
+      loading: true
+    };
+    
+    // Add both messages to the UI
+    setMessages((prevMessages) => [...prevMessages, userMessage, loadingMessage]);
+    
+    // Clear input field immediately for better UX
+    setMessageInput("");
     
     // Send the message to the API
-    sendMessage(messageInput);
+    sendMessage(messageContent);
   };
 
   return (
