@@ -291,10 +291,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get messages for a specific user session
-  app.get("/api/oracle/:userId", async (req: Request, res: Response) => {
+  // Get messages for a specific user session (supports both query and path parameters)
+  app.get("/api/oracle/:userId?", async (req: Request, res: Response) => {
     try {
-      const { userId } = req.params;
+      // Get userId from either params (path) or query parameter
+      const userId = req.params.userId || req.query.sessionId as string;
+      
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+      
       const messages = await storage.getOracleMessages(userId);
       res.json(messages);
     } catch (error) {
