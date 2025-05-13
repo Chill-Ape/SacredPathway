@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 interface LoreEntry {
   id: string;
@@ -18,6 +19,10 @@ interface LoreData {
  */
 function loadLoreData(): LoreData {
   try {
+    // Get the directory path in ES modules
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    
     const filePath = path.join(__dirname, '../config/lore.json');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);

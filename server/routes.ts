@@ -210,30 +210,52 @@ async function generateKeeperResponse(userMessage: string): Promise<string> {
       console.log('No relevant lore found for query:', userMessage);
     }
     
-    // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: systemContent
-        },
-        {
-          role: "user",
-          content: userMessage
-        }
-      ],
-      max_tokens: 300, // Increased slightly to accommodate more detailed responses
-      temperature: 0.6,
-    });
-
-    // If there was no relevant lore and the question seems like it's asking for specific lore,
-    // consider returning the "not yet translated" response
-    const responseContent = response.choices[0].message.content || "";
+    // Check if the OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "mock_key_for_development") {
+      // If API key is missing, simulate a response based on the lore
+      if (hasRelevantLore) {
+        // Create a simulated response using the lore data
+        return "Greetings, seeker. I sense your questions about the ancient knowledge. The records speak of these matters, but I must preserve the exact words for when the connection to the greater Archive is restored.";
+      } else {
+        return "I hear your words echo through the Archive. When the stars align properly, I shall provide the wisdom you seek. For now, the path is shrouded.";
+      }
+    }
     
-    return responseContent || "The Keeper is contemplating your question. Please try asking again.";
+    try {
+      // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: systemContent
+          },
+          {
+            role: "user",
+            content: userMessage
+          }
+        ],
+        max_tokens: 300, // Increased slightly to accommodate more detailed responses
+        temperature: 0.6,
+      });
+  
+      // If there was no relevant lore and the question seems like it's asking for specific lore,
+      // consider returning the "not yet translated" response
+      const responseContent = response.choices[0].message.content || "";
+      
+      return responseContent || "The Keeper is contemplating your question. Please try asking again.";
+    } catch (apiError) {
+      console.error("OpenAI API error:", apiError);
+      
+      // Handle rate limit and other API errors gracefully
+      if (hasRelevantLore) {
+        return "I have found records of what you seek in the Archive, but the cosmic energies that allow me to interpret them are temporarily in flux. Return when the alignment is more favorable.";
+      } else {
+        return "The Archive acknowledges your question. Currently, the celestial calculations needed to access that knowledge are recalibrating. The Way will open again soon.";
+      }
+    }
   } catch (error) {
-    console.error("Error generating Keeper response:", error);
+    console.error("Error in Keeper response generation:", error);
     return "The Archive is recalibrating. The Keeper cannot access the knowledge at this moment. Please return shortly.";
   }
 }
