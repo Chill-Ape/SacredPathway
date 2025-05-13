@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ManaPackages from '@/components/mana/ManaPackages';
@@ -6,6 +6,8 @@ import ManaTransactions from '@/components/mana/ManaTransactions';
 import ManaBalance from '@/components/mana/ManaBalance';
 import { Sparkles } from 'lucide-react';
 import { Helmet } from 'react-helmet';
+import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'wouter';
 
 function ManageMana(): React.JSX.Element {
   const { user, isLoading } = useAuth();

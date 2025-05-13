@@ -636,6 +636,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(200).send('Webhook received');
   });
   
+  // Handle Stripe Checkout redirect after successful payment
+  app.get("/api/mana/purchase/complete", async (req: Request, res: Response) => {
+    const { session_id } = req.query;
+    
+    if (!session_id) {
+      return res.redirect('/mana?status=error&message=No+session+ID+provided');
+    }
+    
+    if (!stripe || !process.env.STRIPE_SECRET_KEY) {
+      return res.redirect('/mana?status=error&message=Payment+service+unavailable');
+    }
+    
+    try {
+      // Retrieve the checkout session
+      const session = await stripe.checkout.sessions.retrieve(session_id as string);
+      
+      // Check if the payment was successful
+      if (session.payment_status !== 'paid') {
+        return res.redirect('/mana?status=error&message=Payment+not+completed');
+      }
+      
+      // Get the user and package details from the metadata
+      const { userId, packageId, manaAmount } = session.metadata || {};
+      
+      if (!userId || !packageId || !manaAmount) {
+        return res.redirect('/mana?status=error&message=Invalid+session+metadata');
+      }
+      
+      // Get the mana package to verify
+      const manaPackage = await storage.getManaPackageById(Number(packageId));
+      if (!manaPackage) {
+        return res.redirect('/mana?status=error&message=Mana+package+not+found');
+      }
+      
+      // Create a mana transaction record
+      await storage.createManaTransaction({
+        userId: Number(userId),
+        amount: Number(manaAmount),
+        description: `Purchased ${manaAmount} Mana`,
+        transactionType: 'mana_purchase',
+        referenceId: packageId,
+        stripePaymentIntentId: session.payment_intent as string
+      });
+      
+      // Update the user's mana balance
+      await storage.updateUserManaBalance(Number(userId), Number(manaAmount));
+      
+      // Redirect to the mana page with success message
+      return res.redirect(`/mana?status=success&amount=${manaAmount}`);
+    } catch (error) {
+      console.error('Error processing checkout completion:', error);
+      return res.redirect('/mana?status=error&message=Processing+error');
+    }
+  });
+  
   // Complete a Mana purchase after successful payment
   app.post("/api/mana/purchase/complete", async (req: Request, res: Response) => {
     if (!req.isAuthenticated()) {
