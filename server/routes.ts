@@ -598,21 +598,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.updateUserStripeCustomerId(req.user.id, stripeCustomerId);
       }
       
-      // Create a payment intent
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: manaPackage.price,
-        currency: 'usd',
+      // Get the domain
+      const domain = process.env.NODE_ENV === 'production' 
+        ? `https://${req.get('host')}`
+        : `http://${req.get('host')}`;
+      
+      // Create a Checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: manaPackage.name,
+                description: `${manaPackage.amount} Mana for the Akashic Archive`,
+              },
+              unit_amount: manaPackage.price,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
         customer: stripeCustomerId,
+        success_url: `${domain}/api/mana/purchase/complete?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${domain}/mana?status=canceled`,
         metadata: {
           packageId: manaPackage.id.toString(),
           userId: req.user.id.toString(),
-          packageName: manaPackage.name,
           manaAmount: manaPackage.amount.toString()
-        }
+        },
       });
       
       res.json({
-        clientSecret: paymentIntent.client_secret,
+        sessionId: session.id,
         packageDetails: manaPackage
       });
     } catch (error) {

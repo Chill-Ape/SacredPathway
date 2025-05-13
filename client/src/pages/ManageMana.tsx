@@ -11,6 +11,45 @@ import { useLocation } from 'wouter';
 
 function ManageMana(): React.JSX.Element {
   const { user, isLoading } = useAuth();
+  const { toast } = useToast();
+  const [location, setLocation] = useLocation();
+  
+  useEffect(() => {
+    // Handle redirect params from Stripe checkout
+    const searchParams = new URLSearchParams(window.location.search);
+    const status = searchParams.get('status');
+    const amount = searchParams.get('amount');
+    const errorMessage = searchParams.get('message');
+    
+    if (status === 'success' && amount) {
+      toast({
+        title: 'Purchase Successful!',
+        description: `You've successfully added ${amount} Mana to your account.`,
+        variant: 'default',
+      });
+      
+      // Clear the URL params
+      setLocation('/mana', { replace: true });
+    } else if (status === 'error' && errorMessage) {
+      toast({
+        title: 'Purchase Failed',
+        description: decodeURIComponent(errorMessage.replace(/\+/g, ' ')),
+        variant: 'destructive',
+      });
+      
+      // Clear the URL params
+      setLocation('/mana', { replace: true });
+    } else if (status === 'canceled') {
+      toast({
+        title: 'Purchase Canceled',
+        description: 'Your Mana purchase was canceled. No payment was processed.',
+        variant: 'default',
+      });
+      
+      // Clear the URL params
+      setLocation('/mana', { replace: true });
+    }
+  }, [location, toast, setLocation]);
 
   if (isLoading) {
     return (
