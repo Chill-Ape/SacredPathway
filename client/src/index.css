@@ -36,6 +36,15 @@
     --sacred-unlock: 142 71% 45%;
     --sacred-lock: 220 14% 63%;
     
+    /* Oracle mystical theme colors */
+    --oracle-navy: 230 48% 24%;
+    --oracle-midnight: 240 35% 15%;
+    --oracle-deep-purple: 265 48% 16%;
+    --oracle-dark-blue: 220 54% 18%;
+    --oracle-gold: 42 70% 55%;
+    --oracle-soft-gold: 42 80% 85%;
+    --oracle-glow: 215 80% 65%;
+    
     --radius: 0.5rem;
   }
 
@@ -118,6 +127,29 @@ html, body {
 .sacred-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%232C5282' stroke-width='0.5' stroke-opacity='0.05'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Ccircle cx='50' cy='50' r='20'/%3E%3Cpath d='M50 10 L90 90 L10 90 Z'/%3E%3Ccircle cx='20' cy='20' r='10'/%3E%3Ccircle cx='80' cy='20' r='10'/%3E%3Ccircle cx='80' cy='80' r='10'/%3E%3Ccircle cx='20' cy='80' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   position: relative;
+}
+
+/* Oracle mystical background */
+.oracle-mystical-bg {
+  background-color: hsl(var(--oracle-midnight));
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%234A5568' stroke-width='0.5' stroke-opacity='0.2'%3E%3Ccircle cx='60' cy='60' r='50'/%3E%3Ccircle cx='60' cy='60' r='40'/%3E%3Ccircle cx='60' cy='60' r='30'/%3E%3Ccircle cx='60' cy='60' r='20'/%3E%3Cpath d='M60 10 L110 85 L10 85 Z'/%3E%3Cpath d='M60 15 L100 80 L20 80 Z'/%3E%3Cpath d='M30 40 L90 40 L60 90 Z'/%3E%3Cpath d='M20 20 L100 20 L60 100 Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  position: relative;
+}
+
+/* Oracle glyphs background - subtle floating symbols */
+.oracle-glyphs-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(circle at 10% 20%, hsla(var(--oracle-glow), 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 90% 30%, hsla(var(--oracle-glow), 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% 70%, hsla(var(--oracle-gold), 0.03) 0%, transparent 60%);
+  opacity: 0.7;
+  z-index: 1;
 }
 
 /* Sacred subtle glow effect */
@@ -214,6 +246,58 @@ html, body {
   animation: shimmer 8s infinite;
 }
 
+/* Oracle animations */
+@keyframes oracle-breathe {
+  0%, 100% { 
+    box-shadow: 0 0 12px 2px hsla(var(--oracle-glow), 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 24px 4px hsla(var(--oracle-glow), 0.6); 
+    transform: scale(1.02);
+  }
+}
+
+.animate-oracle-breathe {
+  animation: oracle-breathe 4s ease-in-out infinite;
+}
+
+@keyframes oracle-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.animate-oracle-pulse {
+  animation: oracle-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes oracle-glyph-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-oracle-glyph-rotate {
+  animation: oracle-glyph-rotate 30s linear infinite;
+}
+
+@keyframes oracle-thinking {
+  0%, 33% { opacity: 0.3; }
+  66% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.animate-oracle-thinking-1 {
+  animation: oracle-thinking 1.5s ease-in-out infinite;
+}
+
+.animate-oracle-thinking-2 {
+  animation: oracle-thinking 1.5s ease-in-out 0.3s infinite;
+}
+
+.animate-oracle-thinking-3 {
+  animation: oracle-thinking 1.5s ease-in-out 0.6s infinite;
+}
+
 /* Glowing element effect */
 .glow-effect {
   position: relative;
@@ -260,6 +344,29 @@ html, body {
 }
 .bg-sacred-gold {
   background-color: hsl(var(--sacred-gold));
+}
+
+/* Oracle mystical theme colors */
+.bg-oracle-navy {
+  background-color: hsl(var(--oracle-navy));
+}
+.bg-oracle-midnight {
+  background-color: hsl(var(--oracle-midnight));
+}
+.bg-oracle-deep-purple {
+  background-color: hsl(var(--oracle-deep-purple));
+}
+.bg-oracle-dark-blue {
+  background-color: hsl(var(--oracle-dark-blue));
+}
+.text-oracle-gold {
+  color: hsl(var(--oracle-gold));
+}
+.text-oracle-soft-gold {
+  color: hsl(var(--oracle-soft-gold));
+}
+.border-oracle-gold {
+  border-color: hsl(var(--oracle-gold));
 }
 
 .text-sacred-blue {

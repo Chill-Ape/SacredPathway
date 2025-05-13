@@ -65,7 +65,6 @@ export const insertUserSchema = createInsertSchema(users)
   })
   .partial({
     phone: true,
-    password: true,
   });
 
 export const insertScrollSchema = createInsertSchema(scrolls).pick({
