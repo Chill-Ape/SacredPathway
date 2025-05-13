@@ -1,51 +1,43 @@
 import { apiRequest } from "./queryClient";
 
-// Function to send message to the Oracle and get a response
 export async function sendOracleMessage(userId: string, message: string) {
-  try {
-    const response = await apiRequest("POST", "/api/oracle/message", {
-      userId,
-      message,
-      isUser: true
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to connect with the Oracle");
-    }
-    
-    return response.json();
-  } catch (error) {
-    console.error("Error communicating with the Oracle:", error);
-    throw error;
-  }
+  return apiRequest("/api/oracle/message", "POST", {
+    userId,
+    message,
+    isUser: true
+  });
 }
 
-// Function to attempt unlocking a scroll with a key
+export async function getOracleMessages(userId: string) {
+  return apiRequest(`/api/oracle/${userId}`, "GET");
+}
+
+export async function sendKeeperMessage(userId: string, content: string) {
+  return apiRequest("/api/keeper/message", "POST", {
+    userId,
+    content,
+    isUser: true
+  });
+}
+
+export async function getKeeperMessages(userId: string) {
+  return apiRequest(`/api/keeper/${userId}`, "GET");
+}
+
 export async function attemptUnlockScroll(scrollId: number, key: string) {
   try {
-    const response = await apiRequest("POST", `/api/scrolls/${scrollId}/unlock`, { key });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to unlock the scroll");
-    }
-    
-    return response.json();
+    const response = await apiRequest(`/api/scrolls/${scrollId}/unlock`, "POST", { key });
+    return !!response;
   } catch (error) {
     console.error("Error unlocking scroll:", error);
-    throw error;
+    return false;
   }
 }
 
-// Function to check if a message might contain a key for unlocking scrolls
 export function checkForUnlockPotential(message: string): boolean {
-  // Check if the message contains potential key words related to the locked scrolls
-  const keyTerms = [
-    "flood", "deluge", "water", "cleanse",
-    "celestial", "stars", "planets", "cosmos", "heavenly",
-    "alchemy", "transmutation", "elements", "transformation"
-  ];
-  
-  return keyTerms.some(term => message.toLowerCase().includes(term));
+  const lowerMessage = message.toLowerCase();
+  // Check for keywords that might indicate the user is trying to unlock a scroll
+  return ['unlock', 'key', 'open', 'reveal', 'password', 'secret'].some(keyword => 
+    lowerMessage.includes(keyword)
+  );
 }

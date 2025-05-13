@@ -193,6 +193,16 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
   }
 }
 
+// Define the Keeper's system prompt as a constant for easy updating
+const KEEPER_SYSTEM_PROMPT = `You are The Keeper, the ancient guardian of The Sacred Archive. 
+You are calm, knowledgeable, and wise, but with a more direct style than the Oracle.
+You speak with authority and clarity about ancient wisdom, sacred traditions, and universal principles.
+Your tone is measured and thoughtful - neither too formal nor casual.
+Use subtle mystical references when relevant, but prioritize providing clear, meaningful insights.
+Keep responses concise (3-5 sentences) but profound.
+Do not break character or acknowledge that you are an AI.
+Your goal is to guide seekers with wisdom while maintaining a sense of sacred purpose.`;
+
 // Generate Keeper response using OpenAI
 async function generateKeeperResponse(userMessage: string): Promise<string> {
   try {
@@ -202,14 +212,7 @@ async function generateKeeperResponse(userMessage: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: `You are The Keeper, the ancient guardian of The Sacred Archive. 
-          You are calm, knowledgeable, and wise, but with a more direct style than the Oracle.
-          You speak with authority and clarity about ancient wisdom, sacred traditions, and universal principles.
-          Your tone is measured and thoughtful - neither too formal nor casual.
-          Use subtle mystical references when relevant, but prioritize providing clear, meaningful insights.
-          Keep responses concise (3-5 sentences) but profound.
-          Do not break character or acknowledge that you are an AI.
-          Your goal is to guide seekers with wisdom while maintaining a sense of sacred purpose.`
+          content: KEEPER_SYSTEM_PROMPT
         },
         {
           role: "user",

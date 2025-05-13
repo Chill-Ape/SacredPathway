@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
+import { sendKeeperMessage, getKeeperMessages } from "@/lib/openai";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send as SendIcon, Loader2 } from "lucide-react";
@@ -12,6 +13,24 @@ interface Message {
   id: string;
   content: string;
   isUser: boolean;
+}
+
+// Define API response type
+interface KeeperResponse {
+  userMessage: {
+    id: number;
+    userId: string;
+    content: string;
+    isUser: boolean;
+    createdAt: string;
+  };
+  assistantMessage: {
+    id: number;
+    userId: string;
+    content: string;
+    isUser: boolean;
+    createdAt: string;
+  };
 }
 
 // Create a session ID for the user
@@ -39,20 +58,17 @@ export default function KeeperChat() {
   // Fetch conversation history
   const { data: conversationData, isLoading: isLoadingConversation } = useQuery({
     queryKey: ["/api/keeper", session.sessionId],
+    queryFn: () => getKeeperMessages(session.sessionId),
     enabled: !!session.sessionId
   });
 
   // Send message mutation
-  const sendMessageMutation = useMutation({
+  const sendMessageMutation = useMutation<KeeperResponse, Error, string>({
     mutationFn: async (content: string) => {
-      return apiRequest(
-        "/api/keeper/message",
-        "POST",
-        { userId: session.sessionId, content }
-      );
+      return sendKeeperMessage(session.sessionId, content);
     },
     onSuccess: (data) => {
-      if (data) {
+      if (data?.assistantMessage) {
         // Add the assistant's response to messages
         setMessages(prev => [
           ...prev, 
@@ -76,9 +92,9 @@ export default function KeeperChat() {
 
   // Set initial message when conversation loads
   useEffect(() => {
-    if (!isLoadingConversation && conversationData) {
+    if (!isLoadingConversation) {
       // If we have messages in the history, use those
-      if (conversationData.length > 0) {
+      if (conversationData && Array.isArray(conversationData) && conversationData.length > 0) {
         setMessages(
           conversationData.map((msg: any) => ({
             id: uuidv4(),
