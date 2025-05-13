@@ -22,11 +22,11 @@ export default function Logo({ className = "", inverted = false }: LogoProps) {
           strokeWidth="8"
         />
         
-        {/* Circle inside */}
+        {/* Circle inside - adjusted to fit within triangle */}
         <circle 
           cx="100" 
-          cy="110" 
-          r="35" 
+          cy="120" 
+          r="28" 
           fill="none" 
           stroke={primaryColor} 
           strokeWidth="8"

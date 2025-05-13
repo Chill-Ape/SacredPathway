@@ -8,21 +8,21 @@ export default function Home() {
     {
       title: "Ancient Scrolls",
       description: "Explore the collection of sacred texts that reveal forgotten wisdom from beyond time.",
-      image: "https://images.unsplash.com/photo-1587891060949-af3c88717c18?q=80&w=600", // Ancient scroll/papyrus
+      image: "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?q=80&w=600", // Ancient scroll/papyrus with better visibility
       href: "/scrolls",
       delay: 0.7
     },
     {
       title: "The Keeper",
       description: "Seek wisdom from the timeless guardian of the Sacred Archive and vessel of ancient memory.",
-      image: "https://images.unsplash.com/photo-1532153432275-08be4113a2d1?q=80&w=600", // Ancient statue
+      image: "https://images.unsplash.com/photo-1608344858738-80ac5c288506?q=80&w=600", // Ancient statue with better composition
       href: "/keeper",
       delay: 0.9
     },
     {
       title: "Sacred Lore",
       description: "Learn about the Great Cycle, the mythic flood, and the tablets of creation.",
-      image: "https://images.unsplash.com/photo-1566373049939-704ea027e13c?q=80&w=600", // Ancient temple/ruins
+      image: "https://images.unsplash.com/photo-1548161049-f139a5eb9f51?q=80&w=600", // Ancient temple/stone with better clarity
       href: "/lore",
       delay: 1.1
     }

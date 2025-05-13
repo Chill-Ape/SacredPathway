@@ -296,11 +296,11 @@ export default function Hero() {
                   className="blur-sm"
                 />
                 
-                {/* Circle inside */}
+                {/* Circle inside - adjusted to fit within triangle */}
                 <circle 
                   cx="100" 
-                  cy="110" 
-                  r="35" 
+                  cy="120" 
+                  r="28" 
                   fill="none" 
                   stroke="hsl(214, 70%, 50%, 0.3)" 
                   strokeWidth="10"
@@ -337,11 +337,11 @@ export default function Hero() {
                   strokeWidth="8"
                 />
                 
-                {/* Circle inside */}
+                {/* Circle inside - adjusted to fit within triangle */}
                 <circle 
                   cx="100" 
-                  cy="110" 
-                  r="35" 
+                  cy="120" 
+                  r="28" 
                   fill="none" 
                   stroke="hsl(214, 80%, 24%)" 
                   strokeWidth="8"
