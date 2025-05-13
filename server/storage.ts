@@ -600,6 +600,7 @@ export class MemStorage implements IStorage {
   private contactMessages: Map<number, ContactMessage>;
   private manaTransactions: Map<number, ManaTransaction>;
   private manaPackages: Map<number, ManaPackage>;
+  private oracleUsageBySession: Map<string, Map<string, number>>; // Track Oracle usage per session per date
   sessionStore: session.Store;
   
   private currentUserId: number;
