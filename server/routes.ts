@@ -48,11 +48,12 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up session and authentication
+  // Set up session and authentication using persistent storage
   const sessionSettings = {
     secret: 'sacred-archive-session-secret',
     resave: false,
     saveUninitialized: false,
+    store: storage.sessionStore, // Use our database session store
     cookie: { 
       secure: process.env.NODE_ENV === 'production',
       maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week

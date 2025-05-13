@@ -91,13 +91,19 @@ export class DatabaseStorage implements IStorage {
     try {
       console.log("Creating database tables if they don't exist");
       
-      // Create default scrolls
-      const scrollCount = await db.select({ count: db.fn.count() }).from(scrolls);
-      if (!scrollCount[0] || Number(scrollCount[0].count) === 0) {
-        console.log("Creating default scrolls");
-        await this.initializeDefaultScrolls();
-      } else {
-        console.log("Scrolls already exist:", scrollCount[0].count);
+      try {
+        // First check if the scrolls table exists by fetching data
+        const scrollCount = await db.select({ count: db.fn.count() }).from(scrolls);
+        if (!scrollCount[0] || Number(scrollCount[0].count) === 0) {
+          console.log("Creating default scrolls");
+          await this._initializeDefaultScrolls();
+        } else {
+          console.log("Scrolls already exist:", scrollCount[0].count);
+        }
+      } catch (err) {
+        // If the table doesn't exist yet, we'll get an error
+        console.log("Scrolls table not initialized yet, creating default scrolls");
+        await this._initializeDefaultScrolls();
       }
     } catch (error) {
       console.error("Error initializing tables:", error);
