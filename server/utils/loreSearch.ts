@@ -6,8 +6,9 @@ interface LoreEntry {
   id: string;
   title: string;
   summary: string;
-  keywords: string[];
+  keywords?: string[];
   passage?: string;
+  source?: string;
 }
 
 interface LoreData {
@@ -23,9 +24,19 @@ function loadLoreData(): LoreData {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     
-    const filePath = path.join(__dirname, '../config/lore.json');
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
+    // First try to load from the new location in the root directory
+    try {
+      const rootFilePath = path.join(__dirname, '../../../keeper_lore.json');
+      const rootData = fs.readFileSync(rootFilePath, 'utf8');
+      return JSON.parse(rootData);
+    } catch (rootError) {
+      console.log('Falling back to legacy lore file location');
+      
+      // Fall back to the original location
+      const filePath = path.join(__dirname, '../config/lore.json');
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+    }
   } catch (error) {
     console.error('Error loading lore data:', error);
     return { entries: [] };
@@ -59,25 +70,37 @@ export function findRelevantLore(message: string): LoreEntry[] {
       score += 10;
     }
     
-    // Check for keyword matches
-    entry.keywords.forEach(keyword => {
-      if (normalizedMessage.includes(keyword.toLowerCase())) {
-        score += 5;
-      }
-    });
-    
-    // Additional partial matching for longer phrases
-    entry.keywords.forEach(keyword => {
-      const words = keyword.toLowerCase().split(' ');
-      if (words.length > 1) {
-        // For multi-word keywords, check if at least half the words match
-        const matchCount = words.filter(word => 
-          normalizedMessage.includes(word) && word.length > 3
-        ).length;
-        
-        if (matchCount >= Math.ceil(words.length / 2)) {
-          score += 3;
+    // Check for keywords match if the entry has keywords
+    if (entry.keywords && Array.isArray(entry.keywords)) {
+      // Process each keyword
+      for (const keyword of entry.keywords) {
+        if (normalizedMessage.includes(keyword.toLowerCase())) {
+          score += 5;
         }
+        
+        // Additional partial matching for longer phrases
+        const words = keyword.toLowerCase().split(' ');
+        if (words.length > 1) {
+          // For multi-word keywords, check if at least half the words match
+          const matchCount = words.filter(word => 
+            normalizedMessage.includes(word) && word.length > 3
+          ).length;
+          
+          if (matchCount >= Math.ceil(words.length / 2)) {
+            score += 3;
+          }
+        }
+      }
+    }
+    
+    // Extract words from summary for additional matching
+    const summaryWords = entry.summary.toLowerCase().split(/\s+/);
+    const significantWords = summaryWords.filter(word => word.length > 4);
+    
+    // Count matching significant words from the summary
+    significantWords.forEach(word => {
+      if (normalizedMessage.includes(word)) {
+        score += 1;
       }
     });
     

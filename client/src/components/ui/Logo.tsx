@@ -9,59 +9,39 @@ export default function Logo({ className = "", inverted = false }: LogoProps) {
   const primaryColor = inverted ? "#F7F7F7" : "#1A365D";
   
   return (
-    <div className={`relative w-14 h-14 ${className}`} style={{ position: "relative" }}>
-      {/* Triangle */}
-      <div 
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-          border: `2px solid ${primaryColor}`,
-          borderTop: "none",
-        }}
-      />
-
-      {/* Circle */}
-      <div 
-        style={{
-          position: "absolute",
-          top: "25%",
-          left: "25%",
-          width: "50%",
-          height: "50%",
-          border: `2px solid ${primaryColor}`,
-          borderRadius: "50%",
-        }}
-      />
-
-      {/* Dot above */}
-      <div 
-        style={{
-          position: "absolute",
-          top: "-10%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "12%",
-          height: "12%",
-          backgroundColor: primaryColor,
-          borderRadius: "50%",
-        }}
-      />
-
-      {/* Line below */}
-      <div 
-        style={{
-          position: "absolute",
-          bottom: "-10%",
-          left: 0,
-          width: "100%",
-          height: "2px",
-          backgroundColor: primaryColor,
-        }}
-      />
+    <div className={`relative w-14 h-14 ${className}`}>
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        {/* Dot above */}
+        <circle cx="100" cy="30" r="10" fill={primaryColor} />
+        
+        {/* Triangle */}
+        <path 
+          d="M100 55 L25 165 L175 165 Z" 
+          fill="none" 
+          stroke={primaryColor} 
+          strokeWidth="8"
+        />
+        
+        {/* Circle inside */}
+        <circle 
+          cx="100" 
+          cy="110" 
+          r="35" 
+          fill="none" 
+          stroke={primaryColor} 
+          strokeWidth="8"
+        />
+        
+        {/* Line below */}
+        <line 
+          x1="20" 
+          y1="185" 
+          x2="180" 
+          y2="185" 
+          stroke={primaryColor} 
+          strokeWidth="8"
+        />
+      </svg>
     </div>
   );
 }
