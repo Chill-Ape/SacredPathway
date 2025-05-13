@@ -142,7 +142,7 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(scrolls, eq(userScrolls.scrollId, scrolls.id))
       .where(eq(userScrolls.userId, userId));
     
-    return result.map(r => r.scroll);
+    return result.map((r: { scroll: Scroll }) => r.scroll);
   }
   
   async unlockScrollForUser(userId: number, scrollId: number): Promise<boolean> {
@@ -271,6 +271,7 @@ export class MemStorage implements IStorage {
   constructor() {
     this.users = new Map();
     this.scrolls = new Map();
+    this.userScrolls = new Map();
     this.oracleMessages = new Map();
     this.keeperMessages = new Map();
     this.contactMessages = new Map();
@@ -346,6 +347,58 @@ export class MemStorage implements IStorage {
       return scroll.key.toLowerCase() === key.toLowerCase();
     }
     return false;
+  }
+  
+  // USER-SCROLL RELATION METHODS
+  async getUserUnlockedScrolls(userId: number): Promise<Scroll[]> {
+    const unlockedScrolls: Scroll[] = [];
+    
+    // Find all relations for this user
+    this.userScrolls.forEach((relation, key) => {
+      if (relation.userId === userId) {
+        const scroll = this.scrolls.get(relation.scrollId);
+        if (scroll) {
+          unlockedScrolls.push(scroll);
+        }
+      }
+    });
+    
+    return unlockedScrolls;
+  }
+  
+  async unlockScrollForUser(userId: number, scrollId: number): Promise<boolean> {
+    // Check if user and scroll exist
+    const user = this.users.get(userId);
+    const scroll = this.scrolls.get(scrollId);
+    
+    if (!user || !scroll) {
+      return false;
+    }
+    
+    // Create relation key
+    const key = `${userId}-${scrollId}`;
+    
+    // Check if already unlocked
+    if (this.userScrolls.has(key)) {
+      return true;
+    }
+    
+    // Create new relation
+    this.userScrolls.set(key, {
+      userId,
+      scrollId,
+      unlockedAt: new Date()
+    });
+    
+    return true;
+  }
+  
+  async isScrollUnlockedForUser(userId: number, scrollId: number): Promise<boolean> {
+    // Create relation key
+    const key = `${userId}-${scrollId}`;
+    
+    // Check if relation exists
+    return this.userScrolls.has(key);
   }
   
   // ORACLE MESSAGE METHODS
