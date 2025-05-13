@@ -58,13 +58,13 @@ export default function ProfileMenu() {
         
         <DropdownMenuSeparator />
         
-        <Link href="/profile">
+        <Link to="/profile">
           <DropdownMenuItem className="cursor-pointer">
             My Profile
           </DropdownMenuItem>
         </Link>
         
-        <Link href="/scrolls">
+        <Link to="/scrolls">
           <DropdownMenuItem className="cursor-pointer">
             Explore Scrolls
           </DropdownMenuItem>
@@ -72,7 +72,7 @@ export default function ProfileMenu() {
         
         <DropdownMenuSeparator />
         
-        <Link href="/admin">
+        <Link to="/admin">
           <DropdownMenuItem className="cursor-pointer">
             Admin Dashboard
           </DropdownMenuItem>
