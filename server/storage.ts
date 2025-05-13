@@ -21,10 +21,11 @@ import {
   contactMessages,
   keeperMessages,
   manaTransactions,
-  manaPackages
+  manaPackages,
+  oracleUsage
 } from "@shared/schema";
 import { db, pool, isDatabaseAvailable } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -465,6 +466,60 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return result;
+  }
+  
+  // Oracle usage tracking for session-based limitations
+  async getOracleSessionCount(userId: string, date: string): Promise<number> {
+    try {
+      const [usage] = await db
+        .select({ count: oracleUsage.count })
+        .from(oracleUsage)
+        .where(and(
+          eq(oracleUsage.sessionId, userId),
+          eq(oracleUsage.date, date)
+        ));
+      
+      return usage?.count || 0;
+    } catch (error) {
+      console.error("Error getting Oracle session count:", error);
+      return 0;
+    }
+  }
+  
+  async incrementOracleSessionCount(userId: string, date: string): Promise<number> {
+    try {
+      // Check if there's an existing record
+      const existingCount = await this.getOracleSessionCount(userId, date);
+      
+      if (existingCount === 0) {
+        // Create new record
+        const [newRecord] = await db
+          .insert(oracleUsage)
+          .values({
+            sessionId: userId,
+            date,
+            count: 1
+          })
+          .returning();
+        
+        return newRecord.count;
+      } else {
+        // Update existing record
+        const [updatedRecord] = await db
+          .update(oracleUsage)
+          .set({ count: existingCount + 1 })
+          .where(and(
+            eq(oracleUsage.sessionId, userId),
+            eq(oracleUsage.date, date)
+          ))
+          .returning();
+        
+        return updatedRecord.count;
+      }
+    } catch (error) {
+      console.error("Error incrementing Oracle session count:", error);
+      return 1; // Default to 1 if there's an error
+    }
   }
 
   // Initialize default scrolls 

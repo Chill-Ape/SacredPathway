@@ -116,6 +116,15 @@ export const insertContactMessageSchema = createInsertSchema(contactMessages).pi
   message: true,
 });
 
+// Oracle usage tracking for session-based limits
+export const oracleUsage = pgTable("oracle_usage", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").notNull(),
+  date: text("date").notNull(), // Stored as YYYY-MM-DD
+  count: integer("count").notNull().default(1),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const keeperMessages = pgTable("keeper_messages", {
   id: serial("id").primaryKey(),
   userId: text("user_id").notNull(), // Session ID or user ID
