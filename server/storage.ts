@@ -10,12 +10,18 @@ import {
   KeeperMessage,
   InsertKeeperMessage,
   UserScroll,
+  ManaTransaction,
+  InsertManaTransaction,
+  ManaPackage,
+  InsertManaPackage,
   users,
   scrolls,
   userScrolls,
   oracleMessages,
   contactMessages,
-  keeperMessages
+  keeperMessages,
+  manaTransactions,
+  manaPackages
 } from "@shared/schema";
 import { db, pool, isDatabaseAvailable } from "./db";
 import { eq } from "drizzle-orm";
@@ -58,6 +64,17 @@ export interface IStorage {
   // Contact message methods
   createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
   getContactMessages(): Promise<ContactMessage[]>;
+  
+  // Mana methods
+  getUserManaBalance(userId: number): Promise<number>;
+  updateUserManaBalance(userId: number, amount: number): Promise<number>; // Returns new balance
+  createManaTransaction(transaction: InsertManaTransaction): Promise<ManaTransaction>;
+  getUserManaTransactions(userId: number): Promise<ManaTransaction[]>;
+  getAllManaPackages(): Promise<ManaPackage[]>;
+  getManaPackageById(id: number): Promise<ManaPackage | undefined>;
+  createManaPackage(manaPackage: InsertManaPackage): Promise<ManaPackage>;
+  updateManaPackage(id: number, updates: Partial<InsertManaPackage>): Promise<ManaPackage | undefined>;
+  updateUserStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User>;
   
   // Session store
   sessionStore: session.Store;

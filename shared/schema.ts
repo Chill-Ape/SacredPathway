@@ -11,6 +11,8 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   phone: text("phone"),
   password: text("password").notNull(),
+  manaBalance: integer("mana_balance").notNull().default(0),
+  stripeCustomerId: text("stripe_customer_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -128,6 +130,55 @@ export const insertKeeperMessageSchema = createInsertSchema(keeperMessages).pick
   isUser: true,
 });
 
+// Mana-related tables
+export const manaTransactions = pgTable("mana_transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  amount: integer("amount").notNull(), // positive for purchases, negative for expenditures
+  description: text("description").notNull(),
+  transactionType: text("transaction_type").notNull(), // "purchase", "scroll_unlock", "test", "reveal"
+  referenceId: text("reference_id"), // optional reference to related entity (scroll ID, test ID, etc.)
+  stripePaymentIntentId: text("stripe_payment_intent_id"), // for purchases only
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const manaPackages = pgTable("mana_packages", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  amount: integer("amount").notNull(), // amount of mana
+  price: integer("price").notNull(), // price in cents
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Define relationships for mana transactions
+export const manaTransactionsRelations = relations(manaTransactions, ({ one }) => ({
+  user: one(users, {
+    fields: [manaTransactions.userId],
+    references: [users.id],
+  }),
+}));
+
+// Mana transactions insert schema
+export const insertManaTransactionSchema = createInsertSchema(manaTransactions).pick({
+  userId: true,
+  amount: true,
+  description: true,
+  transactionType: true,
+  referenceId: true,
+  stripePaymentIntentId: true,
+});
+
+// Mana packages insert schema
+export const insertManaPackageSchema = createInsertSchema(manaPackages).pick({
+  name: true,
+  description: true,
+  amount: true,
+  price: true,
+  isActive: true,
+});
+
 // Type exports
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -149,3 +200,9 @@ export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
 
 export type KeeperMessage = typeof keeperMessages.$inferSelect;
 export type InsertKeeperMessage = z.infer<typeof insertKeeperMessageSchema>;
+
+export type ManaTransaction = typeof manaTransactions.$inferSelect;
+export type InsertManaTransaction = z.infer<typeof insertManaTransactionSchema>;
+
+export type ManaPackage = typeof manaPackages.$inferSelect;
+export type InsertManaPackage = z.infer<typeof insertManaPackageSchema>;
