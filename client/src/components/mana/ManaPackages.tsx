@@ -10,6 +10,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Initialize Stripe with the public key
+console.log('Stripe Public Key:', import.meta.env.VITE_STRIPE_PUBLIC_KEY); 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const ManaPackages: React.FC = () => {
@@ -60,7 +61,7 @@ const ManaPackages: React.FC = () => {
     },
   });
 
-  const handlePurchase = (pkg: ManaPackage) => {
+  const handlePurchase = async (pkg: ManaPackage) => {
     if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
       toast({
         title: "Payment System Not Available",
@@ -70,8 +71,47 @@ const ManaPackages: React.FC = () => {
       return;
     }
     
-    setProcessingPackageId(pkg.id);
-    createPaymentIntent.mutate(pkg.id);
+    try {
+      console.log('Starting purchase process for package:', pkg);
+      setProcessingPackageId(pkg.id);
+      
+      // Make the API request directly here for better control
+      const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { packageId: pkg.id });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create payment session');
+      }
+      
+      const data = await response.json();
+      console.log('Received session data:', data);
+      
+      if (!data.sessionId) {
+        throw new Error('No session ID received from server');
+      }
+      
+      // Redirect to Stripe Checkout
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+      
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (error: any) {
+      console.error('Purchase error:', error);
+      toast({
+        title: 'Payment Error',
+        description: error.message || 'An error occurred during checkout',
+        variant: 'destructive',
+      });
+      setProcessingPackageId(null);
+    }
   };
 
   if (!user) {

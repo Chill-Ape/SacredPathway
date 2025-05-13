@@ -603,8 +603,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? `https://${req.get('host')}`
         : `http://${req.get('host')}`;
       
-      // Create a Checkout session
-      const session = await stripe.checkout.sessions.create({
+      console.log('Creating Stripe Checkout session with public key:', process.env.VITE_STRIPE_PUBLIC_KEY);
+      console.log('Domain for success/cancel URLs:', domain);
+      
+      const sessionConfig = {
         payment_method_types: ['card'],
         line_items: [
           {
@@ -619,7 +621,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             quantity: 1,
           },
         ],
-        mode: 'payment',
+        mode: 'payment' as const, // Type annotation to fix TS error
         customer: stripeCustomerId,
         success_url: `${domain}/api/mana/purchase/complete?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${domain}/mana?status=canceled`,
@@ -628,15 +630,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userId: req.user.id.toString(),
           manaAmount: manaPackage.amount.toString()
         },
-      });
+      };
+      
+      console.log('Checkout session config:', JSON.stringify(sessionConfig, null, 2));
+      
+      // Create a Checkout session
+      const session = await stripe.checkout.sessions.create(sessionConfig);
       
       res.json({
         sessionId: session.id,
         packageDetails: manaPackage
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating payment intent:", error);
-      res.status(500).json({ message: "Failed to create payment intent" });
+      
+      // Log detailed error information
+      if (error.type === 'StripeError') {
+        console.error('Stripe error code:', error.code);
+        console.error('Stripe error message:', error.message);
+        console.error('Stripe error type:', error.type);
+      }
+      
+      res.status(500).json({ message: error.message || "Failed to create payment intent" });
     }
   });
 
