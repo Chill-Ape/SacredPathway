@@ -5,6 +5,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Scrolls from "@/pages/Scrolls";
 import ScrollDetail from "@/pages/ScrollDetail";
+import SacredScroll from "@/pages/SacredScroll";
 import Lore from "@/pages/Lore";
 import Keeper from "@/pages/Keeper";
 import Oracle from "@/pages/Oracle";
@@ -32,7 +33,7 @@ function App() {
               <Switch key={location}>
                 <Route path="/" component={Home} />
                 <Route path="/scrolls" component={Scrolls} />
-                <Route path="/scrolls/:id" component={ScrollDetail} />
+                <Route path="/scrolls/:id" component={SacredScroll} />
                 <Route path="/lore" component={Lore} />
                 <Route path="/oracle" component={Oracle} />
                 <Route path="/keeper" component={Keeper} />
