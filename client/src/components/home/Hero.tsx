@@ -57,7 +57,7 @@ export default function Hero() {
                 ease: "linear"
               }}
             >
-              {/* Outer circle */}
+              {/* Outer spinning circle */}
               <circle 
                 cx="50" 
                 cy="50" 
@@ -67,50 +67,52 @@ export default function Hero() {
                 strokeWidth="0.5"
                 strokeDasharray="1,3"
               />
-              
-              {/* Middle circle */}
+            </motion.svg>
+            
+            {/* The fixed sacred symbol */}
+            <svg 
+              viewBox="0 0 200 200" 
+              className="absolute top-0 left-0 w-full h-full" 
+              style={{ 
+                filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+              }}
+            >
+              {/* Dot above */}
               <circle 
-                cx="50" 
-                cy="50" 
-                r="35" 
-                fill="none" 
-                stroke="hsl(214, 60%, 24%)" 
-                strokeWidth="0.5"
+                cx="100" 
+                cy="30" 
+                r="10" 
+                fill="hsl(214, 60%, 24%)" 
               />
               
-              {/* Inner triangle */}
-              <polygon 
-                points="50,15 10,85 90,85" 
+              {/* Triangle */}
+              <path 
+                d="M100 55 L25 165 L175 165 Z" 
                 fill="none" 
                 stroke="hsl(214, 60%, 24%)" 
-                strokeWidth="2"
+                strokeWidth="8"
               />
               
               {/* Circle inside */}
               <circle 
-                cx="50" 
-                cy="50" 
-                r="20" 
+                cx="100" 
+                cy="110" 
+                r="35" 
                 fill="none" 
                 stroke="hsl(214, 60%, 24%)" 
-                strokeWidth="2"
+                strokeWidth="8"
               />
               
-              {/* Sacred symbols around */}
-              <g fill="hsl(214, 60%, 24%)" fontSize="7">
-                <text x="47" y="13" textAnchor="middle">✧</text>
-                <text x="92" y="85" textAnchor="middle">✧</text>
-                <text x="8" y="85" textAnchor="middle">✧</text>
-              </g>
-              
-              {/* Dot in center */}
-              <circle 
-                cx="50" 
-                cy="50" 
-                r="3" 
-                fill="hsl(214, 60%, 24%)" 
+              {/* Line below */}
+              <line 
+                x1="20" 
+                y1="185" 
+                x2="180" 
+                y2="185" 
+                stroke="hsl(214, 60%, 24%)" 
+                strokeWidth="8"
               />
-            </motion.svg>
+            </svg>
           </div>
           <motion.div 
             className="absolute inset-0 bg-sacred-blue/10 rounded-full blur-md"

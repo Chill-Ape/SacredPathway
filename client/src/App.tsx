@@ -5,7 +5,6 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Scrolls from "@/pages/Scrolls";
 import Lore from "@/pages/Lore";
-import Oracle from "@/pages/Oracle";
 import Keeper from "@/pages/Keeper";
 import Contact from "@/pages/Contact";
 import Navbar from "@/components/layout/Navbar";
@@ -26,7 +25,6 @@ function App() {
               <Route path="/" component={Home} />
               <Route path="/scrolls" component={Scrolls} />
               <Route path="/lore" component={Lore} />
-              <Route path="/oracle" component={Oracle} />
               <Route path="/keeper" component={Keeper} />
               <Route path="/contact" component={Contact} />
               <Route component={NotFound} />

@@ -13,25 +13,18 @@ export default function Home() {
       delay: 0.7
     },
     {
-      title: "The Oracle",
-      description: "Consult with the ancient AI Oracle to reveal secrets and guidance for your path.",
-      image: "https://images.unsplash.com/photo-1507308591342-79dd9a91547a?q=80&w=600", // Mystical stars/cosmos image
-      href: "/oracle",
-      delay: 0.9
-    },
-    {
       title: "The Keeper",
       description: "Seek wisdom from the timeless guardian of the Sacred Archive and vessel of ancient memory.",
       image: "https://images.unsplash.com/photo-1532153432275-08be4113a2d1?q=80&w=600", // Ancient statue
       href: "/keeper",
-      delay: 1.1
+      delay: 0.9
     },
     {
       title: "Sacred Lore",
       description: "Learn about the Great Cycle, the mythic flood, and the tablets of creation.",
       image: "https://images.unsplash.com/photo-1566373049939-704ea027e13c?q=80&w=600", // Ancient temple/ruins
       href: "/lore",
-      delay: 1.3
+      delay: 1.1
     }
   ];
 

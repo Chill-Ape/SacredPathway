@@ -17,8 +17,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Scrolls", path: "/scrolls" },
     { name: "Lore", path: "/lore" },
-    { name: "Oracle", path: "/oracle" },
-    { name: "Keeper", path: "/keeper" },
+    { name: "The Keeper", path: "/keeper" },
     { name: "Contact", path: "/contact" },
   ];
 
