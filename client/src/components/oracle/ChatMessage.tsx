@@ -15,8 +15,8 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
       transition={{ duration: 0.3 }}
     >
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-sacred-blue flex items-center justify-center text-sacred-white mr-3 flex-shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <div className={`w-8 h-8 rounded-full bg-oracle-deep-purple flex items-center justify-center text-oracle-gold mr-3 flex-shrink-0 ${!loading ? 'animate-oracle-pulse' : ''}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10" />
             <circle cx="12" cy="12" r="4" />
             <line x1="4.93" y1="4.93" x2="9.17" y2="9.17" />
@@ -30,21 +30,23 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
       
       <div className={`${
         isUser 
-          ? 'bg-sacred-white shadow-sm' 
-          : 'bg-sacred-blue/10'
-        } rounded-lg py-2 px-4 max-w-xs md:max-w-md`}>
+          ? 'bg-oracle-navy/40 shadow-sm border border-oracle-gold/20' 
+          : 'bg-oracle-deep-purple/30 border border-oracle-gold/30'
+        } rounded-lg py-3 px-4 max-w-xs md:max-w-md ${!isUser && !loading ? 'animate-oracle-breathe' : ''}`}>
         <p className={`${
           isUser 
-            ? 'font-raleway text-sacred-gray' 
-            : 'font-playfair text-sacred-blue'
-          } ${loading ? 'animate-pulse' : ''}`}>
+            ? 'font-garamond text-oracle-soft-gold/90' 
+            : 'font-garamond text-oracle-gold'
+          } ${loading ? 'animate-pulse' : ''}`}
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
           {message}
         </p>
       </div>
       
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-sacred-gold/80 flex items-center justify-center text-sacred-white ml-3 flex-shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <div className="w-8 h-8 rounded-full bg-oracle-navy border border-oracle-gold/30 flex items-center justify-center text-oracle-soft-gold ml-3 flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>

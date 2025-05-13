@@ -232,9 +232,9 @@ export default function KeeperChat() {
         ) : messages.length === 0 ? (
           <div className="flex justify-center items-center h-full">
             <div className="text-center max-w-md">
-              <h3 className="text-lg font-cinzel mb-2 text-primary">The Oracle Awaits</h3>
+              <h3 className="text-lg font-cinzel mb-2 text-primary">Awaiting Your Inquiry</h3>
               <p className="text-gray-600">
-                The Oracle is an ancient guardian of sacred knowledge who speaks with the wisdom of the ages. Ask about the Tablets, the Great Cycle, Enki, the Flood, Mana, or the Ages.
+                Ask a question to begin your journey into ancient wisdom.
               </p>
             </div>
           </div>
