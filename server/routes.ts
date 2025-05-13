@@ -12,11 +12,12 @@ import Stripe from "stripe";
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Initialize Stripe client (will be properly initialized when STRIPE_SECRET_KEY is available)
-let stripe: Stripe | null = null;
-if (process.env.STRIPE_SECRET_KEY) {
-  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Initialize Stripe client
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error('STRIPE_SECRET_KEY is not set. Stripe functionality will not work.');
 }
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+console.log('Stripe client initialized with secret key status:', process.env.STRIPE_SECRET_KEY ? 'Available' : 'Missing');
 
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";

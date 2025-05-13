@@ -10,8 +10,14 @@ import { apiRequest } from '@/lib/queryClient';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Initialize Stripe with the public key
-console.log('Stripe Public Key:', import.meta.env.VITE_STRIPE_PUBLIC_KEY); 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+console.log('Stripe Public Key Status:', stripePublicKey ? 'Available' : 'Missing');
+
+if (!stripePublicKey) {
+  console.error('VITE_STRIPE_PUBLIC_KEY is missing. Stripe checkout will not work.');
+}
+
+const stripePromise = loadStripe(stripePublicKey || '');
 
 const ManaPackages: React.FC = () => {
   const { user } = useAuth();
@@ -72,35 +78,49 @@ const ManaPackages: React.FC = () => {
     }
     
     try {
-      console.log('Starting purchase process for package:', pkg);
+      console.log('Starting purchase process for package:', pkg.id, pkg.name);
       setProcessingPackageId(pkg.id);
       
       // Make the API request directly here for better control
+      console.log('Making API request to create payment intent...');
       const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { packageId: pkg.id });
       
+      console.log('API response status:', response.status);
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create payment session');
+        let errorMessage = 'Failed to create payment session';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // If the response isn't JSON, try to get text
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
       
       const data = await response.json();
-      console.log('Received session data:', data);
+      console.log('Received session data with ID:', data.sessionId ? 'Valid session ID' : 'Missing session ID');
       
       if (!data.sessionId) {
         throw new Error('No session ID received from server');
       }
       
       // Redirect to Stripe Checkout
+      console.log('Loading Stripe...');
       const stripe = await stripePromise;
       if (!stripe) {
-        throw new Error('Stripe failed to load');
+        throw new Error('Stripe failed to load. Please check your Stripe public key.');
       }
       
+      console.log('Redirecting to Stripe checkout...');
       const { error } = await stripe.redirectToCheckout({
         sessionId: data.sessionId,
       });
       
       if (error) {
+        console.error('Stripe redirect error:', error);
         throw new Error(error.message);
       }
     } catch (error: any) {
