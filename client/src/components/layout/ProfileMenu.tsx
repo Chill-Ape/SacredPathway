@@ -58,9 +58,15 @@ export default function ProfileMenu() {
         
         <DropdownMenuSeparator />
         
+        <Link href="/profile">
+          <DropdownMenuItem className="cursor-pointer">
+            My Profile
+          </DropdownMenuItem>
+        </Link>
+        
         <Link href="/scrolls">
           <DropdownMenuItem className="cursor-pointer">
-            My Scrolls
+            Explore Scrolls
           </DropdownMenuItem>
         </Link>
         

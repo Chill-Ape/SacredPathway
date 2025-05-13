@@ -6,47 +6,50 @@ import { Scroll } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Helmet } from "react-helmet";
+import { useAuth } from "@/hooks/use-auth";
+import { useUserScrolls } from "@/hooks/use-user-scrolls";
 
 export default function Scrolls() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const { unlockScroll, isUnlocking } = useUserScrolls();
   
   // Fetch all scrolls
   const { data: scrolls = [], isLoading } = useQuery<Scroll[]>({ 
     queryKey: ["/api/scrolls"]
   });
   
-  // Unlock scroll mutation
-  const unlockMutation = useMutation({
-    mutationFn: async ({ id, key }: { id: number; key: string }) => {
-      const response = await apiRequest("POST", `/api/scrolls/${id}/unlock`, { key });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to unlock scroll");
-      }
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/scrolls"] });
-      toast({
-        title: "Scroll Unlocked",
-        description: "The ancient knowledge has been revealed to you.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Unlocking Failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  });
-  
   const handleUnlockScroll = async (scrollId: number, key: string): Promise<boolean> => {
     try {
-      await unlockMutation.mutateAsync({ id: scrollId, key });
-      return true;
-    } catch (error) {
+      // If the user is authenticated, use the user-specific unlock method
+      if (user) {
+        unlockScroll({ scrollId, key });
+        return true;
+      } else {
+        // For non-authenticated users, use the regular unlock method
+        const response = await apiRequest("POST", `/api/scrolls/${scrollId}/unlock`, { key });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to unlock scroll");
+        }
+        
+        // Refresh the scrolls list
+        queryClient.invalidateQueries({ queryKey: ["/api/scrolls"] });
+        
+        toast({
+          title: "Scroll Unlocked",
+          description: "The ancient knowledge has been revealed to you. Create an account to save your progress!",
+        });
+        
+        return true;
+      }
+    } catch (error: any) {
+      toast({
+        title: "Unlocking Failed",
+        description: error.message || "Failed to unlock scroll",
+        variant: "destructive",
+      });
       return false;
     }
   };

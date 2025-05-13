@@ -134,18 +134,18 @@ export default function Profile() {
               {userScrolls.map((scroll) => (
                 <Card key={scroll.id} className="bg-white border-sacred-blue/10 overflow-hidden">
                   <div className="flex">
-                    {scroll.imageUrl && (
+                    {scroll.image && (
                       <div 
                         className="w-1/3 bg-sacred-blue/5 flex items-center justify-center p-4"
                       >
                         <img 
-                          src={scroll.imageUrl} 
+                          src={scroll.image} 
                           alt={scroll.title}
                           className="max-h-24 object-contain"
                         />
                       </div>
                     )}
-                    <div className={scroll.imageUrl ? "w-2/3" : "w-full"}>
+                    <div className={scroll.image ? "w-2/3" : "w-full"}>
                       <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
                           <CardTitle className="text-sacred-blue font-cinzel text-lg">
@@ -157,7 +157,7 @@ export default function Profile() {
                           </Badge>
                         </div>
                         <CardDescription className="line-clamp-2 font-raleway">
-                          {scroll.description}
+                          {scroll.content.substring(0, 100)}...
                         </CardDescription>
                       </CardHeader>
                       <CardFooter>
