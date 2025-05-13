@@ -21,7 +21,7 @@ export default function ProfileMenu() {
 
   if (!user) {
     return (
-      <Link href="/auth">
+      <Link to="/auth">
         <Button
           variant="ghost"
           className="font-cinzel text-sacred-blue hover:text-sacred-blue-light hover:bg-sacred-blue/10"

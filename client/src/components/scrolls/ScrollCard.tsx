@@ -77,7 +77,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
               {!user ? (
                 <div className="space-y-2">
                   <p className="text-sacred-gray text-sm italic">To unlock this ancient wisdom, you must first create an account.</p>
-                  <Link href="/auth">
+                  <Link to="/auth">
                     <Button
                       className="w-full bg-sacred-blue hover:bg-sacred-blue-light text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
                     >

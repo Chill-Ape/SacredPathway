@@ -28,7 +28,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/">
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 <Logo className="mr-4" />
                 <span className="text-sacred-blue text-xl font-medium">The Sacred Archive</span>
               </div>
@@ -38,7 +38,7 @@ export default function Navbar() {
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-8 text-sacred-blue text-sm">
             {navLinks.map((link) => (
-              <Link key={link.path} href={link.path}>
+              <Link key={link.path} to={link.path}>
                 <span className={`font-cinzel hover:text-sacred-blue-light transition-colors duration-300 cursor-pointer ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}>
                   {link.name}
                 </span>
@@ -78,7 +78,7 @@ export default function Navbar() {
           >
             <div className="px-2 pt-2 pb-3 space-y-1 font-cinzel text-center">
               {navLinks.map((link) => (
-                <Link key={link.path} href={link.path}>
+                <Link key={link.path} to={link.path}>
                   <span 
                     className={`block w-full py-2 font-cinzel hover:bg-sacred-blue/5 rounded transition-colors duration-300 cursor-pointer ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}
                     onClick={() => setIsMobileMenuOpen(false)}
