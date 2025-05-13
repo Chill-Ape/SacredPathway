@@ -14,6 +14,7 @@ import AuthPage from "@/pages/auth-page";
 import Profile from "@/pages/Profile";
 import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
+import ManageMana from "@/pages/ManageMana";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { AnimatePresence } from "framer-motion";
