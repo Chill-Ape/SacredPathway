@@ -199,6 +199,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (isCorrect) {
         const updatedScroll = await storage.unlockScroll(id);
+        
+        // If user is authenticated, unlock the scroll for the user
+        if (req.isAuthenticated() && req.user) {
+          await storage.unlockScrollForUser(req.user.id, id);
+        }
+        
         res.json(updatedScroll);
       } else {
         res.status(403).json({ message: "Incorrect key" });
@@ -206,6 +212,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error unlocking scroll:", error);
       res.status(500).json({ message: "Failed to unlock scroll" });
+    }
+  });
+  
+  // Get all scrolls unlocked by the authenticated user
+  app.get("/api/user/scrolls", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const scrolls = await storage.getUserUnlockedScrolls(req.user.id);
+      res.json(scrolls);
+    } catch (error) {
+      console.error("Error fetching user scrolls:", error);
+      res.status(500).json({ message: "Failed to fetch user scrolls" });
+    }
+  });
+  
+  // Check if a scroll is unlocked for the authenticated user
+  app.get("/api/user/scrolls/:id", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const isUnlocked = await storage.isScrollUnlockedForUser(req.user.id, id);
+      
+      res.json({ isUnlocked });
+    } catch (error) {
+      console.error("Error checking user scroll status:", error);
+      res.status(500).json({ message: "Failed to check scroll status" });
     }
   });
 
