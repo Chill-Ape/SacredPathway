@@ -109,6 +109,7 @@ export class DatabaseStorage implements IStorage {
     try {
       console.log("Creating database tables if they don't exist");
       
+      // Initialize scrolls
       try {
         // Check if we have any scrolls in the database 
         const existingScrolls = await db.select().from(scrolls);
@@ -124,9 +125,69 @@ export class DatabaseStorage implements IStorage {
         console.log("Scrolls table not initialized yet, creating default scrolls");
         await this._initializeDefaultScrolls();
       }
+      
+      // Initialize Mana packages
+      try {
+        // Check if we have any Mana packages in the database
+        const existingPackages = await db.select().from(manaPackages);
+        
+        if (existingPackages.length === 0) {
+          console.log("Mana packages table is empty, creating default packages");
+          await this._initializeDefaultManaPackages();
+        } else {
+          console.log("Mana packages already exist:", existingPackages.length);
+        }
+      } catch (err) {
+        // If the table doesn't exist yet, we'll get an error
+        console.log("Mana packages table not initialized yet, creating default packages");
+        await this._initializeDefaultManaPackages();
+      }
     } catch (error) {
       console.error("Error initializing tables:", error);
     }
+  }
+  
+  async _initializeDefaultManaPackages() {
+    console.log("Initializing default Mana packages");
+    
+    // Create default mana packages
+    const packages: InsertManaPackage[] = [
+      {
+        name: "Novice Pack",
+        description: "A small amount of Mana to unlock basic scrolls and features.",
+        amount: 100,
+        price: 499, // $4.99
+        isActive: true
+      },
+      {
+        name: "Adept Pack",
+        description: "A moderate amount of Mana for regular Archive users.",
+        amount: 300,
+        price: 999, // $9.99
+        isActive: true
+      },
+      {
+        name: "Scholar Pack",
+        description: "A substantial amount of Mana for dedicated seekers of knowledge.",
+        amount: 1000,
+        price: 2499, // $24.99
+        isActive: true
+      },
+      {
+        name: "Master Pack",
+        description: "An abundant reserve of Mana for the most devoted students of the Archive.",
+        amount: 2500,
+        price: 4999, // $49.99
+        isActive: true
+      }
+    ];
+    
+    // Create all mana packages
+    for (const pkg of packages) {
+      await this.createManaPackage(pkg);
+    }
+    
+    console.log("Created default Mana packages:", packages.length);
   }
   
   async _initializeDefaultScrolls() {
