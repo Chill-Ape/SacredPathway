@@ -5,54 +5,54 @@ interface ChatMessageProps {
   isUser: boolean;
   message: string;
   loading?: boolean;
+  isNew?: boolean; // Flag to indicate if this is a newly added message that needs animation
 }
 
-export default function ChatMessage({ isUser, message, loading = false }: ChatMessageProps) {
+export default function ChatMessage({ isUser, message, loading = false, isNew = false }: ChatMessageProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const typingSpeed = 30; // ms per character - even faster but still has a mystical feel
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
-    // Only do typewriter effect for Oracle messages, not user messages
+    // For user messages, just display them immediately
     if (isUser) {
       setDisplayedText(message);
+      return;
+    }
+    
+    // For older Oracle messages on page reload, display them immediately without animation
+    if (!isNew) {
+      setDisplayedText(message);
+      setIsTyping(false);
       return;
     }
     
     // Initialize audio for typewriter sound
     if (!audioRef.current) {
       audioRef.current = new Audio("/sounds/typewriter-key.mp3");
-      audioRef.current.volume = 0.4; // Louder volume
+      audioRef.current.volume = 0.4;
     }
     
     let currentIndex = 0;
     setIsTyping(true);
     
-    // Progressively reveal text with typewriter effect
+    // Progressively reveal text with typewriter effect (only for new messages)
     const interval = setInterval(() => {
       if (currentIndex < message.length) {
         setDisplayedText(message.substring(0, currentIndex + 1));
         currentIndex++;
         
-        // Always play sound for a more consistent typing experience
-        // For better effect, we'll play sound for all characters
-        
+        // Play sound only for new messages
         if (audioRef.current) {
-          // Create a new audio instance for better overlap of sounds
           const clone = audioRef.current.cloneNode() as HTMLAudioElement;
-          
-          // Higher volume
           clone.volume = 0.3;
           
           try {
             // Only play sound every 2-3 characters for more authentic typing rhythm
             if (currentIndex % 3 === 0 || currentIndex % 2 === 0) {
-              // Play the sound and make it a bit louder
               clone.volume = 0.5;
               clone.play().catch(e => console.log("Audio play prevented:", e));
-              
-              // Add slight variation to playback rate for more natural typing sound
               clone.playbackRate = 0.8 + Math.random() * 0.4; // Between 0.8 and 1.2
             }
           } catch (error) {
@@ -69,7 +69,7 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
       clearInterval(interval);
       setIsTyping(false);
     };
-  }, [message, isUser]);
+  }, [message, isUser, isNew]);
   return (
     <motion.div 
       className={`flex items-start mb-4 ${isUser ? 'justify-end' : ''}`}

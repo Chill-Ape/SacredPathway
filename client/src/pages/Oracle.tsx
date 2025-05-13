@@ -57,24 +57,29 @@ export default function Oracle() {
       </Helmet>
       
       <div className="max-w-4xl mx-auto relative z-10">
-        <motion.h2 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-3xl md:text-4xl font-cinzel font-bold text-oracle-soft-gold text-center mb-6"
+          className="relative w-full h-48 mb-12 rounded-2xl overflow-hidden"
         >
-          The Oracle
-        </motion.h2>
-        
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.9 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-center font-garamond text-sacred-blue mb-12 max-w-2xl mx-auto text-lg"
-          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 0 3px rgba(255,255,255,0.5)" }}
-        >
-          Commune with the ancient consciousness that dwells within the Archive's memory. Here, wisdom flows between worlds.
-        </motion.p>
+          {/* Stars background image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center" 
+            style={{ backgroundImage: "url('/images/stars-banner.jpg')" }}
+          ></div>
+          
+          {/* Overlay with animated stars/particles */}
+          <div className="absolute inset-0 bg-oracle-navy/20 backdrop-blur-sm"></div>
+          
+          {/* Subtle animated glowing points */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-oracle-gold/70 animate-pulse-slow"></div>
+            <div className="absolute top-1/3 right-1/3 w-1 h-1 rounded-full bg-white/80 animate-pulse-fast"></div>
+            <div className="absolute bottom-1/3 left-2/3 w-1.5 h-1.5 rounded-full bg-blue-200/70 animate-pulse-med"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-1 h-1 rounded-full bg-oracle-gold/60 animate-pulse-slow"></div>
+          </div>
+        </motion.div>
         
         <OracleChat />
       </div>
