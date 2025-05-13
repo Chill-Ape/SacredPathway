@@ -90,6 +90,7 @@ export default function KeeperChat() {
         {
           userId: sessionId,
           content,
+          isUser: true
         }
       );
       return await response.json();
