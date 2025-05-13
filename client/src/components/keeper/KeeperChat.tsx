@@ -65,7 +65,7 @@ export default function KeeperChat() {
   // Fetch message history
   const { data, isLoading: isLoadingHistory } = useQuery({
     queryKey: ["/api/keeper", sessionId],
-    queryFn: () => apiRequest(`/api/keeper/${sessionId}`),
+    queryFn: getQueryFn({ on401: "returnNull" }),
     enabled: !!sessionId,
   });
 
@@ -82,9 +82,9 @@ export default function KeeperChat() {
   }, [data]);
 
   // Send message mutation
-  const { mutate: sendMessage, isPending } = useMutation({
-    mutationFn: (content: string) =>
-      apiRequest("/api/keeper/message", {
+  const { mutate: sendMessage, isPending } = useMutation<KeeperResponse, Error, string>({
+    mutationFn: async (content: string) => {
+      const response = await apiRequest("/api/keeper/message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,9 @@ export default function KeeperChat() {
           userId: sessionId,
           content,
         }),
-      }),
+      });
+      return response as KeeperResponse;
+    },
     onSuccess: (data: KeeperResponse) => {
       // Add the user message and assistant response to the chat
       const newMessages: Message[] = [
