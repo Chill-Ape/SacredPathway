@@ -33,8 +33,8 @@ export default function SacredScroll() {
         
         // For "Legacy of the Lost Age" (id 37), we'll use our special ancient-civilizations-scroll.json
         if (scrollId === 37) {
-          console.log("Fetching ancient-civilizations-scroll.json");
-          const response = await fetch('/data/ancient-civilizations-scroll.json');
+          console.log("Fetching ancient-civilizations-scroll.json via API endpoint");
+          const response = await fetch('/api/sacred-scrolls/ancient-civilizations');
           
           if (!response.ok) {
             console.error("Fetch error status:", response.status);
@@ -75,7 +75,8 @@ export default function SacredScroll() {
           }
         }
       } catch (error) {
-        console.error("Error fetching scroll data:", error);
+        console.error("Error fetching scroll data:", error instanceof Error ? error.message : 'Unknown error');
+        console.error("Full error:", error);
       } finally {
         setLoading(false);
       }

@@ -188,6 +188,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch scrolls" });
     }
   });
+  
+  // Serve the ancient civilizations scroll data
+  app.get("/api/sacred-scrolls/ancient-civilizations", (_req: Request, res: Response) => {
+    try {
+      // Read the JSON file from the filesystem
+      const fs = require('fs');
+      const path = require('path');
+      const filePath = path.join(process.cwd(), 'public', 'data', 'ancient-civilizations-scroll.json');
+      
+      if (!fs.existsSync(filePath)) {
+        console.error(`File not found: ${filePath}`);
+        return res.status(404).json({ message: "Scroll data file not found" });
+      }
+      
+      const data = fs.readFileSync(filePath, 'utf8');
+      const jsonData = JSON.parse(data);
+      
+      res.json(jsonData);
+    } catch (error) {
+      console.error("Error serving ancient civilizations scroll:", error);
+      res.status(500).json({ message: "Failed to serve scroll data" });
+    }
+  });
 
   // Get a specific scroll
   app.get("/api/scrolls/:id", async (req: Request, res: Response) => {
@@ -199,20 +222,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Scroll not found" });
       }
       
-      // Special case for Legacy of the Lost Age (id 37) - update image to ancient_tablet_dark.png
-      if (scroll.id === 37 && scroll.image !== "/assets/ancient_tablet_dark.png") {
-        try {
-          // Update the image in the database
-          await db.update(scrolls)
-            .set({ image: "/assets/ancient_tablet_dark.png" })
-            .where(eq(scrolls.id, 37));
-            
-          // Update the response object
-          scroll.image = "/assets/ancient_tablet_dark.png";
-          console.log("Updated Legacy scroll image to ancient_tablet_dark.png");
-        } catch (error) {
-          console.error("Error updating scroll image:", error);
-        }
+      // For Legacy of the Lost Age (id 37), always use ancient_tablet_dark.png
+      if (scroll.id === 37) {
+        scroll.image = "/assets/ancient_tablet_dark.png";
       }
       
       res.json(scroll);
