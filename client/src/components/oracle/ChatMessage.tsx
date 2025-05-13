@@ -10,7 +10,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ isUser, message, loading = false }: ChatMessageProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const typingSpeed = 70; // ms per character - slower for more dramatic effect
+  const typingSpeed = 120; // ms per character - much slower for dramatic effect
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
     // Initialize audio for typewriter sound
     if (!audioRef.current) {
       audioRef.current = new Audio("/sounds/typewriter.mp3");
-      audioRef.current.volume = 0.2;
+      audioRef.current.volume = 0.4; // Louder volume
     }
     
     let currentIndex = 0;
@@ -35,21 +35,25 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
         setDisplayedText(message.substring(0, currentIndex + 1));
         currentIndex++;
         
-        // Play typewriter sound - only play for certain characters to make it more natural
-        // Skip sounds for spaces and punctuation sometimes
-        const currentChar = message[currentIndex - 1] || '';
-        const shouldPlaySound = currentChar !== ' ' && 
-                               (currentChar !== ',' || Math.random() > 0.5) && 
-                               (currentChar !== '.' || Math.random() > 0.7);
+        // Always play sound for a more consistent typing experience
+        // For better effect, we'll play sound for all characters
         
-        if (audioRef.current && shouldPlaySound) {
+        if (audioRef.current) {
           // Create a new audio instance for better overlap of sounds
           const clone = audioRef.current.cloneNode() as HTMLAudioElement;
-          clone.volume = 0.15;
-          clone.play().catch(e => console.log("Audio play prevented:", e));
           
-          // Add slight variation to playback rate for more natural typing sound
-          clone.playbackRate = 0.9 + Math.random() * 0.4; // Between 0.9 and 1.3
+          // Higher volume
+          clone.volume = 0.3;
+          
+          try {
+            // Play the sound
+            clone.play().catch(e => console.log("Audio play prevented:", e));
+            
+            // Add slight variation to playback rate for more natural typing sound
+            clone.playbackRate = 0.8 + Math.random() * 0.4; // Between 0.8 and 1.2
+          } catch (error) {
+            console.log("Error playing sound:", error);
+          }
         }
       } else {
         clearInterval(interval);
@@ -85,13 +89,13 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
       
       <div className={`${
         isUser 
-          ? 'bg-oracle-navy/40 shadow-sm border border-oracle-gold/20' 
-          : 'bg-oracle-deep-purple/30 border border-oracle-gold/30'
+          ? 'bg-oracle-navy/60 shadow-sm border border-oracle-gold/20' 
+          : 'bg-oracle-deep-purple/50 border border-oracle-gold/30'
         } rounded-lg py-3 px-4 max-w-xs md:max-w-md ${!isUser && !loading ? 'animate-oracle-breathe' : ''}`}>
         <p className={`${
           isUser 
-            ? 'font-garamond text-oracle-soft-gold/90' 
-            : 'font-garamond text-oracle-gold'
+            ? 'font-garamond text-white' 
+            : 'font-garamond text-oracle-soft-gold'
           } ${loading ? 'animate-pulse' : ''} ${isTyping && !isUser ? 'oracle-typing' : ''}`}
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
