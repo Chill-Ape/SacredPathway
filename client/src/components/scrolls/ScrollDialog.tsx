@@ -11,6 +11,24 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
+// Import scroll images directly
+import welcomeScrollImage from "@assets/ChatGPT Image Apr 24, 2025, 06_04_06 PM.png";
+import ancientCivilizationImage from "@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png";
+import greatFloodImage from "@assets/ChatGPT Image Apr 24, 2025, 07_12_19 PM.png";
+import crystalTabletImage from "@assets/ChatGPT Image Apr 24, 2025, 07_23_59 PM.png";
+import pathImage from "@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png";
+
+// Map image paths to imported assets
+const imageMap: Record<string, string> = {
+  "/assets/welcome_scroll.png": welcomeScrollImage,
+  "/assets/ancient_civilization.png": ancientCivilizationImage,
+  "/assets/great_flood.png": greatFloodImage,
+  "/assets/crystal_tablet.png": crystalTabletImage,
+  "/assets/flood_scroll.png": greatFloodImage,
+  "/assets/ancient_tablet_dark.png": ancientCivilizationImage,
+  "/assets/pillars_scroll.png": pathImage,
+};
+
 interface ScrollDialogProps {
   scroll: Scroll;
   isOpen: boolean;
@@ -31,7 +49,7 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
         <div className="py-4">
           <div className="w-full max-w-md mx-auto mb-6">
             <img 
-              src={scroll.image} 
+              src={imageMap[scroll.image] || scroll.image}
               alt={scroll.title} 
               className="w-full h-auto rounded-lg shadow-md object-contain bg-gray-100 p-2"
             />

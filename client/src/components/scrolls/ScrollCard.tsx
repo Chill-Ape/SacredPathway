@@ -7,6 +7,24 @@ import ScrollDialog from "@/components/scrolls/ScrollDialog";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 
+// Import scroll images directly
+import welcomeScrollImage from "@assets/ChatGPT Image Apr 24, 2025, 06_04_06 PM.png";
+import ancientCivilizationImage from "@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png";
+import greatFloodImage from "@assets/ChatGPT Image Apr 24, 2025, 07_12_19 PM.png";
+import crystalTabletImage from "@assets/ChatGPT Image Apr 24, 2025, 07_23_59 PM.png";
+import pathImage from "@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png";
+
+// Map image paths to imported assets
+const imageMap: Record<string, string> = {
+  "/assets/welcome_scroll.png": welcomeScrollImage,
+  "/assets/ancient_civilization.png": ancientCivilizationImage,
+  "/assets/great_flood.png": greatFloodImage,
+  "/assets/crystal_tablet.png": crystalTabletImage,
+  "/assets/flood_scroll.png": greatFloodImage,
+  "/assets/ancient_tablet_dark.png": ancientCivilizationImage,
+  "/assets/pillars_scroll.png": pathImage,
+};
+
 interface ScrollCardProps {
   scroll: Scroll;
   onUnlock?: (scrollId: number, key: string) => Promise<boolean>;
@@ -44,7 +62,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
         layout
       >
         <img 
-          src={scroll.image} 
+          src={imageMap[scroll.image] || scroll.image}
           alt={scroll.title} 
           className={`w-full h-52 object-contain bg-gray-100 ${scroll.isLocked ? 'filter grayscale' : ''}`}
         />

@@ -222,9 +222,16 @@ export default function KeeperChat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)] max-h-[800px] bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+    <div className="flex flex-col h-[calc(100vh-12rem)] max-h-[800px] bg-white rounded-lg border border-gray-200 shadow-sm relative">
+      {/* Subtle animated background elements */}
+      <div className="absolute inset-0 overflow-hidden opacity-5 pointer-events-none rounded-lg">
+        <div className="absolute top-0 left-0 w-full h-full bg-blue-500/10 animate-pulse-slow"></div>
+        <div className="absolute top-1/4 right-1/4 w-40 h-40 rounded-full bg-blue-500/5 animate-float opacity-30"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-60 h-60 rounded-full bg-blue-500/5 animate-float-delayed opacity-20"></div>
+      </div>
+      
       {/* Chat messages */}
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4 bg-white relative z-10">
         {isLoadingHistory ? (
           <div className="flex justify-center items-center h-full">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
