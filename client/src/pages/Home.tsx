@@ -3,26 +3,31 @@ import Hero from "@/components/home/Hero";
 import FeatureCard from "@/components/home/FeatureCard";
 import { Helmet } from "react-helmet";
 
+// Import custom images
+import ancientTabletDark from "@assets/ChatGPT Image May 10, 2025, 05_25_40 PM.png";
+import keeperImage from "@assets/ChatGPT Image Apr 24, 2025, 06_22_14 PM.png";
+import loreImage from "@assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png";
+
 export default function Home() {
   const features = [
     {
       title: "Ancient Scrolls",
       description: "Explore the collection of sacred texts that reveal forgotten wisdom from beyond time.",
-      image: "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?q=80&w=600", // Ancient scroll/papyrus with better visibility
+      image: ancientTabletDark, // Ancient tablet with engraved text
       href: "/scrolls",
       delay: 0.7
     },
     {
       title: "The Keeper",
       description: "Seek wisdom from the timeless guardian of the Sacred Archive and vessel of ancient memory.",
-      image: "https://images.unsplash.com/photo-1608344858738-80ac5c288506?q=80&w=600", // Ancient statue with better composition
+      image: keeperImage, // Mystical vessel with blue ethereal energy
       href: "/keeper",
       delay: 0.9
     },
     {
       title: "Sacred Lore",
       description: "Learn about the Great Cycle, the mythic flood, and the tablets of creation.",
-      image: "https://images.unsplash.com/photo-1548161049-f139a5eb9f51?q=80&w=600", // Ancient temple/stone with better clarity
+      image: loreImage, // Sacred geometry symbol
       href: "/lore",
       delay: 1.1
     }
