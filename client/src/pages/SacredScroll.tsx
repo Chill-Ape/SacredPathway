@@ -18,6 +18,8 @@ export default function SacredScroll() {
   const scrollId = match ? parseInt(params.id, 10) : 0;
   const [, navigate] = useLocation();
   
+  console.log("Scroll ID:", scrollId); // Debug scroll ID
+  
   const [scrollData, setScrollData] = useState<ScrollData | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
@@ -27,16 +29,24 @@ export default function SacredScroll() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        console.log("Attempting to fetch data for scroll ID:", scrollId);
+        
         // For "Legacy of the Lost Age" (id 37), we'll use our special ancient-civilizations-scroll.json
         if (scrollId === 37) {
+          console.log("Fetching ancient-civilizations-scroll.json");
           const response = await fetch('/data/ancient-civilizations-scroll.json');
+          
           if (!response.ok) {
+            console.error("Fetch error status:", response.status);
             throw new Error("Failed to fetch sacred scroll data");
           }
+          
           const data = await response.json();
+          console.log("Successfully loaded scroll data:", data.title);
           setScrollData(data);
         } else {
           // For other scrolls, we'd fetch from API
+          console.log("Not the Legacy scroll, redirecting to scrolls page");
           // This is a placeholder - in a real scenario we'd fetch from the server
           navigate('/scrolls');
           return;
