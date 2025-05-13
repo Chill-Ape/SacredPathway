@@ -2,6 +2,11 @@ import { motion } from "framer-motion";
 import LoreSection from "@/components/lore/LoreSection";
 import { Helmet } from "react-helmet";
 
+// Import custom thematic images
+import greatCycleImage from "@assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png"; // Sacred geometry
+import floodImage from "@assets/bd4b8eed-bb3c-47be-aa39-0538667ff596.png"; // Great flood
+import tabletsImage from "@assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png"; // Crystal tablet
+
 export default function Lore() {
   const greatCycleContent = [
     "The Great Cycle is the fundamental rhythm that governs all existence. It is the breath of the cosmos, the eternal dance of creation and dissolution that has been ongoing since before time was measured.",
@@ -50,21 +55,21 @@ export default function Lore() {
         <LoreSection
           title="The Great Cycle"
           content={greatCycleContent}
-          image="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead"
+          image={greatCycleImage}
           delay={0.2}
         />
         
         <LoreSection
           title="The Great Flood"
           content={floodContent}
-          image="https://images.unsplash.com/photo-1516912481808-3406841bd33c"
+          image={floodImage}
           delay={0.3}
         />
         
         <LoreSection
           title="The Sacred Tablets"
           content={tabletsContent}
-          image="https://images.unsplash.com/photo-1541873676-a18131494184"
+          image={tabletsImage}
           delay={0.4}
           listItems={tabletItems}
         />
