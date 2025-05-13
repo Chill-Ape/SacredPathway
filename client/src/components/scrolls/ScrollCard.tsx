@@ -37,7 +37,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
   const [unlockAttempted, setUnlockAttempted] = useState(false);
   const [unlockKey, setUnlockKey] = useState("");
   
-  const handleReadScroll = () => {
+  const handlePreviewScroll = () => {
     setIsDialogOpen(true);
   };
   

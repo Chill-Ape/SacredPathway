@@ -29,7 +29,14 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    // Handle array query keys for endpoints like ['/api/oracle', sessionId]
+    let url = queryKey[0] as string;
+    if (queryKey.length > 1 && queryKey[1]) {
+      // If we have a second parameter and it's not null/undefined, add it to URL
+      url = `${url}/${queryKey[1]}`;
+    }
+    
+    const res = await fetch(url, {
       credentials: "include",
     });
 

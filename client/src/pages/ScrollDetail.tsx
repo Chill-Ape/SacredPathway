@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation, Link } from "wouter";
+import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Scroll } from "@shared/schema";
@@ -26,8 +26,9 @@ const imageMap: Record<string, string> = {
 };
 
 export default function ScrollDetail() {
-  const [params] = useParams();
-  const scrollId = parseInt(params.id, 10);
+  // Get scroll ID from the URL path parameters
+  const [, params] = useLocation();
+  const scrollId = parseInt(params.split('/').pop() || '0', 10);
   const [, navigate] = useLocation();
   
   // Fetch the specific scroll by ID
