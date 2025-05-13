@@ -123,6 +123,15 @@ const ManaPackages: React.FC = () => {
             You need to be logged in to purchase Mana.
           </CardDescription>
         </CardHeader>
+        <CardContent className="text-center">
+          <a href="/auth">
+            <Button 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4"
+            >
+              Log in or Register
+            </Button>
+          </a>
+        </CardContent>
       </Card>
     );
   }
