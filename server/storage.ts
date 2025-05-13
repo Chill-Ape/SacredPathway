@@ -318,6 +318,91 @@ export class DatabaseStorage implements IStorage {
   async getContactMessages(): Promise<ContactMessage[]> {
     return await db.select().from(contactMessages);
   }
+  
+  // MANA METHODS
+  async getUserManaBalance(userId: number): Promise<number> {
+    const [user] = await db.select({ manaBalance: users.manaBalance }).from(users).where(eq(users.id, userId));
+    return user?.manaBalance || 0;
+  }
+
+  async updateUserManaBalance(userId: number, amount: number): Promise<number> {
+    // Get current balance first
+    const currentBalance = await this.getUserManaBalance(userId);
+    const newBalance = currentBalance + amount;
+    
+    // Update user's mana balance
+    await db.update(users)
+      .set({ manaBalance: newBalance })
+      .where(eq(users.id, userId));
+    
+    return newBalance;
+  }
+
+  async createManaTransaction(transaction: InsertManaTransaction): Promise<ManaTransaction> {
+    const [result] = await db.insert(manaTransactions)
+      .values(transaction)
+      .returning();
+    
+    return result;
+  }
+
+  async getUserManaTransactions(userId: number): Promise<ManaTransaction[]> {
+    return await db.select()
+      .from(manaTransactions)
+      .where(eq(manaTransactions.userId, userId))
+      .orderBy(manaTransactions.createdAt);
+  }
+
+  async getAllManaPackages(): Promise<ManaPackage[]> {
+    return await db.select()
+      .from(manaPackages)
+      .where(eq(manaPackages.isActive, true))
+      .orderBy(manaPackages.price);
+  }
+
+  async getManaPackageById(id: number): Promise<ManaPackage | undefined> {
+    const [result] = await db.select()
+      .from(manaPackages)
+      .where(eq(manaPackages.id, id));
+    
+    return result;
+  }
+
+  async createManaPackage(manaPackage: InsertManaPackage): Promise<ManaPackage> {
+    const [result] = await db.insert(manaPackages)
+      .values(manaPackage)
+      .returning();
+    
+    return result;
+  }
+
+  async updateManaPackage(id: number, updates: Partial<InsertManaPackage>): Promise<ManaPackage | undefined> {
+    const [result] = await db.update(manaPackages)
+      .set(updates)
+      .where(eq(manaPackages.id, id))
+      .returning();
+    
+    return result;
+  }
+
+  async updateUserStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ stripeCustomerId })
+      .where(eq(users.id, userId))
+      .returning();
+    
+    return user;
+  }
+  
+  // For scroll image updating
+  async updateScrollImage(id: number, imagePath: string): Promise<Scroll | undefined> {
+    const [result] = await db.update(scrolls)
+      .set({ image: imagePath })
+      .where(eq(scrolls.id, id))
+      .returning();
+    
+    return result;
+  }
 
   // Initialize default scrolls 
   async initializeDefaultScrolls() {
@@ -450,7 +535,9 @@ export class MemStorage implements IStorage {
       createdAt,
       email: insertUser.email,
       phone: insertUser.phone || null,
-      password: insertUser.password || '' // Ensure password is always a string
+      password: insertUser.password || '', // Ensure password is always a string
+      manaBalance: 0, // Initialize mana balance to 0
+      stripeCustomerId: null // Initialize stripe customer ID to null
     };
     this.users.set(id, user);
     return user;
