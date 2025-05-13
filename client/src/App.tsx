@@ -15,6 +15,7 @@ import Profile from "@/pages/Profile";
 import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
 import ManageMana from "@/pages/ManageMana";
+import Simulation from "@/pages/Simulation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { AnimatePresence } from "framer-motion";
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/oracle" component={Oracle} />
                 <Route path="/keeper" component={Keeper} />
                 <Route path="/contact" component={Contact} />
+                <Route path="/simulation" component={Simulation} />
                 <Route path="/auth" component={AuthPage} />
                 <ProtectedRoute path="/profile" component={Profile} />
                 <ProtectedRoute path="/my-scrolls" component={MyScrolls} />

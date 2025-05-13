@@ -39,6 +39,7 @@ export default function Navbar() {
     { name: "Akashic Scrolls", path: "/scrolls" },
     { name: "Akashic Lore", path: "/lore" },
     { name: "The Oracle", path: "/oracle" },
+    { name: "The Simulation", path: "/simulation" },
     { name: "Contact", path: "/contact" },
   ];
 
