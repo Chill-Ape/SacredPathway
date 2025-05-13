@@ -89,16 +89,18 @@
   font-family: 'EB Garamond', serif;
 }
 
-/* Custom cursor styling */
+/* Cursor styling - default cursor enabled */
 html, body {
-  cursor: none;
+  cursor: auto;
 }
 
+/* Uncomment below if you want to re-enable custom cursor in the future
 @media (max-width: 768px) {
   html, body {
     cursor: auto;
   }
 }
+*/
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
