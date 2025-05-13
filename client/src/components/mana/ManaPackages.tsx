@@ -27,7 +27,8 @@ const ManaPackages: React.FC = () => {
   
   const { data: packages, isLoading, error } = useQuery<ManaPackage[]>({
     queryKey: ['/api/mana/packages'],
-    enabled: !!user,
+    // Allow anyone to see the packages, even if not logged in
+    enabled: true,
   });
 
   const createPaymentIntent = useMutation({
@@ -178,47 +179,53 @@ const ManaPackages: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {packages.map((pkg) => (
-        <Card key={pkg.id} className="w-full overflow-hidden">
-          <CardHeader className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
-            <CardTitle className="flex items-center">
-              <Sparkles className="h-5 w-5 mr-2 text-yellow-300" />
-              {pkg.name}
-            </CardTitle>
-            <CardDescription className="text-blue-100">
-              {pkg.description}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="text-center">
-              <span className="text-3xl font-bold text-yellow-500">
-                {pkg.amount}
-              </span>
-              <span className="text-lg ml-2">Mana</span>
-            </div>
-            <div className="text-center mt-2 text-sm text-gray-500">
-              ${(pkg.price / 100).toFixed(2)} USD
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button 
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              onClick={() => handlePurchase(pkg)}
-              disabled={processingPackageId === pkg.id || createPaymentIntent.isPending}
-            >
-              {processingPackageId === pkg.id ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                "Purchase"
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {packages && packages.length > 0 ? (
+        packages.map((pkg) => (
+          <Card key={pkg.id} className="w-full overflow-hidden">
+            <CardHeader className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
+              <CardTitle className="flex items-center">
+                <Sparkles className="h-5 w-5 mr-2 text-yellow-300" />
+                {pkg.name}
+              </CardTitle>
+              <CardDescription className="text-blue-100">
+                {pkg.description}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="text-center">
+                <span className="text-3xl font-bold text-yellow-500">
+                  {pkg.amount}
+                </span>
+                <span className="text-lg ml-2">Mana</span>
+              </div>
+              <div className="text-center mt-2 text-sm text-gray-500">
+                ${(pkg.price / 100).toFixed(2)} USD
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button 
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                onClick={() => handlePurchase(pkg)}
+                disabled={processingPackageId === pkg.id || createPaymentIntent.isPending}
+              >
+                {processingPackageId === pkg.id ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Purchase"
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        ))
+      ) : (
+        <div className="col-span-full text-center p-8 border rounded-lg bg-gray-50">
+          <p className="text-gray-500">No Mana packages available. Please check back later.</p>
+        </div>
+      )}
     </div>
   );
 };
