@@ -28,7 +28,7 @@ const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().optional(),
-  password: z.string().optional(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginValues = z.infer<typeof loginSchema>;
@@ -234,12 +234,12 @@ export default function AuthPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="font-cinzel">
-                            Password (Optional)
+                            Password
                           </FormLabel>
                           <FormControl>
                             <Input
                               type="password"
-                              placeholder="Create a password (optional)"
+                              placeholder="Create a password (at least 6 characters)"
                               className="font-raleway"
                               {...field}
                             />
