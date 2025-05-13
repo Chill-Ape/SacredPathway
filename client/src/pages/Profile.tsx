@@ -2,10 +2,14 @@ import { useAuth } from "@/hooks/use-auth";
 import { useUserScrolls } from "@/hooks/use-user-scrolls";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
-import { Loader2, Scroll as ScrollIcon, Lock, LockOpen } from "lucide-react";
+import { Loader2, Scroll as ScrollIcon, Lock, LockOpen, Upload, Camera, UserCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { useState } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -14,6 +18,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Profile() {
   const { user } = useAuth();

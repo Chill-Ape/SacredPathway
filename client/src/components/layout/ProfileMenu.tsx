@@ -14,7 +14,7 @@ import { User, LogOut, Library, Sparkles } from "lucide-react";
 
 type ProfileMenuProps = {
   isMobile?: boolean;
-  forcedUser?: { id: number; username: string } | null;
+  forcedUser?: { id: number; username: string; profilePicture?: string } | null;
   wasAuthenticated?: boolean;
   onLogout?: () => void;
 };
@@ -111,9 +111,17 @@ export default function ProfileMenu({
           <>
             <div className="flex items-center justify-center mb-3">
               <Avatar className="h-12 w-12 border-2 border-sacred-blue/20">
-                <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-lg">
-                  {user.username[0].toUpperCase()}
-                </AvatarFallback>
+                {user.profilePicture ? (
+                  <img 
+                    src={user.profilePicture} 
+                    alt={`${user.username}'s profile`} 
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-lg">
+                    {user.username[0].toUpperCase()}
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="ml-3 text-left">
                 <p className="font-cinzel text-sacred-blue font-medium">{user.username}</p>
@@ -191,9 +199,17 @@ export default function ProfileMenu({
           className="relative rounded-full h-8 w-8 flex items-center justify-center"
         >
           <Avatar className="h-8 w-8 border border-sacred-blue/20">
-            <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel">
-              {user.username[0].toUpperCase()}
-            </AvatarFallback>
+            {user.profilePicture ? (
+              <img 
+                src={user.profilePicture} 
+                alt={`${user.username}'s profile`} 
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel">
+                {user.username[0].toUpperCase()}
+              </AvatarFallback>
+            )}
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

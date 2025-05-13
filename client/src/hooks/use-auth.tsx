@@ -9,13 +9,20 @@ import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
+// Define UserType for consistent use throughout the hook
+type UserType = { 
+  id: number; 
+  username: string; 
+  profilePicture?: string;
+};
+
 type AuthContextType = {
-  user: { id: number; username: string } | null;
+  user: UserType | null;
   isLoading: boolean;
   error: Error | null;
-  loginMutation: UseMutationResult<{ user: { id: number; username: string } }, Error, LoginData>;
+  loginMutation: UseMutationResult<{ user: UserType }, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
-  registerMutation: UseMutationResult<{ user: { id: number; username: string } }, Error, RegisterData>;
+  registerMutation: UseMutationResult<{ user: UserType }, Error, RegisterData>;
 };
 
 type LoginData = {
@@ -39,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   
   // Try to get user from localStorage if available
-  const [localUser, setLocalUser] = useState<{ id: number; username: string } | null>(() => {
+  const [localUser, setLocalUser] = useState<UserType | null>(() => {
     try {
       const storedUser = localStorage.getItem('akashic_user');
       return storedUser ? JSON.parse(storedUser) : null;
@@ -52,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     data: userData,
     error,
     isLoading,
-  } = useQuery<{ user: { id: number; username: string } } | undefined, Error>({
+  } = useQuery<{ user: UserType } | undefined, Error>({
     queryKey: ["/api/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
     staleTime: 1000 * 60 * 5, // Keep data fresh for 5 minutes
