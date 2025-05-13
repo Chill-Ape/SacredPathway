@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { v4 as uuidv4 } from "uuid";
 import ChatMessage from "@/components/oracle/ChatMessage";
+import useSound from "use-sound";
 import { motion } from "framer-motion";
 
 type SessionState = {

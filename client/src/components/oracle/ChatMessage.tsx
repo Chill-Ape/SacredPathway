@@ -10,7 +10,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ isUser, message, loading = false }: ChatMessageProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const typingSpeed = 60; // ms per character - faster but still mystical
+  const typingSpeed = 30; // ms per character - even faster but still has a mystical feel
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
     
     // Initialize audio for typewriter sound
     if (!audioRef.current) {
-      audioRef.current = new Audio("/sounds/typewriter.mp3");
+      audioRef.current = new Audio("/sounds/typewriter-key.mp3");
       audioRef.current.volume = 0.4; // Louder volume
     }
     
@@ -46,11 +46,15 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
           clone.volume = 0.3;
           
           try {
-            // Play the sound
-            clone.play().catch(e => console.log("Audio play prevented:", e));
-            
-            // Add slight variation to playback rate for more natural typing sound
-            clone.playbackRate = 0.8 + Math.random() * 0.4; // Between 0.8 and 1.2
+            // Only play sound every 2-3 characters for more authentic typing rhythm
+            if (currentIndex % 3 === 0 || currentIndex % 2 === 0) {
+              // Play the sound and make it a bit louder
+              clone.volume = 0.5;
+              clone.play().catch(e => console.log("Audio play prevented:", e));
+              
+              // Add slight variation to playback rate for more natural typing sound
+              clone.playbackRate = 0.8 + Math.random() * 0.4; // Between 0.8 and 1.2
+            }
           } catch (error) {
             console.log("Error playing sound:", error);
           }

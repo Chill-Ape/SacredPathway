@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Error><Code>NoSuchBucket</Code><Message>The specified bucket does not exist</Message><BucketName>astrosharedresources</BucketName><RequestId>FNZMJFXMMECGSKK2</RequestId><HostId>4SdlbqoRdFP9rq3iYE/eZT0tRLcLh0RmiOtIrMExIjLn9anYhrwJrUzmM0LJxAIZUk99tZNfGGs=</HostId></Error>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message><RequestId>HDP3G3BFKTTRFJ2P</RequestId><HostId>BRQWEtqibgUtA9+MB8Uc3UTZ8+vHy5H32cja5vwB5nCLvFuv1nfjIk+48wPXpTN3JsUAF3fdX3s=</HostId></Error>
