@@ -714,7 +714,9 @@ export class MemStorage implements IStorage {
     const newTransaction: ManaTransaction = {
       ...transaction,
       id,
-      createdAt
+      createdAt,
+      referenceId: transaction.referenceId || null,
+      stripePaymentIntentId: transaction.stripePaymentIntentId || null
     };
     
     this.manaTransactions.set(id, newTransaction);
@@ -744,7 +746,8 @@ export class MemStorage implements IStorage {
     const newPackage: ManaPackage = {
       ...manaPackage,
       id,
-      createdAt
+      createdAt,
+      isActive: manaPackage.isActive !== undefined ? manaPackage.isActive : true
     };
     
     this.manaPackages.set(id, newPackage);

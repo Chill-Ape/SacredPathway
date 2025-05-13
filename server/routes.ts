@@ -1,12 +1,13 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema, scrolls } from "@shared/schema";
+import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema, scrolls, insertManaTransactionSchema } from "@shared/schema";
 import OpenAI from "openai";
 import { PROMPTS } from "./config/prompts";
 import { getLoreContext } from "./utils/loreSearch";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
+import Stripe from "stripe";
 
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -431,6 +432,116 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error submitting contact form:", error);
       res.status(500).json({ message: "Failed to submit contact form" });
+    }
+  });
+
+  // MANA SYSTEM ROUTES
+  
+  // Get user's mana balance
+  app.get("/api/user/mana", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const balance = await storage.getUserManaBalance(req.user.id);
+      res.json({ balance });
+    } catch (error) {
+      console.error("Error fetching mana balance:", error);
+      res.status(500).json({ message: "Failed to fetch mana balance" });
+    }
+  });
+  
+  // Get user's mana transaction history
+  app.get("/api/user/mana/transactions", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const transactions = await storage.getUserManaTransactions(req.user.id);
+      res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching mana transactions:", error);
+      res.status(500).json({ message: "Failed to fetch mana transactions" });
+    }
+  });
+  
+  // Get available mana packages
+  app.get("/api/mana/packages", async (_req: Request, res: Response) => {
+    try {
+      const packages = await storage.getAllManaPackages();
+      res.json(packages);
+    } catch (error) {
+      console.error("Error fetching mana packages:", error);
+      res.status(500).json({ message: "Failed to fetch mana packages" });
+    }
+  });
+  
+  // Get specific mana package
+  app.get("/api/mana/packages/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid package ID" });
+      }
+      
+      const manaPackage = await storage.getManaPackageById(id);
+      if (!manaPackage) {
+        return res.status(404).json({ message: "Mana package not found" });
+      }
+      
+      res.json(manaPackage);
+    } catch (error) {
+      console.error("Error fetching mana package:", error);
+      res.status(500).json({ message: "Failed to fetch mana package" });
+    }
+  });
+  
+  // Spend mana to unlock a scroll
+  app.post("/api/user/mana/spend", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const { amount, scrollId, transactionType } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+      
+      // Check if user has enough mana
+      const currentBalance = await storage.getUserManaBalance(req.user.id);
+      if (currentBalance < amount) {
+        return res.status(400).json({ message: "Insufficient mana balance" });
+      }
+      
+      // Create the transaction record
+      const transaction = await storage.createManaTransaction({
+        userId: req.user.id,
+        amount: -amount, // Negative amount for spending
+        description: `Spent ${amount} mana to ${transactionType === 'scroll_unlock' ? 'unlock a scroll' : 'access content'}`,
+        transactionType: transactionType || 'scroll_unlock',
+        referenceId: scrollId ? scrollId.toString() : null,
+        stripePaymentIntentId: null
+      });
+      
+      // Update the user's mana balance
+      const newBalance = await storage.updateUserManaBalance(req.user.id, -amount);
+      
+      // If it's a scroll unlock, unlock the scroll for the user
+      if (transactionType === 'scroll_unlock' && scrollId) {
+        await storage.unlockScrollForUser(req.user.id, scrollId);
+      }
+      
+      res.json({
+        transaction,
+        newBalance
+      });
+    } catch (error) {
+      console.error("Error spending mana:", error);
+      res.status(500).json({ message: "Failed to process mana transaction" });
     }
   });
 
