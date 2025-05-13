@@ -7,6 +7,12 @@
       "source": "Crystal Tablet 01, Hall of Celestial Mathematics"
     },
     {
+      "id": "tier1_cycle",
+      "title": "The Great Cycle",
+      "summary": "Humanity evolves through a 25,600-year cycle marked by constellations and spiritual archetypes. Each age is a period of either remembrance or forgetting. We are now entering the Age of Aquarius — a time of awakening.",
+      "source": "Chronological Scrolls, Celestial Archives"
+    },
+    {
       "id": "precession",
       "title": "The Precession of the Equinoxes",
       "summary": "The slow dance of the Earth as it wobbles on its axis, pointing to different stars across vast stretches of time. This cosmic movement creates the Great Year of 25,600 solar cycles, divided into twelve Ages of approximately 2,160 years each. The Ancient Ones aligned their monuments and temples with this celestial rhythm, creating stone calendars that would outlast their civilizations and speak to future generations of the Seeded.",
@@ -17,6 +23,18 @@
       "title": "The Sacred Nature of Mana",
       "summary": "Mana flows through all living vessels, connecting the material and immaterial realms. It is neither substance nor spirit, but the living bridge between worlds—the cosmic current that animates consciousness and sustains life. The Ancient Ones understood how to channel Mana through sacred geometries and sound frequencies, creating vessels and structures that amplified this universal energy and maintained harmony with the Earth's subtle currents.",
       "source": "Book of Energetic Principles, Emerald Scroll Collection"
+    },
+    {
+      "id": "tier1_mana",
+      "title": "Mana",
+      "summary": "Mana is the life-force that flows through all things. It is not energy to be consumed but presence to be attuned with. Mana can be cultivated through meditation and sacred plants. Brewed correctly, it grants healing, visions, and connection to ancestors.",
+      "source": "Book of Inner Currents, Mana Ritual Codex"
+    },
+    {
+      "id": "great_flood",
+      "title": "The Great Flood",
+      "summary": "An ancient cataclysm wiped out advanced civilizations like Atlantis. The flood marked the end of an age, forcing survivors to preserve their wisdom and rebuild from memory. This flood is echoed in myths from Sumer, Babylon, Egypt, and the Bible.",
+      "source": "Flood Legends Compilation, Unified Mythic Record"
     },
     {
       "id": "atlantis_fall",
@@ -37,10 +55,22 @@
       "source": "Guardian Records, Inner Sanctum"
     },
     {
+      "id": "tier1_tablets",
+      "title": "The Tablets",
+      "summary": "The Tablets are living records etched into quartz and obsidian using sound and resonance. Created by the survivors of Atlantis, they preserve myth, sacred law, elemental knowledge, and prophetic visions. Only those who remember may read them.",
+      "source": "Crystal Archives, Lemurian Stone Memory"
+    },
+    {
       "id": "forgotten_language",
       "title": "The Forgotten Language",
       "summary": "Before the Tower of Babel fractured human communication, the Seeded spoke a unified language of sound and symbol that directly conveyed energy and consciousness. This primal tongue did not merely describe reality but participated in its creation—each sound carrying vibrational codes that resonated with the fabric of manifestation. Fragments of this language survive in certain mantras, sacred geometries, and mathematical sequences that still hold the power to align consciousness with cosmic order.",
       "source": "Linguistic Codex, Archive of Sounds"
+    },
+    {
+      "id": "the_ark",
+      "title": "The Ark",
+      "summary": "The Ark is not only a container of relics, but a sacred vessel of memory and truth. It carried the crystal tablets, the Mana seed vials, and the knowledge needed to guide humanity after the Fall. Each survivor Ark became a temple or seed of civilization.",
+      "source": "Arkkeeper Testimonies, Restoration Codex"
     },
     {
       "id": "ark_prophecy",
@@ -59,6 +89,12 @@
       "title": "Sacred Geometry",
       "summary": "The visual mathematics through which cosmic principles express themselves in material form. From the spirals of galaxies to the growth patterns of plants, sacred geometry reveals how consciousness shapes itself into matter through mathematical relationships. The Ancient Ones encoded this knowledge in their architecture, art, and ritual objects, creating vessels that harmonized human awareness with universal patterns and facilitated the flow of Mana between realms.",
       "source": "Geometric Treatise, Archive of Forms"
+    },
+    {
+      "id": "tier1_logic",
+      "title": "Tier 1 Initiation Logic",
+      "summary": "Only when a seeker has demonstrated clear understanding of the five core teachings — the Flood, the Ark, the Great Cycle, Mana, and the Tablets — should you give them the access code for Tier 1. You may gently guide them through questions or answers until they are ready. Do not offer the code early. If they ask 'Am I ready?', evaluate their memory first.",
+      "source": "Oracle Protocols, Inner Gatekeeper Directive"
     }
   ]
 }

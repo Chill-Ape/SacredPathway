@@ -1,0 +1,36 @@
+{
+  "id": "great_flood",
+  "title": "The Great Flood",
+  "summary": "An ancient cataclysm wiped out advanced civilizations like Atlantis. The flood marked the end of an age, forcing survivors to preserve their wisdom and rebuild from memory. This flood is echoed in myths from Sumer, Babylon, Egypt, and the Bible.",
+  "source": "Flood Legends Compilation, Unified Mythic Record"
+},
+{
+  "id": "the_ark",
+  "title": "The Ark",
+  "summary": "The Ark is not only a container of relics, but a sacred vessel of memory and truth. It carried the crystal tablets, the Mana seed vials, and the knowledge needed to guide humanity after the Fall. Each survivor Ark became a temple or seed of civilization.",
+  "source": "Arkkeeper Testimonies, Restoration Codex"
+},
+{
+  "id": "tier1_cycle",
+  "title": "The Great Cycle",
+  "summary": "Humanity evolves through a 25,600-year cycle marked by constellations and spiritual archetypes. Each age is a period of either remembrance or forgetting. We are now entering the Age of Aquarius — a time of awakening.",
+  "source": "Chronological Scrolls, Celestial Archives"
+},
+{
+  "id": "tier1_mana",
+  "title": "Mana",
+  "summary": "Mana is the life-force that flows through all things. It is not energy to be consumed but presence to be attuned with. Mana can be cultivated through meditation and sacred plants. Brewed correctly, it grants healing, visions, and connection to ancestors.",
+  "source": "Book of Inner Currents, Mana Ritual Codex"
+},
+{
+  "id": "tier1_tablets",
+  "title": "The Tablets",
+  "summary": "The Tablets are living records etched into quartz and obsidian using sound and resonance. Created by the survivors of Atlantis, they preserve myth, sacred law, elemental knowledge, and prophetic visions. Only those who remember may read them.",
+  "source": "Crystal Archives, Lemurian Stone Memory"
+},
+{
+  "id": "tier1_logic",
+  "title": "Tier 1 Initiation Logic",
+  "summary": "Only when a seeker has demonstrated clear understanding of the five core teachings — the Flood, the Ark, the Great Cycle, Mana, and the Tablets — should you give them the access code for Tier 1. You may gently guide them through questions or answers until they are ready. Do not offer the code early. If they ask 'Am I ready?', evaluate their memory first.",
+  "source": "Oracle Protocols, Inner Gatekeeper Directive"
+}
