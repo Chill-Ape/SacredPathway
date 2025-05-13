@@ -23,8 +23,11 @@ type LoginData = {
   password?: string;
 };
 
-// Use zod schema with required password
-const registerSchema = insertUserSchema.extend({
+// Create a schema with required password based on insertUserSchema properties
+const registerSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  email: z.string().email("Invalid email format"),
+  phone: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
