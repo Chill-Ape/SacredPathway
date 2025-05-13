@@ -102,8 +102,24 @@ const ManaPackages: React.FC = () => {
       }
       
       const data = await response.json();
-      console.log('Received session data with ID:', data.sessionId ? 'Valid session ID' : 'Missing session ID');
+      console.log('Received data:', data);
       
+      // Handle the case where authentication is required
+      if (data.requiresAuthentication) {
+        // This case should not normally occur because the component already checks for user
+        // before displaying purchase buttons, but we handle it for completeness
+        toast({
+          title: 'Authentication Required',
+          description: data.message || 'You need to be logged in to purchase Mana.',
+          variant: 'default',
+        });
+        
+        // Redirect to auth page with return URL
+        window.location.href = `/auth?redirect=${encodeURIComponent('/mana')}`;
+        return;
+      }
+      
+      // Check for session ID which is needed for Stripe checkout
       if (!data.sessionId) {
         throw new Error('No session ID received from server');
       }

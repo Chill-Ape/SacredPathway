@@ -620,6 +620,7 @@ export class MemStorage implements IStorage {
     this.contactMessages = new Map();
     this.manaTransactions = new Map();
     this.manaPackages = new Map();
+    this.oracleUsageBySession = new Map();
     
     // Initialize session store
     this.sessionStore = new MemoryStore({
@@ -915,6 +916,47 @@ export class MemStorage implements IStorage {
     this.scrolls.set(id, scroll);
     
     return scroll;
+  }
+  
+  // Oracle usage tracking methods
+  async getOracleSessionCount(userId: string, date: string): Promise<number> {
+    try {
+      // Check if we have data for this session
+      const sessionData = this.oracleUsageBySession.get(userId);
+      if (!sessionData) {
+        return 0;
+      }
+      
+      // Check if we have data for this date
+      return sessionData.get(date) || 0;
+    } catch (error) {
+      console.error("Error getting Oracle session count:", error);
+      return 0;
+    }
+  }
+  
+  async incrementOracleSessionCount(userId: string, date: string): Promise<number> {
+    try {
+      // Check if we have a map for this session
+      if (!this.oracleUsageBySession.has(userId)) {
+        this.oracleUsageBySession.set(userId, new Map<string, number>());
+      }
+      
+      // Get the map for this session
+      const sessionData = this.oracleUsageBySession.get(userId)!;
+      
+      // Get current count for this date
+      const currentCount = sessionData.get(date) || 0;
+      const newCount = currentCount + 1;
+      
+      // Update the count
+      sessionData.set(date, newCount);
+      
+      return newCount;
+    } catch (error) {
+      console.error("Error incrementing Oracle session count:", error);
+      return 1; // Default to 1 if there's an error
+    }
   }
   
   // INITIALIZE DEFAULT DATA
