@@ -6,7 +6,7 @@ import { Loader2, Scroll as ScrollIcon, Lock, LockOpen, Upload, Camera, UserCirc
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -29,12 +29,8 @@ import {
 
 // Define types for the component props
 interface ProfilePictureSectionProps {
-  user: {
-    id: number;
-    username: string;
-    profilePicture?: string;
-  };
-  onUpdate: (user: any) => void;
+  user: UserType;
+  onUpdate: (user: UserType) => void;
 }
 
 // Component for profile picture upload and customization
@@ -206,7 +202,7 @@ export default function Profile() {
         {/* Profile Picture Section */}
         <ProfilePictureSection 
           user={userData} 
-          onUpdate={(updatedUser) => setUserData(updatedUser)} 
+          onUpdate={(updatedUser: UserType) => setUserData(updatedUser)} 
         />
 
         {/* User Stats */}

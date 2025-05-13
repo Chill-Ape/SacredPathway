@@ -38,6 +38,7 @@ declare global {
       phone: string | null;
       manaBalance: number;
       stripeCustomerId: string | null;
+      profilePicture: string | null;
       createdAt: Date;
     }
   }
