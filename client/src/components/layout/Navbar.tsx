@@ -4,6 +4,7 @@ import Logo from "@/components/ui/Logo";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import ProfileMenu from "@/components/layout/ProfileMenu";
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -43,6 +44,7 @@ export default function Navbar() {
                 </span>
               </Link>
             ))}
+            <ProfileMenu />
           </div>
           
           {/* Mobile menu button */}
