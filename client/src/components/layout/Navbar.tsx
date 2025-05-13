@@ -11,48 +11,24 @@ export default function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
-  const [cachedUser, setCachedUser] = useState(() => {
-    // Initialize from localStorage if available
-    try {
-      const storedUser = localStorage.getItem('akashic_user');
-      return storedUser ? JSON.parse(storedUser) : null;
-    } catch (e) {
-      return null;
-    }
-  });
   
-  // Update cached user when user state changes
+  // State to keep track of whether user was authenticated previously
+  const [wasAuthenticated, setWasAuthenticated] = useState(false);
+  
+  // When authentication changes, update wasAuthenticated status
   useEffect(() => {
     if (user) {
-      setCachedUser(user);
-      // Store in localStorage
-      localStorage.setItem('akashic_user', JSON.stringify(user));
-    } else {
-      // If user is null (logged out), clear the cached user too
-      setCachedUser(null);
-      // Clear from localStorage
-      localStorage.removeItem('akashic_user');
+      setWasAuthenticated(true);
     }
   }, [user]);
   
-  // Clear localStorage on logout
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedUser = localStorage.getItem('akashic_user');
-      if (!storedUser) {
-        setCachedUser(null);
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-  
-  // Use either the current user state or the cached version to prevent flickering
-  const currentUser = user || cachedUser;
+  // Reset wasAuthenticated on explicit logout
+  const handleLogout = () => {
+    setWasAuthenticated(false);
+  };
   
   // Debug
-  console.log("Navbar - User:", user, "Cached user:", cachedUser, "Current user:", currentUser);
+  console.log("Navbar - User:", user, "Was authenticated:", wasAuthenticated);
   
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -88,7 +64,11 @@ export default function Navbar() {
                 </span>
               </Link>
             ))}
-            <ProfileMenu />
+            <ProfileMenu 
+              forcedUser={user}
+              wasAuthenticated={wasAuthenticated}
+              onLogout={handleLogout}
+            />
           </div>
           
           {/* Mobile menu button */}
@@ -135,7 +115,12 @@ export default function Navbar() {
               {/* Login/Profile button in mobile menu */}
               <div className="py-3 border-t border-sacred-blue/10 mt-3">
                 <div className="flex justify-center" onClick={() => setIsMobileMenuOpen(false)}>
-                  {!isLoading && <ProfileMenu isMobile={true} forcedUser={currentUser} />}
+                  {!isLoading && <ProfileMenu 
+                    isMobile={true} 
+                    forcedUser={user} 
+                    wasAuthenticated={wasAuthenticated}
+                    onLogout={handleLogout} 
+                  />}
                 </div>
               </div>
             </div>

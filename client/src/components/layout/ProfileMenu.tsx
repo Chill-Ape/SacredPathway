@@ -15,20 +15,31 @@ import { User, LogOut, Library } from "lucide-react";
 type ProfileMenuProps = {
   isMobile?: boolean;
   forcedUser?: { id: number; username: string } | null;
+  wasAuthenticated?: boolean;
+  onLogout?: () => void;
 };
 
-export default function ProfileMenu({ isMobile = false, forcedUser = null }: ProfileMenuProps) {
+export default function ProfileMenu({ 
+  isMobile = false, 
+  forcedUser = null,
+  wasAuthenticated = false,
+  onLogout
+}: ProfileMenuProps) {
   const { user: authUser, logoutMutation } = useAuth();
   const [location] = useLocation();
   
   // Use either the forcedUser (from parent) or the authUser (from context)
   const user = forcedUser || authUser;
+  
+  console.log("ProfileMenu - User:", user, "Was authenticated:", wasAuthenticated);
 
   const handleLogout = () => {
     console.log("Logging out user...");
     
-    // Clear user data from localStorage immediately to prevent UI flicker
-    localStorage.removeItem('akashic_user');
+    // Call the parent component's onLogout callback if provided
+    if (onLogout) {
+      onLogout();
+    }
     
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
@@ -44,6 +55,25 @@ export default function ProfileMenu({ isMobile = false, forcedUser = null }: Pro
 
   // Handle the case when user is not logged in
   if (!user) {
+    // If wasAuthenticated is true, show a loading profile button
+    if (wasAuthenticated) {
+      return (
+        <Button
+          variant="outline"
+          className={`font-cinzel text-sacred-blue border-sacred-blue/20 transition-all ${
+            isMobile ? "w-full justify-center" : ""
+          }`}
+          disabled
+        >
+          <div className="flex items-center">
+            <div className="h-5 w-5 rounded-full bg-sacred-blue/10 animate-pulse mr-2"></div>
+            <span>Loading...</span>
+          </div>
+        </Button>
+      );
+    }
+    
+    // Normal login button
     return (
       <Link to="/auth">
         <Button
