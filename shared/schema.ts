@@ -1,16 +1,15 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, primaryKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
+
+// Define tables first
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
-
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+  password: text("password"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const scrolls = pgTable("scrolls", {
@@ -21,6 +20,48 @@ export const scrolls = pgTable("scrolls", {
   isLocked: boolean("is_locked").notNull().default(true),
   key: text("key").notNull(), // Key phrase to unlock the scroll
 });
+
+// Define userScrolls relation table - using forward references
+export const userScrolls = pgTable("user_scrolls", {
+  userId: integer("user_id").notNull(),
+  scrollId: integer("scroll_id").notNull(),
+  unlockedAt: timestamp("unlocked_at").notNull().defaultNow(),
+}, (t) => ({
+  pk: primaryKey({ columns: [t.userId, t.scrollId] }),
+}));
+
+// Define relationships
+
+export const usersRelations = relations(users, ({ many }) => ({
+  unlockedScrolls: many(userScrolls),
+}));
+
+export const scrollsRelations = relations(scrolls, ({ many }) => ({
+  unlockedBy: many(userScrolls),
+}));
+
+export const userScrollsRelations = relations(userScrolls, ({ one }) => ({
+  user: one(users, {
+    fields: [userScrolls.userId],
+    references: [users.id],
+  }),
+  scroll: one(scrolls, {
+    fields: [userScrolls.scrollId],
+    references: [scrolls.id],
+  }),
+}));
+
+// Define insert schemas
+
+// User insert schema with optional password for username-only registration
+export const insertUserSchema = createInsertSchema(users)
+  .pick({
+    username: true,
+    password: true,
+  })
+  .partial({
+    password: true,
+  });
 
 export const insertScrollSchema = createInsertSchema(scrolls).pick({
   title: true,
@@ -80,6 +121,12 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export type Scroll = typeof scrolls.$inferSelect;
 export type InsertScroll = z.infer<typeof insertScrollSchema>;
+
+export type UserScroll = typeof userScrolls.$inferSelect;
+export const insertUserScrollSchema = createInsertSchema(userScrolls).pick({
+  userId: true,
+  scrollId: true,
+});
 
 export type OracleMessage = typeof oracleMessages.$inferSelect;
 export type InsertOracleMessage = z.infer<typeof insertOracleMessageSchema>;

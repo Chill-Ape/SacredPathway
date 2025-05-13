@@ -31,6 +31,11 @@ export interface IStorage {
   unlockScroll(id: number): Promise<Scroll | undefined>;
   checkScrollKey(id: number, key: string): Promise<boolean>;
   
+  // User-Scroll relation methods
+  getUserUnlockedScrolls(userId: number): Promise<Scroll[]>;
+  unlockScrollForUser(userId: number, scrollId: number): Promise<boolean>;
+  isScrollUnlockedForUser(userId: number, scrollId: number): Promise<boolean>;
+  
   // Oracle message methods
   getOracleMessages(userId: string): Promise<OracleMessage[]>;
   createOracleMessage(message: InsertOracleMessage): Promise<OracleMessage>;
@@ -210,6 +215,7 @@ export class DatabaseStorage implements IStorage {
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private scrolls: Map<number, Scroll>;
+  private userScrolls: Map<string, UserScroll>; // key in format "userId-scrollId"
   private oracleMessages: Map<number, OracleMessage>;
   private keeperMessages: Map<number, KeeperMessage>;
   private contactMessages: Map<number, ContactMessage>;
@@ -250,7 +256,13 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
+    const createdAt = new Date();
+    const user: User = { 
+      ...insertUser, 
+      id, 
+      createdAt,
+      password: insertUser.password || null 
+    };
     this.users.set(id, user);
     return user;
   }
