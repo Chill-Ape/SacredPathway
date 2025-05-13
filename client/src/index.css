@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 20 14.3% 4.1%;
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --primary: 207 90% 24%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 220 14.5% 30%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 220 14.5% 30%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --ring: 207 90% 54%;
+    
+    /* Sacred custom colors */
+    --sacred-white: 0 0% 97%;
+    --sacred-blue-light: 214 50% 35%;
+    --sacred-blue: 214 60% 24%;
+    --sacred-blue-dark: 214 70% 16%;
+    --sacred-gold: 36 78% 42%;
+    --sacred-gray: 220 16% 36%;
+    --sacred-unlock: 142 71% 45%;
+    --sacred-lock: 220 14% 63%;
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 20% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --primary: 207 90% 54%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --ring: 207 90% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-sacred-white text-foreground font-raleway;
+  }
+}
+
+/* Fonts */
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-raleway {
+  font-family: 'Raleway', sans-serif;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--sacred-blue));
+  border-radius: 4px;
+}
+
+/* Sacred pattern background */
+.sacred-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232C5282' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Custom page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms, transform 400ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 400ms, transform 400ms;
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1.2s ease-in-out forwards;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 1.2s ease-out forwards;
+}
+
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-700 { animation-delay: 0.7s; }
+.animate-delay-1000 { animation-delay: 1s; }
+
+/* Sacred blue colors */
+.bg-sacred-white {
+  background-color: hsl(var(--sacred-white));
+}
+.bg-sacred-blue {
+  background-color: hsl(var(--sacred-blue));
+}
+.bg-sacred-blue-light {
+  background-color: hsl(var(--sacred-blue-light));
+}
+.bg-sacred-blue-dark {
+  background-color: hsl(var(--sacred-blue-dark));
+}
+.bg-sacred-gold {
+  background-color: hsl(var(--sacred-gold));
+}
+
+.text-sacred-blue {
+  color: hsl(var(--sacred-blue));
+}
+.text-sacred-blue-light {
+  color: hsl(var(--sacred-blue-light));
+}
+.text-sacred-gold {
+  color: hsl(var(--sacred-gold));
+}
+.text-sacred-gray {
+  color: hsl(var(--sacred-gray));
+}
+.text-sacred-white {
+  color: hsl(var(--sacred-white));
+}
+.text-sacred-unlock {
+  color: hsl(var(--sacred-unlock));
+}
+.text-sacred-lock {
+  color: hsl(var(--sacred-lock));
+}
+
+.border-sacred-blue {
+  border-color: hsl(var(--sacred-blue));
+}
