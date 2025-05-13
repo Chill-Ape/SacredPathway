@@ -34,7 +34,7 @@ export default function KeeperMessage({ isUser, message, loading = false }: Keep
               <p key={index} className={cn(
                 "m-0",
                 index > 0 && "mt-2",
-                !isUser && "font-raleway text-gray-800"
+                !isUser && "font-cinzel text-gray-800 leading-relaxed"
               )}>
                 {paragraph}
               </p>
