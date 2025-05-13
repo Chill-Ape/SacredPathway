@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+// Import the ancient tablet dark image for the scroll
+import ancientTabletDarkImage from "@assets/ChatGPT Image Apr 24, 2025, 06_22_14 PM.png";
 
 interface ScrollData {
   title: string;
@@ -31,19 +33,38 @@ export default function SacredScroll() {
         setLoading(true);
         console.log("Attempting to fetch data for scroll ID:", scrollId);
         
-        // For "Legacy of the Lost Age" (id 37), we'll use our special ancient-civilizations-scroll.json
+        // For "Legacy of the Lost Age" (id 37), use hardcoded data
         if (scrollId === 37) {
-          console.log("Fetching ancient-civilizations-scroll.json via API endpoint");
-          const response = await fetch('/api/sacred-scrolls/ancient-civilizations');
+          console.log("Using hardcoded ancient civilizations scroll data");
           
-          if (!response.ok) {
-            console.error("Fetch error status:", response.status);
-            throw new Error("Failed to fetch sacred scroll data");
-          }
+          const scrollData = {
+            title: "Ancient Civilizations, Flood Myths, and the Legacy of a Lost Age",
+            pages: [
+              {
+                title: "Introduction",
+                content: "Many ancient cultures recount a great flood that devastated the world, sparing only a few survivors. These flood myths often coincide with the dawn of civilization in Mesopotamia and Egypt. Early archaeological evidence from ancient Mesopotamia – notably the city of Eridu – and from predynastic Egypt reveals surprisingly sophisticated development, including large temples and the first pyramids. Curiously, some myths and ruins hint that the earliest phases of these civilizations might have drawn on knowledge inherited from an even earlier age."
+              },
+              {
+                title: "Timeline of Early Developments and Flood Events",
+                content: "c. 10,000 BC (12,000 years ago) – End of the Ice Age; global climate warms and glaciers melt. Sea levels rise ~120 m from the Last Glacial Maximum to 8000 BP (ca. 6000 BC), inundating coastal plains. This period includes events like Meltwater Pulse 1A (a rapid sea-level jump) and has been proposed as the time of a great cataclysmic flood.\n\nc. 7500 BC – The low-lying \"Gulf Oasis\" (land under the present Persian Gulf) is completely flooded by rising seas. Archaeological studies note a \"sudden increase in settlements\" above the old shoreline around this time, suggesting displaced populations moved into Mesopotamia.\n\nc. 5400 BC – Eridu, in southern Mesopotamia (modern Iraq), is founded during the Ubaid period. According to excavation, Eridu was built on virgin sand dunes near what was then the shoreline of the Persian Gulf. It becomes one of the earliest known cities in the world."
+              },
+              {
+                title: "Timeline of Civilizations (cont.)",
+                content: "c. 4000–3000 BC – Rapid growth of civilizations: In Mesopotamia, the Uruk period sees the emergence of large urban centers (e.g. Uruk itself) and the invention of writing (cuneiform) by the late 4th millennium BC. Eridu continues to be inhabited and remains an important religious center. In Northeast Africa, Predynastic Egypt develops along the Nile. Small villages coalesce into larger entities; by c. 3100 BC, King Narmer (Menes) unifies Upper and Lower Egypt, founding the First Dynasty and beginning the Early Dynastic Period.\n\nc. 2900 BC – Traditional date for a great flood in Mesopotamia. Archaeologists have found a distinctive 60 cm layer of mud and silt at the city of Shuruppak (Tell Fara) separating Jemdet Nasr and Early Dynastic strata, indicating a major flood event. Similar flood layers are noted at other Mesopotamian sites (though not all at the same date, consistent with periodic river floods)."
+              },
+              {
+                title: "Timeline of Civilizations (cont.)",
+                content: "c. 2650 BC – The Egyptian architect Imhotep designs the Step Pyramid of Djoser at Saqqara, marking the first monumental stone pyramid. This marvel of engineering (approximately 60 m tall, with six tiers) inaugurates the age of pyramid-building in Egypt.\n\nc. 2600–2500 BC – Height of Old Kingdom Egypt. Pharaohs Sneferu, Khufu, Khafre, Menkaure build the great pyramids. The Great Pyramid of Giza (Khufu's pyramid, c. 2550 BC) stands as the largest and most precisely constructed pyramid, aligned almost perfectly to the cardinal directions. These early pyramids showcase advanced architectural knowledge (massive scale, precise cut stone masonry) that later generations did not surpass.\n\nc. 2400–1800 BC – Mesopotamian scribes record the flood myths in writing. The Sumerian Eridu Genesis (earliest version c. 17th century BC) tells of Ziusudra and the flood, while the Old Babylonian Epic of Atrahasis (c. eighteenth century BC) and later the Epic of Gilgamesh (flood story in Tablet XI, recorded by ~1200 BC from earlier sources) preserve the tale of Utnapishtim."
+              },
+              {
+                title: "Flood Myths Across Cultures",
+                content: "The Mesopotamian accounts describe a great flood sent by the gods to destroy humanity. In the Epic of Gilgamesh, the hero meets the survivor Utnapishtim who tells how Ea (Enki), the god of wisdom, warned him to build a boat and save his family and animals. Following a seven-day flood that destroyed mankind, the boat landed on a mountain, and Utnapishtim released birds to find dry land.\n\nThe Hebrew Bible's account of Noah's Ark (recorded ~6th century BC but based on older traditions) parallels the Mesopotamian versions in many details, including the divine warning, the ark's construction, the animals, the mountain landing, and the bird releases. This account was later inherited by Christianity and Islam.\n\nAcross the world, over 200 different flood myths exist, from ancient China (Yu the Great) and India (Manu) to the Americas (Maya, Hopi) and Pacific Islands. While some may reflect local flooding, the striking similarities in myths worldwide have led some to suggest they preserve a memory of catastrophic post-glacial sea level rise."
+              }
+            ]
+          };
           
-          const data = await response.json();
-          console.log("Successfully loaded scroll data:", data.title);
-          setScrollData(data);
+          setScrollData(scrollData);
+          console.log("Successfully loaded scroll data:", scrollData.title);
         } else {
           try {
             const response = await fetch(`/api/scrolls/${scrollId}`);
@@ -134,7 +155,7 @@ export default function SacredScroll() {
       className="min-h-screen py-8 px-4 bg-sacred-light"
     >
       <Helmet>
-        <title>{scrollData.title} | Page {currentPage + 1} of {scrollData.pages.length} | The Akashic Archive</title>
+        <title>{`${scrollData.title} | Page ${currentPage + 1} of ${scrollData.pages.length} | The Akashic Archive`}</title>
         <meta name="description" content={`Reading ${scrollData.title}: ${currentPageData.title}. An ancient scroll from the Akashic Archives.`} />
       </Helmet>
       
@@ -145,11 +166,13 @@ export default function SacredScroll() {
           <span className="font-cinzel">Return to Scrolls</span>
         </Link>
         
-        {/* Scroll container with parchment background */}
+        {/* Scroll container with background */}
         <div 
           className="relative rounded-lg overflow-hidden shadow-xl mb-8"
           style={{ 
-            backgroundImage: "url('/images/parchment-bg.jpg')", 
+            backgroundImage: scrollId === 37 
+              ? `url(${ancientTabletDarkImage})` 
+              : "url('/images/parchment-bg.jpg')", 
             backgroundSize: "cover",
             backgroundPosition: "center"
           }}
