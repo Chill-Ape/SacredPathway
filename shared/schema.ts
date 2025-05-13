@@ -60,6 +60,20 @@ export const insertContactMessageSchema = createInsertSchema(contactMessages).pi
   message: true,
 });
 
+export const keeperMessages = pgTable("keeper_messages", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(), // Session ID or user ID
+  content: text("content").notNull(),
+  isUser: boolean("is_user").notNull(), // true if user, false if Keeper
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertKeeperMessageSchema = createInsertSchema(keeperMessages).pick({
+  userId: true,
+  content: true,
+  isUser: true,
+});
+
 // Type exports
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -72,3 +86,6 @@ export type InsertOracleMessage = z.infer<typeof insertOracleMessageSchema>;
 
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
+
+export type KeeperMessage = typeof keeperMessages.$inferSelect;
+export type InsertKeeperMessage = z.infer<typeof insertKeeperMessageSchema>;
