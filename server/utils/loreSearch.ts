@@ -26,16 +26,24 @@ function loadLoreData(): LoreData {
     
     // First try to load from the new location in the root directory
     try {
-      const rootFilePath = path.join(__dirname, '../../../keeper_lore.json');
+      const rootFilePath = path.join(__dirname, '../../../oracle_knowledge.json');
       const rootData = fs.readFileSync(rootFilePath, 'utf8');
       return JSON.parse(rootData);
     } catch (rootError) {
-      console.log('Falling back to legacy lore file location');
-      
-      // Fall back to the original location
-      const filePath = path.join(__dirname, '../config/lore.json');
-      const data = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(data);
+      // Try the old keeper_lore.json if oracle_knowledge.json doesn't exist yet
+      try {
+        console.log('Trying keeper_lore.json as fallback');
+        const keeperFilePath = path.join(__dirname, '../../../keeper_lore.json');
+        const keeperData = fs.readFileSync(keeperFilePath, 'utf8');
+        return JSON.parse(keeperData);
+      } catch (keeperError) {
+        console.log('Falling back to legacy lore file location');
+        
+        // Fall back to the original location
+        const filePath = path.join(__dirname, '../config/lore.json');
+        const data = fs.readFileSync(filePath, 'utf8');
+        return JSON.parse(data);
+      }
     }
   } catch (error) {
     console.error('Error loading lore data:', error);
