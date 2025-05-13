@@ -56,6 +56,8 @@ export interface IStorage {
   // Oracle message methods
   getOracleMessages(userId: string): Promise<OracleMessage[]>;
   createOracleMessage(message: InsertOracleMessage): Promise<OracleMessage>;
+  getOracleSessionCount(userId: string, date: string): Promise<number>; // Get Oracle usage count for anonymous users
+  incrementOracleSessionCount(userId: string, date: string): Promise<number>; // Increment Oracle usage count
   
   // Keeper message methods
   getKeeperMessages(userId: string): Promise<KeeperMessage[]>;

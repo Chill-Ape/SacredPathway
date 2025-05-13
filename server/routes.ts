@@ -364,6 +364,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/oracle/message", async (req: Request, res: Response) => {
     try {
       const messageData = insertOracleMessageSchema.parse(req.body);
+      const userId = messageData.userId;
+      
+      // Define Oracle usage costs
+      const ORACLE_COST = 5; // Mana cost per Oracle query
+      const FREE_DAILY_QUERIES = 3; // Number of free queries for non-authenticated users
+      
+      // Check for anonymous (non-authenticated) users' limits
+      if (!req.isAuthenticated()) {
+        // For anonymous users, check against session-based daily limit
+        const todayDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const sessionKey = `oracle_${userId}_${todayDate}`;
+        
+        // Try to get session counter from storage
+        let dailyCount = await storage.getOracleSessionCount(userId, todayDate);
+        
+        if (dailyCount >= FREE_DAILY_QUERIES) {
+          return res.status(403).json({ 
+            message: "You have reached your daily Oracle consultation limit. Create an account and purchase Mana to continue your journey with the Oracle.",
+            requiresMana: true
+          });
+        }
+        
+        // Increment the daily count
+        await storage.incrementOracleSessionCount(userId, todayDate);
+      } else {
+        // For authenticated users, check and deduct Mana
+        const authenticatedUserId = req.user.id;
+        
+        // Get current Mana balance
+        const manaBalance = await storage.getUserManaBalance(authenticatedUserId);
+        
+        if (manaBalance < ORACLE_COST) {
+          return res.status(403).json({ 
+            message: "Your Mana is insufficient to consult the Oracle. Acquire more Mana to continue your journey.",
+            requiresMana: true
+          });
+        }
+        
+        // Deduct Mana for the Oracle consultation
+        await storage.updateUserManaBalance(authenticatedUserId, -ORACLE_COST);
+        
+        // Record the transaction
+        await storage.createManaTransaction({
+          userId: authenticatedUserId,
+          amount: -ORACLE_COST,
+          description: "Oracle consultation",
+          transactionType: "ORACLE_QUERY"
+        });
+      }
       
       // Store the user's message
       const savedMessage = await storage.createOracleMessage(messageData);
