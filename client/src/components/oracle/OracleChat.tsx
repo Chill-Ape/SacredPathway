@@ -42,7 +42,7 @@ export default function OracleChat() {
   });
   
   // Send message mutation
-  const sendMessageMutation = useMutation({
+  const { mutate: sendMessage, isPending } = useMutation({
     mutationFn: async (newMessage: string) => {
       if (!session) throw new Error("No active session");
       
@@ -76,12 +76,8 @@ export default function OracleChat() {
     
     if (!message.trim()) return;
     
-    try {
-      await sendMessageMutation.mutateAsync(message);
-      setMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
+    sendMessage(message);
+    setMessage("");
   };
   
   if (!session) {
@@ -166,7 +162,7 @@ export default function OracleChat() {
           ))}
           
           {/* Mutation loading state */}
-          {sendMessageMutation.isPending && (
+          {isPending && (
             <div className="flex items-start mb-4">
               <div className="w-8 h-8 rounded-full bg-oracle-deep-purple flex items-center justify-center text-oracle-gold mr-3 flex-shrink-0 animate-oracle-pulse">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -196,12 +192,12 @@ export default function OracleChat() {
             style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.05rem" }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            disabled={sendMessageMutation.isPending}
+            disabled={isPending}
           />
           <Button
             type="submit"
             className="bg-oracle-navy hover:bg-oracle-deep-purple border border-oracle-gold/40 text-oracle-gold font-cinzel tracking-wide py-6 rounded-r-lg transition-colors duration-300"
-            disabled={sendMessageMutation.isPending || !message.trim()}
+            disabled={isPending || !message.trim()}
           >
             <Send className="h-5 w-5 mr-2" />
             Ask
