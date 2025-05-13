@@ -92,13 +92,14 @@ export class DatabaseStorage implements IStorage {
       console.log("Creating database tables if they don't exist");
       
       try {
-        // First check if the scrolls table exists by fetching data
-        const scrollCount = await db.select({ count: db.fn.count() }).from(scrolls);
-        if (!scrollCount[0] || Number(scrollCount[0].count) === 0) {
-          console.log("Creating default scrolls");
+        // Check if we have any scrolls in the database 
+        const existingScrolls = await db.select().from(scrolls);
+        
+        if (existingScrolls.length === 0) {
+          console.log("Scrolls table is empty, creating default scrolls");
           await this._initializeDefaultScrolls();
         } else {
-          console.log("Scrolls already exist:", scrollCount[0].count);
+          console.log("Scrolls already exist:", existingScrolls.length);
         }
       } catch (err) {
         // If the table doesn't exist yet, we'll get an error
@@ -334,6 +335,14 @@ export class DatabaseStorage implements IStorage {
     });
     
     // Locked scrolls
+    await this.createScroll({
+      title: "Legacy of the Lost Age",
+      content: "Many ancient cultures share flood myths coinciding with the dawn of civilization. Archaeological evidence from Eridu (founded 5400 BC) shows eighteen superimposed temples built over millennia. The Sumerian King List names Eridu as the first city where 'kingship descended from heaven.' This ancient city became the template for later Mesopotamian civilization, and its flood stories echo across cultures. The Great Flood, dated by evidence to around 2900 BC, marks a division between mythic time and historical time. Were the elaborate myths and monumental architecture of early Egypt and Mesopotamia preserving knowledge from an even earlier, now-lost civilization?",
+      image: "/assets/ancient_civilization.png",
+      isLocked: true,
+      key: "lost-age"
+    });
+    
     await this.createScroll({
       title: "The Flood",
       content: "Chronicles of the great deluge that changed the course of humanity and ushered in a new age. When the waters rose, they cleansed the world of the corrupted consciousness that had forgotten its divine origins. Those who remembered the sacred knowledge retreated to high places, preserving the wisdom for the new cycle to come.",
