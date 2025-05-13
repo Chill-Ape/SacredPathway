@@ -61,6 +61,7 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        turquoise: "#4AD9D9", // Turquoise blue color for Oracle chat
       },
       keyframes: {
         "accordion-down": {

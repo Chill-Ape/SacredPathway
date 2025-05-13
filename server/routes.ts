@@ -393,6 +393,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 // Generate oracle response using OpenAI
 async function generateOracleResponse(userMessage: string): Promise<string> {
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is missing");
+      return "The Oracle's connection to the cosmic wisdom is temporarily unavailable. Please try again soon.";
+    }
+
+    // Check if we should include relevant lore context
+    const loreContext = getLoreContext(userMessage);
+    const fullPrompt = loreContext ? `${loreContext}\n\nUser Query: ${userMessage}` : userMessage;
+
     // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
@@ -403,10 +412,10 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
         },
         {
           role: "user",
-          content: userMessage
+          content: fullPrompt
         }
       ],
-      max_tokens: 250,
+      max_tokens: 300,
       temperature: 0.7,
     });
 

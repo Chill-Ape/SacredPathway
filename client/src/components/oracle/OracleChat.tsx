@@ -121,9 +121,9 @@ export default function OracleChat() {
       </div>
       
       {/* Oracle chat interface */}
-      <div className="p-6 bg-oracle-midnight/95 rounded-lg">
+      <div className="p-6 bg-white rounded-lg shadow-md">
         <motion.div 
-          className={`bg-oracle-deep-purple/30 rounded-lg p-4 h-80 overflow-y-auto mb-4 border border-oracle-gold/10 ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
+          className={`bg-turquoise rounded-lg p-4 h-80 overflow-y-auto mb-4 border border-oracle-gold/20 ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
