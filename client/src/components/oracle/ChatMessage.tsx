@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 
 interface ChatMessageProps {
   isUser: boolean;
@@ -7,6 +8,51 @@ interface ChatMessageProps {
 }
 
 export default function ChatMessage({ isUser, message, loading = false }: ChatMessageProps) {
+  const [displayedText, setDisplayedText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const typingSpeed = 40; // ms per character
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  useEffect(() => {
+    // Only do typewriter effect for Oracle messages, not user messages
+    if (isUser) {
+      setDisplayedText(message);
+      return;
+    }
+    
+    // Initialize audio for typewriter sound
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/sounds/typewriter.mp3");
+      audioRef.current.volume = 0.2;
+    }
+    
+    let currentIndex = 0;
+    setIsTyping(true);
+    
+    // Progressively reveal text with typewriter effect
+    const interval = setInterval(() => {
+      if (currentIndex < message.length) {
+        setDisplayedText(message.substring(0, currentIndex + 1));
+        currentIndex++;
+        
+        // Play typewriter sound
+        if (audioRef.current) {
+          // Reset and play for better sound effect continuity
+          const clone = audioRef.current.cloneNode() as HTMLAudioElement;
+          clone.volume = 0.1;
+          clone.play().catch(e => console.log("Audio play prevented:", e));
+        }
+      } else {
+        clearInterval(interval);
+        setIsTyping(false);
+      }
+    }, typingSpeed);
+    
+    return () => {
+      clearInterval(interval);
+      setIsTyping(false);
+    };
+  }, [message, isUser]);
   return (
     <motion.div 
       className={`flex items-start mb-4 ${isUser ? 'justify-end' : ''}`}
@@ -37,10 +83,11 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
           isUser 
             ? 'font-garamond text-oracle-soft-gold/90' 
             : 'font-garamond text-oracle-gold'
-          } ${loading ? 'animate-pulse' : ''}`}
+          } ${loading ? 'animate-pulse' : ''} ${isTyping && !isUser ? 'oracle-typing' : ''}`}
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          {message}
+          {isUser ? message : displayedText}
+          {isTyping && !isUser && <span className="oracle-cursor">|</span>}
         </p>
       </div>
       

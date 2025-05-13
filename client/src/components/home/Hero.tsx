@@ -351,7 +351,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          The Sacred Archive
+          The Akashic Archive
         </motion.h1>
         
         {/* Sacred divider with animation */}

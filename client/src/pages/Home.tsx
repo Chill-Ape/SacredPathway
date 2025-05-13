@@ -42,8 +42,8 @@ export default function Home() {
       className="min-h-screen"
     >
       <Helmet>
-        <title>The Sacred Archive | Ancient Wisdom & Mystical Knowledge</title>
-        <meta name="description" content="Explore The Sacred Archive - a repository of timeless wisdom connecting past, present, and future through ancient teachings preserved since the dawn of consciousness." />
+        <title>The Akashic Archive | Ancient Wisdom & Mystical Knowledge</title>
+        <meta name="description" content="Explore The Akashic Archive - a repository of timeless wisdom connecting past, present, and future through ancient teachings preserved since the dawn of consciousness." />
       </Helmet>
       
       <Hero />
