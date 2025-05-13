@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useState, useEffect } from "react";
 import {
   useQuery,
   useMutation,
@@ -37,6 +37,16 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
+  
+  // Try to get user from localStorage if available
+  const [localUser, setLocalUser] = useState<{ id: number; username: string } | null>(() => {
+    try {
+      const storedUser = localStorage.getItem('akashic_user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   
   const {
     data: userData,
@@ -116,6 +126,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await apiRequest("POST", "/api/logout");
     },
     onSuccess: () => {
+      // Clear user data from localStorage
+      localStorage.removeItem('akashic_user');
+      setLocalUser(null);
+      
       // Clear user data from the cache
       queryClient.setQueryData(["/api/user"], null);
       
@@ -127,7 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: "You have been successfully logged out.",
       });
       
-      console.log("Auth provider: User logged out, cleared cache");
+      console.log("Auth provider: User logged out, cleared cache and localStorage");
     },
     onError: (error: Error) => {
       toast({
@@ -138,10 +152,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  // For debugging
-  console.log('Auth provider - userData:', userData);
+  // Update local user when userData changes
+  useEffect(() => {
+    if (userData?.user) {
+      setLocalUser(userData.user);
+    }
+  }, [userData]);
   
-  const user = userData?.user ?? null;
+  // For debugging
+  console.log('Auth provider - userData:', userData, 'localUser:', localUser);
+  
+  // Use API data if available, otherwise fall back to localStorage
+  const user = userData?.user || localUser;
   
   return (
     <AuthContext.Provider

@@ -91,7 +91,19 @@ export default function ProfileMenu({
 
   // For mobile view, instead of a dropdown, we'll display direct buttons
   if (isMobile) {
-    console.log("ProfileMenu Mobile - User state:", user);
+    console.log("ProfileMenu Mobile - User state:", user, "wasAuthenticated:", wasAuthenticated);
+    
+    // If no user but wasAuthenticated, show loading state
+    if (!user && wasAuthenticated) {
+      return (
+        <div className="w-full py-3">
+          <div className="flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-sacred-blue/10 animate-pulse mr-2"></div>
+            <span className="text-sacred-blue">Loading...</span>
+          </div>
+        </div>
+      );
+    }
     
     return (
       <div className="w-full space-y-2">
