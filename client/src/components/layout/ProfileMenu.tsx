@@ -70,6 +70,14 @@ export default function ProfileMenu() {
           </DropdownMenuItem>
         </Link>
         
+        <DropdownMenuSeparator />
+        
+        <Link href="/admin">
+          <DropdownMenuItem className="cursor-pointer">
+            Admin Dashboard
+          </DropdownMenuItem>
+        </Link>
+        
         <DropdownMenuItem
           className="cursor-pointer text-red-500 focus:text-red-500"
           onClick={handleLogout}

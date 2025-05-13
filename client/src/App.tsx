@@ -9,6 +9,7 @@ import Keeper from "@/pages/Keeper";
 import Contact from "@/pages/Contact";
 import AuthPage from "@/pages/auth-page";
 import Profile from "@/pages/Profile";
+import Admin from "@/pages/Admin";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { AnimatePresence } from "framer-motion";
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/contact" component={Contact} />
                 <Route path="/auth" component={AuthPage} />
                 <ProtectedRoute path="/profile" component={Profile} />
+                <ProtectedRoute path="/admin" component={Admin} />
                 <Route component={NotFound} />
               </Switch>
             </AnimatePresence>

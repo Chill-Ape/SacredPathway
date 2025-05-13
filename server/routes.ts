@@ -246,6 +246,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to check scroll status" });
     }
   });
+  
+  // Admin endpoint to get all users (in a real app, you'd restrict this by role)
+  app.get("/api/admin/users", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // In a production app, you would check if the user has admin permissions
+      // For now, we'll just allow any authenticated user to access this endpoint
+      const users = await storage.getAllUsers();
+      
+      // Remove sensitive information like passwords
+      const safeUsers = users.map(user => ({
+        id: user.id,
+        username: user.username,
+        createdAt: user.createdAt
+      }));
+      
+      res.json(safeUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
 
   // Get messages for a specific user session
   app.get("/api/oracle/:userId", async (req: Request, res: Response) => {
