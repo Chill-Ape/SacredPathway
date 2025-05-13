@@ -21,7 +21,7 @@ const imageMap: Record<string, string> = {
   "/assets/great_flood.png": greatFloodImage,
   "/assets/crystal_tablet.png": crystalTabletImage,
   "/assets/flood_scroll.png": greatFloodImage,
-  "/assets/ancient_tablet_dark.png": ancientCivilizationImage,
+  "/assets/ancient_tablet_dark.png": crystalTabletImage,
   "/assets/pillars_scroll.png": pathImage,
 };
 

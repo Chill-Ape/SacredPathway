@@ -26,7 +26,7 @@ const imageMap: Record<string, string> = {
   "/assets/great_flood.png": greatFloodImage,
   "/assets/crystal_tablet.png": crystalTabletImage,
   "/assets/flood_scroll.png": greatFloodImage,
-  "/assets/ancient_tablet_dark.png": ancientCivilizationImage,
+  "/assets/ancient_tablet_dark.png": crystalTabletImage,
   "/assets/pillars_scroll.png": pathImage,
 };
 
@@ -89,11 +89,11 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
             Close Preview
           </Button>
           
-          <Link to={`/scrolls/${scroll.id}`}>
+          <Link to={scroll.id === 37 ? `/sacred-scroll/${scroll.id}` : `/scrolls/${scroll.id}`}>
             <Button 
               className="font-cinzel bg-sacred-blue text-sacred-white hover:bg-sacred-blue-light"
             >
-              View Full Scroll
+              {scroll.id === 37 ? "View Sacred Scroll Pages" : "View Full Scroll"}
             </Button>
           </Link>
         </div>
