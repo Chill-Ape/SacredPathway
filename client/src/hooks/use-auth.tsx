@@ -23,9 +23,9 @@ type LoginData = {
   password?: string;
 };
 
-// Use zod schema but make password optional
+// Use zod schema with required password
 const registerSchema = insertUserSchema.extend({
-  password: z.string().optional(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type RegisterData = z.infer<typeof registerSchema>;
@@ -50,11 +50,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return await res.json();
     },
     onSuccess: (data) => {
+      console.log("Login successful, setting user data:", data);
       queryClient.setQueryData(["/api/user"], data);
       toast({
         title: "Login successful",
         description: `Welcome back, ${data.user.username}!`,
       });
+      
+      // Add a small delay before forcing a navigation
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
     },
     onError: (error: Error) => {
       toast({
@@ -71,11 +77,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return await res.json();
     },
     onSuccess: (data) => {
+      console.log("Registration successful, setting user data:", data);
       queryClient.setQueryData(["/api/user"], data);
       toast({
         title: "Registration successful",
         description: `Welcome, ${data.user.username}!`,
       });
+      
+      // Add a small delay before forcing a navigation
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
     },
     onError: (error: Error) => {
       toast({
