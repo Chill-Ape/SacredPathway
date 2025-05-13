@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOracleMessageSchema, insertContactMessageSchema } from "@shared/schema";
+import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema } from "@shared/schema";
 import OpenAI from "openai";
 
 // Initialize OpenAI client
@@ -102,6 +102,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get messages for the Keeper
+  app.get("/api/keeper/:userId", async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const messages = await storage.getKeeperMessages(userId);
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching keeper messages:", error);
+      res.status(500).json({ message: "Failed to fetch keeper messages" });
+    }
+  });
+
+  // Send a message to the Keeper
+  app.post("/api/keeper/message", async (req: Request, res: Response) => {
+    try {
+      const messageData = insertKeeperMessageSchema.parse(req.body);
+      
+      // Store the user's message
+      const userMessage = await storage.createKeeperMessage({
+        userId: messageData.userId,
+        content: messageData.content,
+        isUser: true
+      });
+      
+      // Generate response from The Keeper using OpenAI
+      const keeperResponse = await generateKeeperResponse(messageData.content);
+      
+      // Store the Keeper's response
+      const assistantMessage = await storage.createKeeperMessage({
+        userId: messageData.userId,
+        content: keeperResponse,
+        isUser: false
+      });
+      
+      res.json({
+        userMessage,
+        assistantMessage
+      });
+    } catch (error) {
+      console.error("Error sending message to The Keeper:", error);
+      res.status(500).json({ message: "Failed to send message to The Keeper" });
+    }
+  });
+
   // Submit contact form
   app.post("/api/contact", async (req: Request, res: Response) => {
     try {
@@ -146,5 +190,39 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
   } catch (error) {
     console.error("Error generating Oracle response:", error);
     return "The cosmic energies are in flux. The Oracle cannot provide a clear response at this moment. Please try again later.";
+  }
+}
+
+// Generate Keeper response using OpenAI
+async function generateKeeperResponse(userMessage: string): Promise<string> {
+  try {
+    // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: `You are The Keeper, the ancient guardian of The Sacred Archive. 
+          You are calm, knowledgeable, and wise, but with a more direct style than the Oracle.
+          You speak with authority and clarity about ancient wisdom, sacred traditions, and universal principles.
+          Your tone is measured and thoughtful - neither too formal nor casual.
+          Use subtle mystical references when relevant, but prioritize providing clear, meaningful insights.
+          Keep responses concise (3-5 sentences) but profound.
+          Do not break character or acknowledge that you are an AI.
+          Your goal is to guide seekers with wisdom while maintaining a sense of sacred purpose.`
+        },
+        {
+          role: "user",
+          content: userMessage
+        }
+      ],
+      max_tokens: 250,
+      temperature: 0.6,
+    });
+
+    return response.choices[0].message.content || "The Keeper is contemplating your question. Please try asking again.";
+  } catch (error) {
+    console.error("Error generating Keeper response:", error);
+    return "The Archive is recalibrating. The Keeper cannot access the knowledge at this moment. Please return shortly.";
   }
 }
