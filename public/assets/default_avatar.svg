@@ -1,13 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-  <!-- Background Circle -->
-  <circle cx="100" cy="100" r="100" fill="#184772" />
-  
-  <!-- Head -->
-  <circle cx="100" cy="85" r="40" fill="#E0DAC6" />
-  
-  <!-- Body -->
-  <path d="M100 135 L100 180 Q60 170 50 130 Q80 145 100 135 Q120 145 150 130 Q140 170 100 180 Z" fill="#E0DAC6" />
-  
-  <!-- Subtle Glow -->
-  <circle cx="100" cy="100" r="95" fill="none" stroke="#DAA520" stroke-width="2" opacity="0.7" />
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="100" fill="#E5E7EB"/>
+  <path d="M100 110C122.091 110 140 92.0914 140 70C140 47.9086 122.091 30 100 30C77.9086 30 60 47.9086 60 70C60 92.0914 77.9086 110 100 110Z" fill="#6B7280"/>
+  <path d="M40 170C40 136.863 66.8629 110 100 110C133.137 110 160 136.863 160 170V200H40V170Z" fill="#6B7280"/>
 </svg>

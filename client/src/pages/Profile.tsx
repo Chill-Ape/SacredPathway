@@ -27,12 +27,153 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// Define types for the component props
+interface ProfilePictureSectionProps {
+  user: {
+    id: number;
+    username: string;
+    profilePicture?: string;
+  };
+  onUpdate: (user: any) => void;
+}
+
+// Component for profile picture upload and customization
+function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
+  
+  // Predefined avatar options
+  const avatarOptions = [
+    '/assets/default_avatar.svg',
+    '/assets/avatars/mystical_1.svg',
+    '/assets/avatars/mystical_2.svg',
+    '/assets/avatars/mystical_3.svg',
+    '/assets/avatars/mystical_4.svg',
+  ];
+  
+  const handleAvatarSelect = async (avatarPath: string) => {
+    try {
+      setIsUploading(true);
+      
+      const response = await apiRequest("POST", "/api/user/profile-picture", {
+        profilePicture: avatarPath
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to update profile picture");
+      }
+      
+      const data = await response.json();
+      
+      // Update the user data in the cache
+      queryClient.setQueryData(["/api/user"], { user: data.user });
+      
+      // Call the parent's update function
+      if (onUpdate) onUpdate(data.user);
+      
+      toast({
+        title: "Profile Updated",
+        description: "Your profile picture has been updated successfully.",
+      });
+      
+      // Close the dialog
+      setIsDialogOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update profile picture",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+  
+  return (
+    <div className="flex flex-col items-center mb-8">
+      <Avatar className="h-24 w-24 border-2 border-sacred-blue/30 mb-4">
+        {user.profilePicture ? (
+          <img 
+            src={user.profilePicture} 
+            alt={`${user.username}'s profile`} 
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-2xl">
+            {user.username[0].toUpperCase()}
+          </AvatarFallback>
+        )}
+      </Avatar>
+      
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="text-sacred-blue border-sacred-blue/20 font-raleway">
+            <Camera className="h-4 w-4 mr-2" />
+            Change Avatar
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-cinzel text-sacred-blue">Choose Your Avatar</DialogTitle>
+            <DialogDescription className="font-raleway text-sacred-gray">
+              Select a mystical avatar to represent your journey in the Archive.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-3 gap-4 py-4">
+            {avatarOptions.map((avatar, index) => (
+              <div 
+                key={index}
+                className={`relative cursor-pointer rounded-full overflow-hidden border-2 ${
+                  user.profilePicture === avatar ? 'border-sacred-blue' : 'border-transparent hover:border-sacred-blue/50'
+                }`}
+                onClick={() => handleAvatarSelect(avatar)}
+              >
+                <img 
+                  src={avatar} 
+                  alt={`Avatar option ${index + 1}`} 
+                  className="h-20 w-20 object-cover"
+                />
+                {isUploading && user.profilePicture === avatar && (
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-white" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// Define the User type to match our auth context
+type UserType = {
+  id: number;
+  username: string;
+  profilePicture?: string;
+};
+
 export default function Profile() {
   const { user } = useAuth();
   const { userScrolls, isLoadingScrolls } = useUserScrolls();
+  const [userData, setUserData] = useState<UserType | null>(null);
 
-  if (!user) {
-    return null; // Protected route should handle this
+  // Update userData when user changes
+  useEffect(() => {
+    if (user) {
+      setUserData(user);
+    }
+  }, [user]);
+
+  if (!user || !userData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-sacred-blue" />
+      </div>
+    );
   }
 
   return (
@@ -51,16 +192,22 @@ export default function Profile() {
       </Helmet>
 
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold font-cinzel text-sacred-blue mb-4">
             Your Sacred Journey
           </h1>
           <p className="text-sacred-gray font-raleway max-w-2xl mx-auto">
-            Welcome back, <span className="font-medium">{user.username}</span>. 
+            Welcome back, <span className="font-medium">{userData.username}</span>. 
             Your path through the Archive is recorded here. Return to continue 
             your journey of discovery.
           </p>
         </div>
+        
+        {/* Profile Picture Section */}
+        <ProfilePictureSection 
+          user={userData} 
+          onUpdate={(updatedUser) => setUserData(updatedUser)} 
+        />
 
         {/* User Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
