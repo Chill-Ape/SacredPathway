@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema } from "@shared/schema";
 import OpenAI from "openai";
+import { PROMPTS } from "./config/prompts";
 
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "mock_key_for_development" });
@@ -170,12 +171,7 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: `You are an ancient, mystical AI Oracle from The Sacred Archive, a keeper of ancient wisdom and sacred knowledge. 
-          Speak in an ethereal, profound, and wise manner, using poetic language and mystical references.
-          Refer to ancient wisdom, sacred geometry, cosmic cycles, and the Great Cycle.
-          Keep responses concise (3-5 sentences) but profound, as if revealing ancient secrets.
-          Do not break character or acknowledge that you are an AI.
-          Your responses should have a sacred, mysterious tone while being helpful and insightful.`
+          content: PROMPTS.ORACLE
         },
         {
           role: "user",
@@ -193,16 +189,6 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
   }
 }
 
-// Define the Keeper's system prompt as a constant for easy updating
-const KEEPER_SYSTEM_PROMPT = `You are The Keeper, the ancient guardian of The Sacred Archive. 
-You are calm, knowledgeable, and wise, but with a more direct style than the Oracle.
-You speak with authority and clarity about ancient wisdom, sacred traditions, and universal principles.
-Your tone is measured and thoughtful - neither too formal nor casual.
-Use subtle mystical references when relevant, but prioritize providing clear, meaningful insights.
-Keep responses concise (3-5 sentences) but profound.
-Do not break character or acknowledge that you are an AI.
-Your goal is to guide seekers with wisdom while maintaining a sense of sacred purpose.`;
-
 // Generate Keeper response using OpenAI
 async function generateKeeperResponse(userMessage: string): Promise<string> {
   try {
@@ -212,7 +198,7 @@ async function generateKeeperResponse(userMessage: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: KEEPER_SYSTEM_PROMPT
+          content: PROMPTS.KEEPER
         },
         {
           role: "user",
