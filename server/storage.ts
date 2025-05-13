@@ -480,6 +480,8 @@ export class MemStorage implements IStorage {
   private oracleMessages: Map<number, OracleMessage>;
   private keeperMessages: Map<number, KeeperMessage>;
   private contactMessages: Map<number, ContactMessage>;
+  private manaTransactions: Map<number, ManaTransaction>;
+  private manaPackages: Map<number, ManaPackage>;
   sessionStore: session.Store;
   
   private currentUserId: number;
@@ -487,6 +489,8 @@ export class MemStorage implements IStorage {
   private currentOracleMessageId: number;
   private currentKeeperMessageId: number;
   private currentContactMessageId: number;
+  private currentManaTransactionId: number;
+  private currentManaPackageId: number;
 
   constructor() {
     this.users = new Map();
@@ -495,6 +499,8 @@ export class MemStorage implements IStorage {
     this.oracleMessages = new Map();
     this.keeperMessages = new Map();
     this.contactMessages = new Map();
+    this.manaTransactions = new Map();
+    this.manaPackages = new Map();
     
     // Initialize session store
     this.sessionStore = new MemoryStore({
@@ -506,9 +512,14 @@ export class MemStorage implements IStorage {
     this.currentOracleMessageId = 1;
     this.currentKeeperMessageId = 1;
     this.currentContactMessageId = 1;
+    this.currentManaTransactionId = 1;
+    this.currentManaPackageId = 1;
     
     // Initialize with some default scrolls
     this.initializeDefaultScrolls();
+    
+    // Initialize with default mana packages
+    this.initializeDefaultManaPackages();
   }
 
   // USER METHODS
