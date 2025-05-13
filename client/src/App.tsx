@@ -29,7 +29,7 @@ function App() {
             <AnimatePresence mode="wait">
               <Switch key={location}>
                 <Route path="/" component={Home} />
-                <ProtectedRoute path="/scrolls" component={Scrolls} />
+                <Route path="/scrolls" component={Scrolls} />
                 <Route path="/lore" component={Lore} />
                 <Route path="/keeper" component={Keeper} />
                 <Route path="/contact" component={Contact} />
