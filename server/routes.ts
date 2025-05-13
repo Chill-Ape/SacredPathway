@@ -191,11 +191,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.json({ 
         user: { 
           id: req.user.id, 
-          username: req.user.username 
+          username: req.user.username,
+          profilePicture: req.user.profilePicture || '/assets/default_avatar.svg'
         } 
       });
     }
     res.status(401).json({ message: 'Not authenticated' });
+  });
+  
+  // Update user's profile picture
+  app.post('/api/user/profile-picture', async (req, res) => {
+    if (!req.isAuthenticated() || !req.user) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    try {
+      const { profilePicture } = req.body;
+      
+      if (!profilePicture) {
+        return res.status(400).json({ message: 'Profile picture URL is required' });
+      }
+      
+      const updatedUser = await storage.updateUserProfilePicture(req.user.id, profilePicture);
+      
+      res.json({ 
+        user: { 
+          id: updatedUser.id, 
+          username: updatedUser.username,
+          profilePicture: updatedUser.profilePicture 
+        } 
+      });
+    } catch (error) {
+      console.error('Error updating profile picture:', error);
+      res.status(500).json({ message: 'Failed to update profile picture' });
+    }
   });
   const httpServer = createServer(app);
 

@@ -13,7 +13,7 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   manaBalance: integer("mana_balance").notNull().default(0),
   stripeCustomerId: text("stripe_customer_id"),
-  profilePicture: text("profile_picture").default("/assets/default_avatar.png"),
+  profilePicture: text("profile_picture").default("/assets/default_avatar.svg"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

@@ -459,6 +459,15 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
   
+  async updateUserProfilePicture(userId: number, profilePicture: string): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ profilePicture })
+      .where(eq(users.id, userId))
+      .returning();
+    
+    return user;
+  }
+  
   // For scroll image updating
   async updateScrollImage(id: number, imagePath: string): Promise<Scroll | undefined> {
     const [result] = await db.update(scrolls)
@@ -669,7 +678,8 @@ export class MemStorage implements IStorage {
       phone: insertUser.phone || null,
       password: insertUser.password || '', // Ensure password is always a string
       manaBalance: 0, // Initialize mana balance to 0
-      stripeCustomerId: null // Initialize stripe customer ID to null
+      stripeCustomerId: null, // Initialize stripe customer ID to null
+      profilePicture: "/assets/default_avatar.svg" // Set default profile picture
     };
     this.users.set(id, user);
     return user;
@@ -901,6 +911,19 @@ export class MemStorage implements IStorage {
     }
     
     user.stripeCustomerId = stripeCustomerId;
+    this.users.set(userId, user);
+    
+    return user;
+  }
+  
+  async updateUserProfilePicture(userId: number, profilePicture: string): Promise<User> {
+    const user = await this.getUser(userId);
+    
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    
+    user.profilePicture = profilePicture;
     this.users.set(userId, user);
     
     return user;
