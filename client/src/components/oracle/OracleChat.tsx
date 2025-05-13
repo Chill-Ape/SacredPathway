@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
+import { Send, Sparkles } from "lucide-react";
 import { OracleMessage } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { v4 as uuidv4 } from "uuid";
@@ -15,10 +16,24 @@ type SessionState = {
   sessionId: string;
 };
 
+// Constants for Oracle usage
+const ORACLE_COST = 5; // Mana cost per Oracle query
+const FREE_DAILY_QUERIES = 3; // Number of free queries for non-authenticated users
+
+interface RemainingQueries {
+  count: number;
+  isAuthenticated: boolean;
+}
+
 export default function OracleChat() {
   const [message, setMessage] = useState("");
   const [session, setSession] = useState<SessionState | null>(null);
   const [loadedPreviously, setLoadedPreviously] = useState<boolean>(false); // Track if messages have loaded before
+  const [remainingQueries, setRemainingQueries] = useState<RemainingQueries>({
+    count: FREE_DAILY_QUERIES,
+    isAuthenticated: false
+  });
+  const { user } = useAuth();
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -70,6 +85,17 @@ export default function OracleChat() {
         isUser: true
       });
       
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        // Handle special case of Mana requirements
+        if (response.status === 403 && errorData.requiresMana) {
+          throw new Error(errorData.message || "Insufficient Mana");
+        }
+        
+        throw new Error("Failed to contact the Oracle");
+      }
+      
       return response.json();
     },
     onSuccess: (data) => {
@@ -78,14 +104,51 @@ export default function OracleChat() {
       
       queryClient.invalidateQueries({ queryKey: ["/api/oracle", session?.sessionId] });
     },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to send message: ${error.message}`,
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      // Check if it's a Mana-related error
+      if (error.message.includes("Mana")) {
+        toast({
+          title: "Oracle Access Limited",
+          description: error.message,
+          variant: "default",
+          action: (
+            <a href="/mana">
+              <Button variant="default" className="bg-gradient-to-r from-blue-600 to-purple-600">
+                Get Mana
+              </Button>
+            </a>
+          ),
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: `Failed to send message: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     }
   });
+  
+  // Update remaining queries count based on message count and authentication status
+  useEffect(() => {
+    if (user) {
+      // For authenticated users, check if they have a balance (this would require a separate query)
+      setRemainingQueries({
+        count: 0, // Not applicable for auth users
+        isAuthenticated: true
+      });
+    } else if (session && messages) {
+      // For anonymous users, count their messages to track usage
+      // In a real implementation, this would be more accurate with a dedicated endpoint
+      const userMessageCount = messages.filter(msg => msg.isUser).length;
+      const remainingCount = Math.max(0, FREE_DAILY_QUERIES - userMessageCount);
+      
+      setRemainingQueries({
+        count: remainingCount,
+        isAuthenticated: false
+      });
+    }
+  }, [user, session, messages]);
   
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -139,6 +202,18 @@ export default function OracleChat() {
       
       {/* Oracle chat interface */}
       <div className="p-6 bg-white rounded-lg shadow-md">
+        {/* Info about Oracle usage costs */}
+        <div className="mb-2 flex justify-end">
+          <div className="inline-flex items-center py-1 px-3 rounded-full bg-blue-50 text-sm text-blue-600 border border-blue-200">
+            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+            {user ? (
+              <span>Each inquiry costs <strong>{ORACLE_COST} Mana</strong></span>
+            ) : (
+              <span><strong>{remainingQueries.count}</strong> free inquiries remaining today</span>
+            )}
+          </div>
+        </div>
+        
         <motion.div 
           className={`bg-gradient-to-t from-[#0a2a45] to-[#184772] rounded-lg p-4 h-[500px] overflow-y-auto mb-4 border border-oracle-gold/20 ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
           initial={{ opacity: 0, y: 20 }}
