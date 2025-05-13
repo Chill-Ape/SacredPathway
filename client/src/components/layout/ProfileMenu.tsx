@@ -25,7 +25,16 @@ export default function ProfileMenu({ isMobile = false, forcedUser = null }: Pro
   const user = forcedUser || authUser;
 
   const handleLogout = () => {
-    logoutMutation.mutate();
+    console.log("Logging out user...");
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        console.log("Logout successful, redirecting to home page");
+        // Force reload the page to clear all state
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 300);
+      }
+    });
   };
 
   // Handle the case when user is not logged in

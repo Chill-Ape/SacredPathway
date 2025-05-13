@@ -17,6 +17,9 @@ export default function Navbar() {
   useEffect(() => {
     if (user) {
       setCachedUser(user);
+    } else {
+      // If user is null (logged out), clear the cached user too
+      setCachedUser(null);
     }
   }, [user]);
   
