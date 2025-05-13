@@ -121,10 +121,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // For debugging
+  console.log('Auth provider - userData:', userData);
+  
+  const user = userData?.user ?? null;
+  
   return (
     <AuthContext.Provider
       value={{
-        user: userData?.user ?? null,
+        user,
         isLoading,
         error,
         loginMutation,
