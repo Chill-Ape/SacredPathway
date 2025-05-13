@@ -9,22 +9,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
-import { User, LogOut } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { User, LogOut, Library } from "lucide-react";
 
-export default function ProfileMenu() {
+type ProfileMenuProps = {
+  isMobile?: boolean;
+};
+
+export default function ProfileMenu({ isMobile = false }: ProfileMenuProps) {
   const { user, logoutMutation } = useAuth();
+  const [location] = useLocation();
 
   const handleLogout = () => {
     logoutMutation.mutate();
   };
 
+  // Handle the case when user is not logged in
   if (!user) {
     return (
       <Link to="/auth">
         <Button
           variant="outline"
-          className="font-cinzel text-sacred-blue hover:text-sacred-white hover:bg-sacred-blue border-sacred-blue/20 transition-all"
+          className={`font-cinzel text-sacred-blue hover:text-sacred-white hover:bg-sacred-blue border-sacred-blue/20 transition-all ${
+            isMobile ? "w-full justify-center" : ""
+          }`}
         >
           <User className="h-5 w-5 mr-2" />
           Login / Register
@@ -33,6 +41,60 @@ export default function ProfileMenu() {
     );
   }
 
+  // For mobile view, instead of a dropdown, we'll display direct buttons
+  if (isMobile) {
+    return (
+      <div className="w-full space-y-2">
+        <div className="flex items-center justify-center mb-3">
+          <Avatar className="h-12 w-12 border-2 border-sacred-blue/20">
+            <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-lg">
+              {user.username[0].toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="ml-3 text-left">
+            <p className="font-cinzel text-sacred-blue font-medium">{user.username}</p>
+            <p className="text-xs text-sacred-gray">Archive Member</p>
+          </div>
+        </div>
+        
+        <Link to="/profile">
+          <Button
+            variant="ghost"
+            className={`w-full justify-start font-cinzel text-left ${
+              location === "/profile" ? "bg-sacred-blue/5 text-sacred-blue" : "text-sacred-gray"
+            }`}
+          >
+            <User className="h-5 w-5 mr-2" />
+            My Profile
+          </Button>
+        </Link>
+        
+        <Link to="/my-scrolls">
+          <Button
+            variant="ghost"
+            className={`w-full justify-start font-cinzel text-left ${
+              location === "/my-scrolls" ? "bg-sacred-blue/5 text-sacred-blue" : "text-sacred-gray"
+            }`}
+          >
+            <Library className="h-5 w-5 mr-2" />
+            My Scrolls
+          </Button>
+        </Link>
+        
+        <Button
+          variant="ghost"
+          className="w-full justify-start font-cinzel text-red-500 hover:text-red-600 hover:bg-red-50"
+          onClick={handleLogout}
+          disabled={logoutMutation.isPending}
+        >
+          <LogOut className="h-5 w-5 mr-2" />
+          {logoutMutation.isPending ? "Logging out..." : "Log out"}
+        </Button>
+      </div>
+    );
+  }
+
+  // Desktop view with dropdown
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -64,9 +126,9 @@ export default function ProfileMenu() {
           </DropdownMenuItem>
         </Link>
         
-        <Link to="/scrolls">
+        <Link to="/my-scrolls">
           <DropdownMenuItem className="cursor-pointer">
-            Explore Scrolls
+            My Scrolls
           </DropdownMenuItem>
         </Link>
         
