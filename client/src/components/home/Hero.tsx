@@ -59,21 +59,7 @@ const AncientGlyph = ({ symbol, left, top, size, rotation, delay }:
 };
 
 export default function Hero() {
-  // Custom cursor effects
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  
-  // Update cursor position
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
+  // Removed custom cursor effects that were causing mouse visibility issues
 
   // Generate particles
   const particles = Array.from({ length: 15 }).map((_, i) => ({
@@ -102,7 +88,7 @@ export default function Hero() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5 }}
     >
-      {/* Disabled custom cursor effect to fix animation issue */}
+      {/* Custom cursor effect removed to fix mouse visibility issues */}
       
       {/* Animated background with subtle movement */}
       <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
