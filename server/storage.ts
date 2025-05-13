@@ -334,12 +334,12 @@ export class DatabaseStorage implements IStorage {
       key: "geometry"
     });
     
-    // Locked scrolls
+    // Made Legacy of the Lost Age scroll accessible
     await this.createScroll({
       title: "Legacy of the Lost Age",
       content: "Many ancient cultures share flood myths coinciding with the dawn of civilization. Archaeological evidence from Eridu (founded 5400 BC) shows eighteen superimposed temples built over millennia. The Sumerian King List names Eridu as the first city where 'kingship descended from heaven.' This ancient city became the template for later Mesopotamian civilization, and its flood stories echo across cultures. The Great Flood, dated by evidence to around 2900 BC, marks a division between mythic time and historical time. Were the elaborate myths and monumental architecture of early Egypt and Mesopotamia preserving knowledge from an even earlier, now-lost civilization?",
       image: "/assets/ancient_civilization.png",
-      isLocked: true,
+      isLocked: false,
       key: "lost-age"
     });
     
@@ -347,7 +347,7 @@ export class DatabaseStorage implements IStorage {
       title: "The Flood",
       content: "Chronicles of the great deluge that changed the course of humanity and ushered in a new age. When the waters rose, they cleansed the world of the corrupted consciousness that had forgotten its divine origins. Those who remembered the sacred knowledge retreated to high places, preserving the wisdom for the new cycle to come.",
       image: "/assets/great_flood.png",
-      isLocked: true,
+      isLocked: false,
       key: "deluge"
     });
     
