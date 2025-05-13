@@ -73,13 +73,22 @@ export default function Scrolls() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {scrolls && scrolls.map((scroll) => (
-              <ScrollCard 
-                key={scroll.id} 
-                scroll={scroll} 
-                onUnlock={handleUnlockScroll} 
-              />
-            ))}
+            {scrolls && [...scrolls]
+              .sort((a, b) => {
+                // First sort by locked status (unlocked first)
+                if (a.isLocked && !b.isLocked) return 1;
+                if (!a.isLocked && b.isLocked) return -1;
+                // Then sort by id (more recent scrolls first)
+                return b.id - a.id;
+              })
+              .map((scroll) => (
+                <ScrollCard 
+                  key={scroll.id} 
+                  scroll={scroll} 
+                  onUnlock={handleUnlockScroll} 
+                />
+              ))
+            }
           </div>
         )}
       </div>
