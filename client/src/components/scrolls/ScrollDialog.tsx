@@ -10,6 +10,7 @@ import {
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 
 // Import scroll images directly
 import welcomeScrollImage from "@assets/ChatGPT Image Apr 24, 2025, 06_04_06 PM.png";
@@ -61,11 +62,17 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
             transition={{ duration: 0.5 }}
             className="font-playfair text-sacred-gray space-y-4"
           >
-            {scroll.content.split('\n').map((paragraph, idx) => (
+            {/* Show only first few paragraphs (preview mode) */}
+            {scroll.content.split('\n\n').slice(0, 2).map((paragraph, idx) => (
               <p key={idx} className="leading-relaxed">
                 {paragraph}
               </p>
             ))}
+            
+            {/* Show "read more" message */}
+            <p className="text-sacred-blue italic mt-6 text-center">
+              Continue reading the full scroll for more ancient wisdom...
+            </p>
           </motion.div>
           
           <div className="mt-8 text-center text-sacred-blue/80 italic font-playfair text-sm">
@@ -73,14 +80,22 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
           </div>
         </div>
         
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-4">
           <Button 
             variant="outline" 
             onClick={onClose}
             className="font-cinzel border-sacred-blue/30 text-sacred-blue hover:bg-sacred-blue hover:text-sacred-white"
           >
-            Close Scroll
+            Close Preview
           </Button>
+          
+          <Link to={`/scrolls/${scroll.id}`}>
+            <Button 
+              className="font-cinzel bg-sacred-blue text-sacred-white hover:bg-sacred-blue-light"
+            >
+              View Full Scroll
+            </Button>
+          </Link>
         </div>
       </DialogContent>
     </Dialog>

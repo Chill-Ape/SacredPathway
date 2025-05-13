@@ -33,9 +33,19 @@ export default function OracleChat() {
     }
   }, []);
   
-  // Fetch messages for the current session
+  // Fetch messages for the current session using a custom queryFn to handle the session ID
   const { data: messages = [], isLoading: messagesLoading } = useQuery<OracleMessage[]>({
     queryKey: ["/api/oracle", session?.sessionId],
+    queryFn: async () => {
+      if (!session?.sessionId) {
+        return [];
+      }
+      const res = await fetch(`/api/oracle/${session.sessionId}`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch messages");
+      }
+      return res.json();
+    },
     enabled: !!session?.sessionId,
     staleTime: 1000 * 60 * 60, // Keep data fresh for 1 hour
     refetchOnWindowFocus: false, // Don't refetch when window gets focus

@@ -130,12 +130,23 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
               )}
             </>
           ) : (
-            <Button
-              className="w-full bg-sacred-blue hover:bg-sacred-blue-light text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
-              onClick={handleReadScroll}
-            >
-              Read Scroll
-            </Button>
+            <div className="space-y-2">
+              <Button
+                className="w-full bg-sacred-blue hover:bg-sacred-blue-light text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
+                onClick={handlePreviewScroll}
+              >
+                Preview Scroll
+              </Button>
+              
+              <Link to={`/scrolls/${scroll.id}`}>
+                <Button
+                  variant="outline"
+                  className="w-full border-sacred-blue text-sacred-blue hover:bg-sacred-blue-light hover:text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
+                >
+                  Open Full Scroll
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </motion.div>
