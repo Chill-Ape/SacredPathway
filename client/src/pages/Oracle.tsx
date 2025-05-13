@@ -4,8 +4,11 @@ import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 
 export default function Oracle() {
-  // Add ambient sound effect on page load
+  // Add ambient sound effect on page load and scroll to top
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     const audioElement = new Audio('/sounds/oracle-ambience.mp3');
     audioElement.volume = 0.15;
     audioElement.loop = true;

@@ -75,11 +75,14 @@ export default function Scrolls() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {scrolls && [...scrolls]
               .sort((a, b) => {
-                // First sort by locked status (unlocked first)
+                // Welcome to the Archive always first
+                if (a.title === "Welcome to the Archive") return -1;
+                if (b.title === "Welcome to the Archive") return 1;
+                // Then sort by locked status (unlocked first)
                 if (a.isLocked && !b.isLocked) return 1;
                 if (!a.isLocked && b.isLocked) return -1;
-                // Then sort by id (more recent scrolls first)
-                return b.id - a.id;
+                // Then sort by title alphabetically
+                return a.title.localeCompare(b.title);
               })
               .map((scroll) => (
                 <ScrollCard 

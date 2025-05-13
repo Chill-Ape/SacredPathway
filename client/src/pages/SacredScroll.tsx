@@ -27,9 +27,9 @@ export default function SacredScroll() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // For "Legacy of the Lost Age" (id 37), we'll use our special sacred-scroll.json
+        // For "Legacy of the Lost Age" (id 37), we'll use our special ancient-civilizations-scroll.json
         if (scrollId === 37) {
-          const response = await fetch('/data/sacred-scroll.json');
+          const response = await fetch('/data/ancient-civilizations-scroll.json');
           if (!response.ok) {
             throw new Error("Failed to fetch sacred scroll data");
           }

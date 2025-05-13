@@ -18,10 +18,10 @@ export default function Home() {
       delay: 0.7
     },
     {
-      title: "The Keeper",
-      description: "Seek wisdom from the timeless guardian of the Sacred Archive and vessel of ancient memory.",
-      image: keeperImage, // Mystical vessel with blue ethereal energy
-      href: "/keeper",
+      title: "The Oracle",
+      description: "Seek guidance from the mystical Oracle, connected to the cosmic memory of all that was and will be.",
+      image: keeperImage, // Using the same image for now
+      href: "/oracle",
       delay: 0.9
     },
     {
