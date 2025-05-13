@@ -19,7 +19,15 @@ import { insertUserSchema, User } from "@shared/schema";
 // Define types for Express User
 declare global {
   namespace Express {
-    interface User extends User {}
+    // Use the User type from shared schema
+    interface User {
+      id: number;
+      username: string;
+      password: string;
+      email: string;
+      phone: string | null;
+      createdAt: Date;
+    }
   }
 }
 

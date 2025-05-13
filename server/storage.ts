@@ -17,7 +17,7 @@ import {
   contactMessages,
   keeperMessages
 } from "@shared/schema";
-import { db, isDatabaseAvailable } from "./db";
+import { db, pool, isDatabaseAvailable } from "./db";
 import { eq } from "drizzle-orm";
 
 import session from "express-session";
@@ -63,6 +63,92 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
+  
+  constructor() {
+    // Initialize PostgreSQL session store
+    if (!pool) {
+      console.error("Database pool is not initialized, using MemoryStore instead");
+      this.sessionStore = new MemoryStore({
+        checkPeriod: 86400000, // prune expired entries every 24h
+      });
+    } else {
+      console.log("Initializing PostgreSQL session store");
+      this.sessionStore = new PostgresSessionStore({
+        pool: pool,
+        createTableIfMissing: true
+      });
+      
+      // Initialize database tables and default data
+      this.initializeTables().catch(err => {
+        console.error("Error initializing database tables:", err);
+      });
+    }
+  }
+  
+  private async initializeTables() {
+    // This will create tables based on the schema
+    try {
+      console.log("Creating database tables if they don't exist");
+      
+      // Create default scrolls
+      const scrollCount = await db.select({ count: db.fn.count() }).from(scrolls);
+      if (!scrollCount[0] || Number(scrollCount[0].count) === 0) {
+        console.log("Creating default scrolls");
+        await this.initializeDefaultScrolls();
+      } else {
+        console.log("Scrolls already exist:", scrollCount[0].count);
+      }
+    } catch (error) {
+      console.error("Error initializing tables:", error);
+    }
+  }
+  
+  async _initializeDefaultScrolls() {
+    console.log("Initializing default scrolls");
+    
+    // Define unlocked scrolls
+    const unlockScrolls: InsertScroll[] = [
+      {
+        title: "Welcome to the Archive",
+        content: "The Sacred Archive is a repository of ancient wisdom, preserved by The Keepers throughout the ages. Within these halls, you'll find knowledge that has been hidden from the world for millennia. As a Seeker, you have been granted access to the outer chambers. More profound wisdom awaits in the deeper sanctums as you prove yourself worthy.",
+        image: "/assets/welcome_scroll.png",
+        isLocked: false,
+        key: ""
+      }
+    ];
+    
+    // Define locked scrolls
+    const lockedScrolls: InsertScroll[] = [
+      {
+        title: "The Great Flood",
+        content: "An ancient cataclysm wiped out civilizations across the globe, preserved in myths worldwide. Survivors carried fragments of antediluvian knowledge into our age. The waters came suddenly, but not without warning - the Watchers knew and preserved what wisdom they could. The Archive contains much that was saved from this deluge.",
+        image: "/assets/flood_scroll.png",
+        isLocked: true,
+        key: "deluge"
+      },
+      {
+        title: "The Five Pillars",
+        content: "The knowledge of the Archive is organized around five fundamental principles: The Flood that nearly erased humanity; The Ark that preserved what remained; The Cycle that governs time; Mana, the force that flows through all; and The Tablets, which record the ancient codes. Understanding their interconnection is key to ascending through the Archive.",
+        image: "/assets/pillars_scroll.png",
+        isLocked: true,
+        key: "pillars"
+      },
+      {
+        title: "Inner Alchemy",
+        content: "Transformative practices to transmute consciousness and achieve inner illumination. The Great Work begins within. By purifying the elements of one's own being - earth, water, air, and fire - the seeker creates the conditions for the quintessence to emerge: the awakened consciousness that recognizes its own divine nature.",
+        image: "/assets/crystal_tablet.png",
+        isLocked: true,
+        key: "alchemy"
+      }
+    ];
+    
+    // Create all scrolls
+    for (const scroll of [...unlockScrolls, ...lockedScrolls]) {
+      await this.createScroll(scroll);
+    }
+  }
+  
   // USER METHODS
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
@@ -276,6 +362,7 @@ export class MemStorage implements IStorage {
   private oracleMessages: Map<number, OracleMessage>;
   private keeperMessages: Map<number, KeeperMessage>;
   private contactMessages: Map<number, ContactMessage>;
+  sessionStore: session.Store;
   
   private currentUserId: number;
   private currentScrollId: number;
@@ -290,6 +377,11 @@ export class MemStorage implements IStorage {
     this.oracleMessages = new Map();
     this.keeperMessages = new Map();
     this.contactMessages = new Map();
+    
+    // Initialize session store
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
     
     this.currentUserId = 1;
     this.currentScrollId = 1;
@@ -325,7 +417,7 @@ export class MemStorage implements IStorage {
       createdAt,
       email: insertUser.email,
       phone: insertUser.phone || null,
-      password: insertUser.password || null 
+      password: insertUser.password || '' // Ensure password is always a string
     };
     this.users.set(id, user);
     return user;
