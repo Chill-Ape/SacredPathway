@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="100" fill="#184772" />
+  
+  <!-- Head -->
+  <circle cx="100" cy="85" r="40" fill="#E0DAC6" />
+  
+  <!-- Body -->
+  <path d="M100 135 L100 180 Q60 170 50 130 Q80 145 100 135 Q120 145 150 130 Q140 170 100 180 Z" fill="#E0DAC6" />
+  
+  <!-- Subtle Glow -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#DAA520" stroke-width="2" opacity="0.7" />
+</svg>

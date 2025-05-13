@@ -40,6 +40,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
+  updateUserProfilePicture(userId: number, profilePicture: string): Promise<User>;
   
   // Scroll methods
   getAllScrolls(): Promise<Scroll[]>;
