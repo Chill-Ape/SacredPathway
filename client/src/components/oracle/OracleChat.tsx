@@ -186,7 +186,7 @@ export default function OracleChat() {
           <Input
             type="text"
             placeholder="Ask your question..."
-            className="flex-grow bg-oracle-deep-purple/20 border-oracle-gold/30 rounded-l-lg py-3 px-4 font-garamond text-oracle-soft-gold focus:outline-none focus:ring-2 focus:ring-oracle-gold/30"
+            className="flex-grow bg-oracle-deep-purple/20 border-oracle-gold/30 rounded-l-lg py-3 px-4 font-garamond text-white placeholder:text-oracle-soft-gold/60 focus:outline-none focus:ring-2 focus:ring-oracle-gold/30"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}

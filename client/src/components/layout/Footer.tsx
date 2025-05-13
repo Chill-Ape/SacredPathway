@@ -29,8 +29,8 @@ export default function Footer() {
   
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Sacred Scrolls", path: "/scrolls" },
-    { name: "Ancient Lore", path: "/lore" },
+    { name: "Akashic Scrolls", path: "/scrolls" },
+    { name: "Akashic Lore", path: "/lore" },
     { name: "The Oracle", path: "/oracle" },
     { name: "Contact", path: "/contact" },
   ];
@@ -38,9 +38,9 @@ export default function Footer() {
   const resourceLinks = [
     { name: "Beginner's Guide", path: "/scrolls" },
     { name: "Meditation Practices", path: "/scrolls" },
-    { name: "Sacred Symbolism", path: "/lore" },
+    { name: "Akashic Symbolism", path: "/lore" },
     { name: "Keeper's Journal", path: "/lore" },
-    { name: "Sacred Geometry", path: "/scrolls" },
+    { name: "Akashic Geometry", path: "/scrolls" },
   ];
 
   return (

@@ -10,7 +10,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ isUser, message, loading = false }: ChatMessageProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const typingSpeed = 40; // ms per character
+  const typingSpeed = 70; // ms per character - slower for more dramatic effect
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
@@ -35,12 +35,21 @@ export default function ChatMessage({ isUser, message, loading = false }: ChatMe
         setDisplayedText(message.substring(0, currentIndex + 1));
         currentIndex++;
         
-        // Play typewriter sound
-        if (audioRef.current) {
-          // Reset and play for better sound effect continuity
+        // Play typewriter sound - only play for certain characters to make it more natural
+        // Skip sounds for spaces and punctuation sometimes
+        const currentChar = message[currentIndex - 1] || '';
+        const shouldPlaySound = currentChar !== ' ' && 
+                               (currentChar !== ',' || Math.random() > 0.5) && 
+                               (currentChar !== '.' || Math.random() > 0.7);
+        
+        if (audioRef.current && shouldPlaySound) {
+          // Create a new audio instance for better overlap of sounds
           const clone = audioRef.current.cloneNode() as HTMLAudioElement;
-          clone.volume = 0.1;
+          clone.volume = 0.15;
           clone.play().catch(e => console.log("Audio play prevented:", e));
+          
+          // Add slight variation to playback rate for more natural typing sound
+          clone.playbackRate = 0.9 + Math.random() * 0.4; // Between 0.9 and 1.3
         }
       } else {
         clearInterval(interval);
