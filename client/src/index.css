@@ -281,8 +281,8 @@ html, body {
 }
 
 @keyframes oracle-chatbox-glow {
-  0%, 100% { box-shadow: 0 0 15px 2px rgba(218, 165, 32, 0.3); }
-  50% { box-shadow: 0 0 25px 4px rgba(218, 165, 32, 0.5); }
+  0%, 100% { box-shadow: 0 0 15px 2px rgba(24, 71, 114, 0.3); }
+  50% { box-shadow: 0 0 25px 4px rgba(24, 71, 114, 0.5); }
 }
 
 .oracle-chatbox-glow {
@@ -290,8 +290,8 @@ html, body {
 }
 
 @keyframes oracle-chatbox-glow-active {
-  0%, 100% { box-shadow: 0 0 20px 5px rgba(218, 165, 32, 0.5); }
-  50% { box-shadow: 0 0 35px 10px rgba(218, 165, 32, 0.8); }
+  0%, 100% { box-shadow: 0 0 20px 5px rgba(24, 71, 114, 0.5); }
+  50% { box-shadow: 0 0 35px 10px rgba(24, 71, 114, 0.8); }
 }
 
 .oracle-chatbox-glow-active {
