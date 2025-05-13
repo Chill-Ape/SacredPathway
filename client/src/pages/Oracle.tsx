@@ -31,7 +31,7 @@ export default function Oracle() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="min-h-screen bg-white px-4 py-16 relative overflow-hidden"
+      className="min-h-screen bg-white px-4 py-8 relative overflow-hidden"
     >
       {/* Breathing background light */}
       <div className="absolute inset-0 z-0">
