@@ -45,6 +45,7 @@ function App() {
                 <ProtectedRoute path="/profile" component={Profile} />
                 <ProtectedRoute path="/my-scrolls" component={MyScrolls} />
                 <ProtectedRoute path="/admin" component={Admin} />
+                <ProtectedRoute path="/mana" component={ManageMana} />
                 <Route component={NotFound} />
               </Switch>
             </AnimatePresence>

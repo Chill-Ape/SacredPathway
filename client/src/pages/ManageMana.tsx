@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { Container } from '@/components/ui/container';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ManaPackages from '@/components/mana/ManaPackages';
 import ManaTransactions from '@/components/mana/ManaTransactions';
@@ -8,27 +7,27 @@ import ManaBalance from '@/components/mana/ManaBalance';
 import { Sparkles } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
-const ManageMana: React.FC = () => {
+function ManageMana(): React.JSX.Element {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <Container className="py-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
         </div>
-      </Container>
+      </div>
     );
   }
 
   if (!user) {
     return (
-      <Container className="py-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold mb-4">Authentication Required</h2>
           <p>You need to be logged in to manage your Mana.</p>
         </div>
-      </Container>
+      </div>
     );
   }
 
@@ -39,7 +38,7 @@ const ManageMana: React.FC = () => {
         <meta name="description" content="Purchase and manage your Mana for the Akashic Archive. Use Mana to unlock ancient scrolls and access hidden knowledge." />
       </Helmet>
       
-      <Container className="py-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -82,7 +81,7 @@ const ManageMana: React.FC = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

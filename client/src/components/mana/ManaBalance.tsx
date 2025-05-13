@@ -7,7 +7,7 @@ import { Sparkles } from 'lucide-react';
 const ManaBalance: React.FC = () => {
   const { user, isLoading: authLoading } = useAuth();
   
-  const { data, isLoading: balanceLoading } = useQuery({
+  const { data, isLoading: balanceLoading } = useQuery<{ balance: number }>({
     queryKey: ['/api/user/mana'],
     enabled: !!user,
   });

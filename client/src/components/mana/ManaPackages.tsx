@@ -1,24 +1,67 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/use-auth';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
 import { ManaPackage } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
+import { loadStripe } from '@stripe/stripe-js';
 
-// This component will be updated when Stripe keys are available to handle actual purchases
+// Initialize Stripe with the public key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
 const ManaPackages: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [processingPackageId, setProcessingPackageId] = useState<number | null>(null);
   
   const { data: packages, isLoading, error } = useQuery<ManaPackage[]>({
     queryKey: ['/api/mana/packages'],
     enabled: !!user,
   });
 
+  const createPaymentIntent = useMutation({
+    mutationFn: async (packageId: number) => {
+      const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { packageId });
+      return response.json();
+    },
+    onSuccess: async (data) => {
+      // Redirect to Stripe Checkout with the client secret
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+
+      if (error) {
+        toast({
+          title: 'Payment Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+      
+      setProcessingPackageId(null);
+      queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Payment Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+      setProcessingPackageId(null);
+    },
+  });
+
   const handlePurchase = (pkg: ManaPackage) => {
-    if (!process.env.VITE_STRIPE_PUBLIC_KEY) {
+    if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
       toast({
         title: "Payment System Not Available",
         description: "The Mana purchase system is currently being set up. Please check back later.",
@@ -27,12 +70,8 @@ const ManaPackages: React.FC = () => {
       return;
     }
     
-    // This function will be expanded when Stripe is fully integrated
-    toast({
-      title: "Coming Soon",
-      description: `Purchasing ${pkg.amount} Mana will be available shortly.`,
-      variant: "default"
-    });
+    setProcessingPackageId(pkg.id);
+    createPaymentIntent.mutate(pkg.id);
   };
 
   if (!user) {
@@ -97,8 +136,16 @@ const ManaPackages: React.FC = () => {
             <Button 
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
               onClick={() => handlePurchase(pkg)}
+              disabled={processingPackageId === pkg.id || createPaymentIntent.isPending}
             >
-              Purchase
+              {processingPackageId === pkg.id ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Purchase"
+              )}
             </Button>
           </CardFooter>
         </Card>
