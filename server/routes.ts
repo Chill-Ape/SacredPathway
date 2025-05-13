@@ -50,19 +50,25 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Add health check endpoint for deployment
-  app.get('/health', (_req, res) => {
+  // Add health check endpoint at root path for deployment
+  app.get('/', (req, res, next) => {
+    // If requesting the root path with Accept: text/html, let Vite handle it for the SPA
+    if (req.headers.accept && req.headers.accept.includes('text/html')) {
+      return next();
+    }
+    
+    // Otherwise, treat it as a health check and respond with OK
     res.status(200).send('OK');
   });
   
-  // Add explicit root path handler
-  app.get('/', (_req, res, next) => {
-    // This will be handled by Vite for the SPA frontend
-    next();
+  // Add additional health check endpoint
+  app.get('/health', (_req, res) => {
+    res.status(200).send('OK');
   });
   // Set up session and authentication using persistent storage
   const sessionSettings = {
-    secret: 'akashic-archive-session-secret',
+    // Use environment variable for session secret with fallback for development
+    secret: process.env.SESSION_SECRET || 'dev-session-secret',
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore, // Use our database session store
@@ -71,6 +77,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
     }
   };
+  
+  // Check if SESSION_SECRET is set in production
+  if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+    console.warn('WARNING: SESSION_SECRET environment variable is not set in production mode!');
+  }
 
   app.use(session(sessionSettings));
   app.use(passport.initialize());
