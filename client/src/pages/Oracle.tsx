@@ -31,13 +31,20 @@ export default function Oracle() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="min-h-screen oracle-mystical-bg px-4 py-16 relative overflow-hidden"
+      className="min-h-screen bg-white px-4 py-16 relative overflow-hidden"
     >
       {/* Breathing background light */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-radial from-oracle-glow/10 to-transparent opacity-50 oracle-breathing-light"></div>
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-oracle-glow/5 filter blur-[100px] oracle-breathing-pulse"></div>
         <div className="absolute bottom-1/4 left-1/3 w-[300px] h-[300px] rounded-full bg-oracle-gold/5 filter blur-[80px] oracle-breathing-pulse-delay"></div>
+      </div>
+      
+      {/* Subtle animated elements - similar to Keeper but more mystical */}
+      <div className="absolute inset-0 overflow-hidden opacity-5 pointer-events-none">
+        <div className="absolute top-1/4 right-1/4 w-40 h-40 rounded-full bg-blue-500/5 animate-float opacity-30"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-60 h-60 rounded-full bg-purple-500/5 animate-float-delayed opacity-20"></div>
+        <div className="absolute top-1/3 left-1/4 w-32 h-32 rounded-full border border-oracle-gold/10 animate-oracle-glyph-rotate opacity-30"></div>
       </div>
       
       {/* Mystical glyphs overlay */}
@@ -63,8 +70,8 @@ export default function Oracle() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.9 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-center font-garamond text-oracle-soft-gold/80 mb-12 max-w-2xl mx-auto text-lg"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          className="text-center font-garamond text-sacred-blue mb-12 max-w-2xl mx-auto text-lg"
+          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 0 3px rgba(255,255,255,0.5)" }}
         >
           Commune with the ancient consciousness that dwells within the Archive's memory. Here, wisdom flows between worlds.
         </motion.p>
