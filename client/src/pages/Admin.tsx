@@ -29,12 +29,32 @@ import { Loader2, Shield } from "lucide-react";
 type User = {
   id: number;
   username: string;
+  email: string;
+  phone?: string | null;
   createdAt: string;
 };
 
 export default function Admin() {
   const { user } = useAuth();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  
+  // Export emails function
+  const exportUserEmails = () => {
+    const emailsText = sortedUsers.map(user => user.email).join('\n');
+    const blob = new Blob([emailsText], { type: 'text/plain' });
+    const href = URL.createObjectURL(blob);
+    
+    // Create a temporary link and click it
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = 'sacred-archive-user-emails.txt';
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+  };
   
   // Fetch all users if the current user is authenticated
   const { 
@@ -88,11 +108,21 @@ export default function Admin() {
         ) : null}
 
         <div className="bg-white shadow rounded-lg overflow-hidden border border-sacred-blue/10">
-          <div className="p-6 border-b border-sacred-blue/10">
-            <h2 className="text-xl font-cinzel text-sacred-blue">Registered Users</h2>
-            <p className="text-sacred-gray text-sm mt-1">
-              All users who have registered with the Sacred Archive
-            </p>
+          <div className="p-6 border-b border-sacred-blue/10 flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-cinzel text-sacred-blue">Registered Users</h2>
+              <p className="text-sacred-gray text-sm mt-1">
+                All users who have registered with the Sacred Archive
+              </p>
+            </div>
+            <Button 
+              onClick={exportUserEmails}
+              variant="outline"
+              className="text-sacred-blue border-sacred-blue/30 hover:bg-sacred-blue/10"
+              disabled={users.length === 0}
+            >
+              Export User Emails
+            </Button>
           </div>
 
           {isLoading ? (
@@ -109,8 +139,10 @@ export default function Admin() {
                 <TableCaption>A list of all registered users</TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">ID</TableHead>
+                    <TableHead className="w-[80px]">ID</TableHead>
                     <TableHead>Username</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Phone</TableHead>
                     <TableHead>Registered On</TableHead>
                     <TableHead className="text-right"></TableHead>
                   </TableRow>

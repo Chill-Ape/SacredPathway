@@ -26,6 +26,8 @@ const loginSchema = z.object({
 
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().optional(),
   password: z.string().optional(),
 });
 
@@ -48,6 +50,8 @@ export default function AuthPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
+      email: "",
+      phone: "",
       password: "",
     },
   });
@@ -177,6 +181,44 @@ export default function AuthPage() {
                           <FormControl>
                             <Input
                               placeholder="Choose a username"
+                              className="font-raleway"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-cinzel">Email (Required)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="Enter your email address"
+                              className="font-raleway"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-cinzel">Phone (Optional)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="tel"
+                              placeholder="Enter your phone number (optional)"
                               className="font-raleway"
                               {...field}
                             />
