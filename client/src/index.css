@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Raleway:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -25,7 +27,7 @@
     --ring: 207 90% 54%;
     
     /* Sacred custom colors */
-    --sacred-white: 0 0% 97%;
+    --sacred-white: 0 0% 98%;
     --sacred-blue-light: 214 50% 35%;
     --sacred-blue: 214 60% 24%;
     --sacred-blue-dark: 214 70% 16%;
@@ -83,6 +85,21 @@
   font-family: 'Playfair Display', serif;
 }
 
+.font-garamond {
+  font-family: 'EB Garamond', serif;
+}
+
+/* Custom cursor styling */
+html, body {
+  cursor: none;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    cursor: auto;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -97,7 +114,22 @@
 
 /* Sacred pattern background */
 .sacred-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232C5282' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%232C5282' stroke-width='0.5' stroke-opacity='0.05'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Ccircle cx='50' cy='50' r='20'/%3E%3Cpath d='M50 10 L90 90 L10 90 Z'/%3E%3Ccircle cx='20' cy='20' r='10'/%3E%3Ccircle cx='80' cy='20' r='10'/%3E%3Ccircle cx='80' cy='80' r='10'/%3E%3Ccircle cx='20' cy='80' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  position: relative;
+}
+
+/* Sacred subtle glow effect */
+.sacred-pattern::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Custom page transitions */
@@ -149,6 +181,58 @@
 
 .animate-fade-up {
   animation: fadeUp 1.2s ease-out forwards;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-rotate {
+  animation: rotate 120s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 8s infinite;
+}
+
+/* Glowing element effect */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle at center, rgba(100, 150, 220, 0.5) 0%, rgba(100, 150, 220, 0) 70%);
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.glow-effect:hover::after {
+  opacity: 1;
 }
 
 .animate-delay-100 { animation-delay: 0.1s; }
