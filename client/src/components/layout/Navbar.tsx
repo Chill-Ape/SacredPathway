@@ -11,9 +11,20 @@ export default function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
-
+  const [cachedUser, setCachedUser] = useState(user);
+  
+  // Update cached user when user state changes
+  useEffect(() => {
+    if (user) {
+      setCachedUser(user);
+    }
+  }, [user]);
+  
+  // Use either the current user state or the cached version to prevent flickering
+  const currentUser = user || cachedUser;
+  
   // Debug
-  console.log("Navbar - User:", user);
+  console.log("Navbar - User:", user, "Cached user:", cachedUser, "Current user:", currentUser);
   
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -96,7 +107,7 @@ export default function Navbar() {
               {/* Login/Profile button in mobile menu */}
               <div className="py-3 border-t border-sacred-blue/10 mt-3">
                 <div className="flex justify-center" onClick={() => setIsMobileMenuOpen(false)}>
-                  <ProfileMenu isMobile={true} />
+                  {!isLoading && <ProfileMenu isMobile={true} forcedUser={currentUser} />}
                 </div>
               </div>
             </div>

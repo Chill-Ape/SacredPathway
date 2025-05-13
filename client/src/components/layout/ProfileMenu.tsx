@@ -14,11 +14,15 @@ import { User, LogOut, Library } from "lucide-react";
 
 type ProfileMenuProps = {
   isMobile?: boolean;
+  forcedUser?: { id: number; username: string } | null;
 };
 
-export default function ProfileMenu({ isMobile = false }: ProfileMenuProps) {
-  const { user, logoutMutation } = useAuth();
+export default function ProfileMenu({ isMobile = false, forcedUser = null }: ProfileMenuProps) {
+  const { user: authUser, logoutMutation } = useAuth();
   const [location] = useLocation();
+  
+  // Use either the forcedUser (from parent) or the authUser (from context)
+  const user = forcedUser || authUser;
 
   const handleLogout = () => {
     logoutMutation.mutate();
