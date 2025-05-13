@@ -20,6 +20,13 @@ import {
 import { db, isDatabaseAvailable } from "./db";
 import { eq } from "drizzle-orm";
 
+import session from "express-session";
+import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+
+const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
+
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
@@ -50,6 +57,9 @@ export interface IStorage {
   // Contact message methods
   createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
   getContactMessages(): Promise<ContactMessage[]>;
+  
+  // Session store
+  sessionStore: session.Store;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -512,4 +522,5 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Use DatabaseStorage if a database connection is available, otherwise fall back to MemStorage
+export const storage = isDatabaseAvailable ? new DatabaseStorage() : new MemStorage();
