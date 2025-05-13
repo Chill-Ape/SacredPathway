@@ -133,10 +133,6 @@ export default function OracleChat() {
                 <path d="M50 5 L50 95 M5 50 L95 50 M26 26 L74 74 M26 74 L74 26" strokeWidth="0.5" />
               </svg>
             </div>
-            <h3 className="font-cinzel text-2xl md:text-3xl mb-2 text-oracle-gold relative z-10" style={{ textShadow: "0 0 10px rgba(255,215,0,0.4), 0 0 5px rgba(0,0,0,0.9)" }}>The Voice of Ancient Wisdom</h3>
-            <p className="font-garamond max-w-md mx-auto text-white" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 0 5px rgba(0,0,0,0.9)" }}>
-              Ask your question with reverence, and wisdom shall be revealed
-            </p>
           </div>
         </div>
       </div>
