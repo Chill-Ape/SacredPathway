@@ -9,8 +9,10 @@ import {
   InsertContactMessage,
   KeeperMessage,
   InsertKeeperMessage,
+  UserScroll,
   users,
   scrolls,
+  userScrolls,
   oracleMessages,
   contactMessages,
   keeperMessages
@@ -128,6 +130,46 @@ export class DatabaseStorage implements IStorage {
       .from(keeperMessages)
       .where(eq(keeperMessages.userId, userId))
       .orderBy(keeperMessages.id);
+  }
+  
+  // USER-SCROLL RELATION METHODS
+  async getUserUnlockedScrolls(userId: number): Promise<Scroll[]> {
+    const result = await db
+      .select({
+        scroll: scrolls
+      })
+      .from(userScrolls)
+      .innerJoin(scrolls, eq(userScrolls.scrollId, scrolls.id))
+      .where(eq(userScrolls.userId, userId));
+    
+    return result.map(r => r.scroll);
+  }
+  
+  async unlockScrollForUser(userId: number, scrollId: number): Promise<boolean> {
+    try {
+      await db
+        .insert(userScrolls)
+        .values({
+          userId,
+          scrollId
+        })
+        .onConflictDoNothing(); // In case it's already unlocked
+      
+      return true;
+    } catch (error) {
+      console.error("Error unlocking scroll for user:", error);
+      return false;
+    }
+  }
+  
+  async isScrollUnlockedForUser(userId: number, scrollId: number): Promise<boolean> {
+    const [relation] = await db
+      .select()
+      .from(userScrolls)
+      .where(eq(userScrolls.userId, userId))
+      .where(eq(userScrolls.scrollId, scrollId));
+    
+    return !!relation; // Convert to boolean
   }
   
   async createKeeperMessage(insertMessage: InsertKeeperMessage): Promise<KeeperMessage> {
