@@ -22,27 +22,18 @@ export default function Scrolls() {
   
   const handleUnlockScroll = async (scrollId: number, key: string): Promise<boolean> => {
     try {
-      // If the user is authenticated, use the user-specific unlock method
+      // We now only allow authenticated users to unlock scrolls
+      // The UI has been updated to prompt users to create an account
       if (user) {
         unlockScroll({ scrollId, key });
         return true;
       } else {
-        // For non-authenticated users, use the regular unlock method
-        const response = await apiRequest("POST", `/api/scrolls/${scrollId}/unlock`, { key });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to unlock scroll");
-        }
-        
-        // Refresh the scrolls list
-        queryClient.invalidateQueries({ queryKey: ["/api/scrolls"] });
-        
+        // Redirect non-authenticated users to auth page (handled in UI)
         toast({
-          title: "Scroll Unlocked",
-          description: "The ancient knowledge has been revealed to you. Create an account to save your progress!",
+          title: "Authentication Required",
+          description: "You must create an account to unlock scrolls and track your progress.",
         });
-        
-        return true;
+        return false;
       }
     } catch (error: any) {
       toast({

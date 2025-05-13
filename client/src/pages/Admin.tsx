@@ -152,6 +152,8 @@ export default function Admin() {
                     <TableRow key={user.id}>
                       <TableCell className="font-mono">{user.id}</TableCell>
                       <TableCell className="font-medium">{user.username}</TableCell>
+                      <TableCell className="font-medium text-sacred-blue">{user.email}</TableCell>
+                      <TableCell>{user.phone || "—"}</TableCell>
                       <TableCell>
                         {new Date(user.createdAt).toLocaleDateString()} at{" "}
                         {new Date(user.createdAt).toLocaleTimeString()}

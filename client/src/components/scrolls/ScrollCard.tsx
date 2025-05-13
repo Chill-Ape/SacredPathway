@@ -1,9 +1,11 @@
 import { Scroll } from "@shared/schema";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Lock, Unlock } from "lucide-react";
+import { Lock, Unlock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollDialog from "@/components/scrolls/ScrollDialog";
+import { Link } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 interface ScrollCardProps {
   scroll: Scroll;
@@ -11,6 +13,7 @@ interface ScrollCardProps {
 }
 
 export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
+  const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [unlockAttempted, setUnlockAttempted] = useState(false);
@@ -71,7 +74,18 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
           
           {scroll.isLocked ? (
             <>
-              {!unlockAttempted ? (
+              {!user ? (
+                <div className="space-y-2">
+                  <p className="text-sacred-gray text-sm italic">To unlock this ancient wisdom, you must first create an account.</p>
+                  <Link href="/auth">
+                    <Button
+                      className="w-full bg-sacred-blue hover:bg-sacred-blue-light text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
+                    >
+                      <UserPlus className="mr-2 h-4 w-4" /> Create Account
+                    </Button>
+                  </Link>
+                </div>
+              ) : !unlockAttempted ? (
                 <div className="space-y-2">
                   <input
                     type="text"
