@@ -7,10 +7,13 @@ import {
   InsertOracleMessage, 
   ContactMessage, 
   InsertContactMessage,
+  KeeperMessage,
+  InsertKeeperMessage,
   users,
   scrolls,
   oracleMessages,
-  contactMessages
+  contactMessages,
+  keeperMessages
 } from "@shared/schema";
 import { db, isDatabaseAvailable } from "./db";
 import { eq } from "drizzle-orm";
@@ -31,6 +34,10 @@ export interface IStorage {
   // Oracle message methods
   getOracleMessages(userId: string): Promise<OracleMessage[]>;
   createOracleMessage(message: InsertOracleMessage): Promise<OracleMessage>;
+  
+  // Keeper message methods
+  getKeeperMessages(userId: string): Promise<KeeperMessage[]>;
+  createKeeperMessage(message: InsertKeeperMessage): Promise<KeeperMessage>;
   
   // Contact message methods
   createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
@@ -104,6 +111,23 @@ export class DatabaseStorage implements IStorage {
   async createOracleMessage(insertMessage: InsertOracleMessage): Promise<OracleMessage> {
     const [message] = await db
       .insert(oracleMessages)
+      .values(insertMessage)
+      .returning();
+    return message;
+  }
+  
+  // KEEPER MESSAGE METHODS
+  async getKeeperMessages(userId: string): Promise<KeeperMessage[]> {
+    return await db
+      .select()
+      .from(keeperMessages)
+      .where(eq(keeperMessages.userId, userId))
+      .orderBy(keeperMessages.id);
+  }
+  
+  async createKeeperMessage(insertMessage: InsertKeeperMessage): Promise<KeeperMessage> {
+    const [message] = await db
+      .insert(keeperMessages)
       .values(insertMessage)
       .returning();
     return message;
@@ -187,22 +211,26 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private scrolls: Map<number, Scroll>;
   private oracleMessages: Map<number, OracleMessage>;
+  private keeperMessages: Map<number, KeeperMessage>;
   private contactMessages: Map<number, ContactMessage>;
   
   private currentUserId: number;
   private currentScrollId: number;
   private currentOracleMessageId: number;
+  private currentKeeperMessageId: number;
   private currentContactMessageId: number;
 
   constructor() {
     this.users = new Map();
     this.scrolls = new Map();
     this.oracleMessages = new Map();
+    this.keeperMessages = new Map();
     this.contactMessages = new Map();
     
     this.currentUserId = 1;
     this.currentScrollId = 1;
     this.currentOracleMessageId = 1;
+    this.currentKeeperMessageId = 1;
     this.currentContactMessageId = 1;
     
     // Initialize with some default scrolls
@@ -273,6 +301,21 @@ export class MemStorage implements IStorage {
     const createdAt = new Date();
     const message: OracleMessage = { ...insertMessage, id, createdAt };
     this.oracleMessages.set(id, message);
+    return message;
+  }
+  
+  // KEEPER MESSAGE METHODS
+  async getKeeperMessages(userId: string): Promise<KeeperMessage[]> {
+    return Array.from(this.keeperMessages.values())
+      .filter(message => message.userId === userId)
+      .sort((a, b) => a.id - b.id);
+  }
+  
+  async createKeeperMessage(insertMessage: InsertKeeperMessage): Promise<KeeperMessage> {
+    const id = this.currentKeeperMessageId++;
+    const createdAt = new Date();
+    const message: KeeperMessage = { ...insertMessage, id, createdAt };
+    this.keeperMessages.set(id, message);
     return message;
   }
   

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { PaperPlaneIcon, Loader2 } from "lucide-react";
+import { Send as SendIcon, Loader2 } from "lucide-react";
 import KeeperMessage from "./KeeperMessage";
 
 // Define message types
@@ -168,7 +168,7 @@ export default function KeeperChat() {
             {sendMessageMutation.isPending ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <PaperPlaneIcon className="h-5 w-5" />
+              <SendIcon className="h-5 w-5" />
             )}
             <span className="sr-only">Send</span>
           </Button>
