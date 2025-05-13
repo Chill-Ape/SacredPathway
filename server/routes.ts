@@ -604,8 +604,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? `https://${req.get('host')}`
         : `http://${req.get('host')}`;
       
-      console.log('Creating Stripe Checkout session with public key:', process.env.VITE_STRIPE_PUBLIC_KEY);
-      console.log('Domain for success/cancel URLs:', domain);
+      console.log('Creating Stripe Checkout session:');
+      console.log('- Public key status:', process.env.VITE_STRIPE_PUBLIC_KEY ? 'Available' : 'Missing');
+      console.log('- Secret key status:', process.env.STRIPE_SECRET_KEY ? 'Available' : 'Missing');
+      console.log('- Domain for success/cancel URLs:', domain);
+      console.log('- Package ID:', manaPackage.id);
+      console.log('- Package price:', manaPackage.price);
+      console.log('- Customer ID:', stripeCustomerId);
       
       // Create a Checkout session with explicit types
       const session = await stripe.checkout.sessions.create({
@@ -633,6 +638,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           manaAmount: manaPackage.amount.toString()
         },
       });
+      
+      // Log successful session creation
+      console.log('Stripe session created successfully, session ID:', session.id);
       
       res.json({
         sessionId: session.id,
