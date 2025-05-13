@@ -87,6 +87,13 @@ export default function Navbar() {
                   </span>
                 </Link>
               ))}
+              
+              {/* Login/Profile button in mobile menu */}
+              <div className="py-3 border-t border-sacred-blue/10 mt-3">
+                <div className="flex justify-center" onClick={() => setIsMobileMenuOpen(false)}>
+                  <ProfileMenu />
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

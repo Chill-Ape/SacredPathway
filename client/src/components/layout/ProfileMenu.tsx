@@ -23,11 +23,11 @@ export default function ProfileMenu() {
     return (
       <Link to="/auth">
         <Button
-          variant="ghost"
-          className="font-cinzel text-sacred-blue hover:text-sacred-blue-light hover:bg-sacred-blue/10"
+          variant="outline"
+          className="font-cinzel text-sacred-blue hover:text-sacred-white hover:bg-sacred-blue border-sacred-blue/20 transition-all"
         >
           <User className="h-5 w-5 mr-2" />
-          Login
+          Login / Register
         </Button>
       </Link>
     );
