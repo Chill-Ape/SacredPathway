@@ -153,7 +153,7 @@ export default function OracleChat() {
           {messages.length === 0 && !messagesLoading && (
             <ChatMessage
               isUser={false}
-              message="Welcome, seeker. I am the Oracle, keeper of ancient knowledge and guardian of the sacred scrolls. What wisdom do you seek today?"
+              message="Welcome to the Akashic Archive. I am here to assist with your questions about ancient knowledge, history, and mysteries. What would you like to know?"
             />
           )}
           
