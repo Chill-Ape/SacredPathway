@@ -688,7 +688,154 @@ export class MemStorage implements IStorage {
     return Array.from(this.contactMessages.values());
   }
   
+  // MANA METHODS
+  async getUserManaBalance(userId: number): Promise<number> {
+    const user = await this.getUser(userId);
+    return user?.manaBalance || 0;
+  }
+
+  async updateUserManaBalance(userId: number, amount: number): Promise<number> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    
+    const newBalance = (user.manaBalance || 0) + amount;
+    user.manaBalance = newBalance;
+    this.users.set(userId, user);
+    
+    return newBalance;
+  }
+
+  async createManaTransaction(transaction: InsertManaTransaction): Promise<ManaTransaction> {
+    const id = this.currentManaTransactionId++;
+    const createdAt = new Date();
+    
+    const newTransaction: ManaTransaction = {
+      ...transaction,
+      id,
+      createdAt
+    };
+    
+    this.manaTransactions.set(id, newTransaction);
+    return newTransaction;
+  }
+
+  async getUserManaTransactions(userId: number): Promise<ManaTransaction[]> {
+    return Array.from(this.manaTransactions.values())
+      .filter(transaction => transaction.userId === userId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  async getAllManaPackages(): Promise<ManaPackage[]> {
+    return Array.from(this.manaPackages.values())
+      .filter(pkg => pkg.isActive)
+      .sort((a, b) => a.price - b.price);
+  }
+
+  async getManaPackageById(id: number): Promise<ManaPackage | undefined> {
+    return this.manaPackages.get(id);
+  }
+
+  async createManaPackage(manaPackage: InsertManaPackage): Promise<ManaPackage> {
+    const id = this.currentManaPackageId++;
+    const createdAt = new Date();
+    
+    const newPackage: ManaPackage = {
+      ...manaPackage,
+      id,
+      createdAt
+    };
+    
+    this.manaPackages.set(id, newPackage);
+    return newPackage;
+  }
+
+  async updateManaPackage(id: number, updates: Partial<InsertManaPackage>): Promise<ManaPackage | undefined> {
+    const existingPackage = await this.getManaPackageById(id);
+    
+    if (!existingPackage) {
+      return undefined;
+    }
+    
+    const updatedPackage: ManaPackage = {
+      ...existingPackage,
+      ...updates,
+      id: existingPackage.id,
+      createdAt: existingPackage.createdAt
+    };
+    
+    this.manaPackages.set(id, updatedPackage);
+    return updatedPackage;
+  }
+
+  async updateUserStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User> {
+    const user = await this.getUser(userId);
+    
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    
+    user.stripeCustomerId = stripeCustomerId;
+    this.users.set(userId, user);
+    
+    return user;
+  }
+  
+  async updateScrollImage(id: number, imagePath: string): Promise<Scroll | undefined> {
+    const scroll = await this.getScrollById(id);
+    
+    if (!scroll) {
+      return undefined;
+    }
+    
+    scroll.image = imagePath;
+    this.scrolls.set(id, scroll);
+    
+    return scroll;
+  }
+  
   // INITIALIZE DEFAULT DATA
+  private initializeDefaultManaPackages() {
+    // Only initialize if none exist
+    if (this.manaPackages.size > 0) {
+      return;
+    }
+    
+    // Create default mana packages
+    this.createManaPackage({
+      name: "Novice Pack",
+      description: "A small amount of Mana to unlock basic scrolls and features.",
+      amount: 100,
+      price: 499, // $4.99
+      isActive: true
+    });
+    
+    this.createManaPackage({
+      name: "Adept Pack",
+      description: "A moderate amount of Mana for regular Archive users.",
+      amount: 300,
+      price: 999, // $9.99
+      isActive: true
+    });
+    
+    this.createManaPackage({
+      name: "Scholar Pack",
+      description: "A substantial amount of Mana for dedicated seekers of knowledge.",
+      amount: 1000,
+      price: 2499, // $24.99
+      isActive: true
+    });
+    
+    this.createManaPackage({
+      name: "Master Pack",
+      description: "An abundant reserve of Mana for the most devoted students of the Archive.",
+      amount: 2500,
+      price: 4999, // $49.99
+      isActive: true
+    });
+  }
+  
   private initializeDefaultScrolls() {
     const unlockScrolls = [
       {
