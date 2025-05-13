@@ -164,8 +164,7 @@ export default function Hero() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
+          /* Mouse hover effects removed as part of cursor fix */
         >
           {/* Pulsing aura */}
           <motion.div 
@@ -392,8 +391,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.2 }}
           className="relative"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
+          /* Mouse hover effects removed as part of cursor fix */
         >
           <Link href="/scrolls">
             <Button
