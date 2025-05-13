@@ -84,17 +84,15 @@ export default function KeeperChat() {
   // Send message mutation
   const { mutate: sendMessage, isPending } = useMutation<KeeperResponse, Error, string>({
     mutationFn: async (content: string) => {
-      const response = await apiRequest("/api/keeper/message", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await apiRequest(
+        "POST", 
+        "/api/keeper/message",
+        {
           userId: sessionId,
           content,
-        }),
-      });
-      return response as KeeperResponse;
+        }
+      );
+      return await response.json();
     },
     onSuccess: (data: KeeperResponse) => {
       // Add the user message and assistant response to the chat
