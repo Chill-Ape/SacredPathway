@@ -39,6 +39,7 @@ export interface IStorage {
   getScrollById(id: number): Promise<Scroll | undefined>;
   createScroll(scroll: InsertScroll): Promise<Scroll>;
   unlockScroll(id: number): Promise<Scroll | undefined>;
+  updateScrollImage(id: number, imagePath: string): Promise<Scroll | undefined>;
   checkScrollKey(id: number, key: string): Promise<boolean>;
   
   // User-Scroll relation methods

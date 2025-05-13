@@ -138,23 +138,23 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
                 Preview Scroll
               </Button>
               
-              <Link to={`/scrolls/${scroll.id}`}>
-                <Button
-                  variant="outline"
-                  className="w-full border-sacred-blue text-sacred-blue hover:bg-sacred-blue-light hover:text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
-                >
-                  Open Full Scroll
-                </Button>
-              </Link>
-              
-              {/* Special button for Legacy of the Lost Age scroll */}
-              {scroll.id === 37 && (
+              {/* Special handling for Legacy of the Lost Age scroll (ID 37) */}
+              {scroll.id === 37 ? (
                 <Link to={`/sacred-scroll/${scroll.id}`}>
                   <Button
                     variant="outline"
-                    className="w-full mt-2 border-sacred-blue bg-sacred-blue/5 text-sacred-blue hover:bg-sacred-blue-light hover:text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
+                    className="w-full border-sacred-blue text-sacred-blue hover:bg-sacred-blue-light hover:text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
                   >
                     View Sacred Scroll Pages
+                  </Button>
+                </Link>
+              ) : (
+                <Link to={`/scrolls/${scroll.id}`}>
+                  <Button
+                    variant="outline"
+                    className="w-full border-sacred-blue text-sacred-blue hover:bg-sacred-blue-light hover:text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
+                  >
+                    Open Full Scroll
                   </Button>
                 </Link>
               )}

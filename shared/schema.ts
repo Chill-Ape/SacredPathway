@@ -80,6 +80,10 @@ export const insertScrollSchema = createInsertSchema(scrolls).pick({
   key: true,
 });
 
+export const updateScrollSchema = createInsertSchema(scrolls).pick({
+  image: true,
+});
+
 export const oracleMessages = pgTable("oracle_messages", {
   id: serial("id").primaryKey(),
   userId: text("user_id").notNull(), // Session ID or user ID
