@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema } from "@shared/schema";
 import OpenAI from "openai";
 import { PROMPTS } from "./config/prompts";
+import { getLoreContext } from "./utils/loreSearch";
 
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "mock_key_for_development" });
@@ -189,27 +190,48 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
   }
 }
 
-// Generate Keeper response using OpenAI
+// Generate Keeper response using OpenAI with lore context
 async function generateKeeperResponse(userMessage: string): Promise<string> {
   try {
+    // Search for relevant lore based on the user's message
+    const loreContext = getLoreContext(userMessage);
+    
+    // Determine if we have relevant lore or not
+    const hasRelevantLore = loreContext.length > 0;
+    
+    // Create the system message with base prompt and lore context if available
+    let systemContent = PROMPTS.KEEPER;
+    
+    if (hasRelevantLore) {
+      // Append lore context to the system message
+      systemContent = `${systemContent}\n\n${loreContext}`;
+      console.log('Found relevant lore for query:', userMessage);
+    } else {
+      console.log('No relevant lore found for query:', userMessage);
+    }
+    
     // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: PROMPTS.KEEPER
+          content: systemContent
         },
         {
           role: "user",
           content: userMessage
         }
       ],
-      max_tokens: 250,
+      max_tokens: 300, // Increased slightly to accommodate more detailed responses
       temperature: 0.6,
     });
 
-    return response.choices[0].message.content || "The Keeper is contemplating your question. Please try asking again.";
+    // If there was no relevant lore and the question seems like it's asking for specific lore,
+    // consider returning the "not yet translated" response
+    const responseContent = response.choices[0].message.content || "";
+    
+    return responseContent || "The Keeper is contemplating your question. Please try asking again.";
   } catch (error) {
     console.error("Error generating Keeper response:", error);
     return "The Archive is recalibrating. The Keeper cannot access the knowledge at this moment. Please return shortly.";
