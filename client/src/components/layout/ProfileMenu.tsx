@@ -26,9 +26,14 @@ export default function ProfileMenu({ isMobile = false, forcedUser = null }: Pro
 
   const handleLogout = () => {
     console.log("Logging out user...");
+    
+    // Clear user data from localStorage immediately to prevent UI flicker
+    localStorage.removeItem('akashic_user');
+    
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
         console.log("Logout successful, redirecting to home page");
+        
         // Force reload the page to clear all state
         setTimeout(() => {
           window.location.href = '/';

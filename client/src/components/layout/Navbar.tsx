@@ -11,17 +11,42 @@ export default function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
-  const [cachedUser, setCachedUser] = useState(user);
+  const [cachedUser, setCachedUser] = useState(() => {
+    // Initialize from localStorage if available
+    try {
+      const storedUser = localStorage.getItem('akashic_user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   
   // Update cached user when user state changes
   useEffect(() => {
     if (user) {
       setCachedUser(user);
+      // Store in localStorage
+      localStorage.setItem('akashic_user', JSON.stringify(user));
     } else {
       // If user is null (logged out), clear the cached user too
       setCachedUser(null);
+      // Clear from localStorage
+      localStorage.removeItem('akashic_user');
     }
   }, [user]);
+  
+  // Clear localStorage on logout
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedUser = localStorage.getItem('akashic_user');
+      if (!storedUser) {
+        setCachedUser(null);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   
   // Use either the current user state or the cached version to prevent flickering
   const currentUser = user || cachedUser;

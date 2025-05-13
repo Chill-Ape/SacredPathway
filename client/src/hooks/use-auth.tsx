@@ -58,7 +58,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (data) => {
       console.log("Login successful, setting user data:", data);
+      
+      // Store user in localStorage immediately to prevent UI flicker
+      localStorage.setItem('akashic_user', JSON.stringify(data.user));
+      
+      // Update query cache
       queryClient.setQueryData(["/api/user"], data);
+      
       toast({
         title: "Login successful",
         description: `Welcome back, ${data.user.username}!`,
