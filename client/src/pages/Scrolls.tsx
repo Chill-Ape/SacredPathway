@@ -54,12 +54,12 @@ export default function Scrolls() {
       className="min-h-screen px-4 py-16"
     >
       <Helmet>
-        <title>Sacred Scrolls | The Sacred Archive</title>
-        <meta name="description" content="Explore the ancient scrolls containing the wisdom of ages past. Discover accessible texts and unlock sealed secrets in The Sacred Archive." />
+        <title>Akashic Scrolls | The Akashic Archive</title>
+        <meta name="description" content="Explore the ancient scrolls containing the wisdom of ages past. Discover accessible texts and unlock sealed secrets in The Akashic Archive." />
       </Helmet>
       
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-cinzel font-bold text-sacred-blue text-center mb-12">The Sacred Scrolls</h2>
+        <h2 className="text-3xl md:text-4xl font-cinzel font-bold text-sacred-blue text-center mb-12">The Akashic Scrolls</h2>
         
         <div className="mb-8 font-raleway text-sacred-gray text-center max-w-2xl mx-auto">
           <p>Explore the ancient scrolls that contain the wisdom of ages past. Some scrolls are available to all seekers, while others will be revealed only to those who have proven their dedication to the path.</p>

@@ -60,7 +60,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   // Set up session and authentication using persistent storage
   const sessionSettings = {
-    secret: 'sacred-archive-session-secret',
+    secret: 'akashic-archive-session-secret',
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore, // Use our database session store

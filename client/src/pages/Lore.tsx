@@ -45,12 +45,12 @@ export default function Lore() {
       className="min-h-screen px-4 py-16"
     >
       <Helmet>
-        <title>Sacred Lore | The Sacred Archive</title>
-        <meta name="description" content="Discover the ancient mythology of The Sacred Archive. Learn about the Great Cycle, the mythic flood, and the seven sacred tablets of creation." />
+        <title>Akashic Lore | The Akashic Archive</title>
+        <meta name="description" content="Discover the ancient mythology of The Akashic Archive. Learn about the Great Cycle, the mythic flood, and the seven sacred tablets of creation." />
       </Helmet>
       
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-cinzel font-bold text-sacred-blue text-center mb-12">The Sacred Lore</h2>
+        <h2 className="text-3xl md:text-4xl font-cinzel font-bold text-sacred-blue text-center mb-12">The Akashic Lore</h2>
         
         <LoreSection
           title="The Great Cycle"

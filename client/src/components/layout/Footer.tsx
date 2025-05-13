@@ -50,7 +50,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center mb-4">
               <Logo inverted className="mr-3" />
-              <span className="text-xl font-cinzel">The Sacred Archive</span>
+              <span className="text-xl font-cinzel">The Akashic Archive</span>
             </div>
             <p className="font-raleway text-sacred-white/80 text-sm">
               A repository of timeless wisdom connecting past, present, and future through the sacred teachings preserved since the dawn of consciousness.
@@ -112,7 +112,7 @@ export default function Footer() {
         
         <div className="border-t border-sacred-white/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="font-raleway text-sacred-white/70 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} The Sacred Archive. All rights reserved. Founded in the Fourth Cycle.
+            &copy; {new Date().getFullYear()} The Akashic Archive. All rights reserved. Founded in the Fourth Cycle.
           </p>
           <div className="flex space-x-6 text-sacred-white/70">
             <Link href="/privacy">

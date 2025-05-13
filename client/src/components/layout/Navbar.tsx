@@ -30,7 +30,7 @@ export default function Navbar() {
             <Link to="/">
               <div className="flex items-center cursor-pointer">
                 <Logo className="mr-4" />
-                <span className="text-sacred-blue text-xl font-medium">The Sacred Archive</span>
+                <span className="text-sacred-blue text-xl font-medium">The Akashic Archive</span>
               </div>
             </Link>
           </div>
