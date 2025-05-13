@@ -7,7 +7,7 @@ import { PROMPTS } from "./config/prompts";
 import { getLoreContext } from "./utils/loreSearch";
 
 // Initialize OpenAI client
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "mock_key_for_development" });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
