@@ -14,11 +14,11 @@ interface ScrollData {
 }
 
 export default function SacredScroll() {
-  const [match, params] = useRoute('/scrolls/:id');
+  const [match, params] = useRoute('/sacred-scroll/:id');
   const scrollId = match ? parseInt(params.id, 10) : 0;
   const [, navigate] = useLocation();
   
-  console.log("Scroll ID:", scrollId); // Debug scroll ID
+  console.log("Sacred Scroll ID:", scrollId); // Debug scroll ID
   
   const [scrollData, setScrollData] = useState<ScrollData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,11 +45,34 @@ export default function SacredScroll() {
           console.log("Successfully loaded scroll data:", data.title);
           setScrollData(data);
         } else {
-          // For other scrolls, we'd fetch from API
-          console.log("Not the Legacy scroll, redirecting to scrolls page");
-          // This is a placeholder - in a real scenario we'd fetch from the server
-          navigate('/scrolls');
-          return;
+          try {
+            const response = await fetch(`/api/scrolls/${scrollId}`);
+            
+            if (!response.ok) {
+              console.error("Fetch error status:", response.status);
+              throw new Error("Failed to fetch sacred scroll data");
+            }
+            
+            const scroll = await response.json();
+            
+            // For now, let's just use a simple structure for most scrolls
+            const simpleScrollData: ScrollData = {
+              title: scroll.title,
+              pages: [
+                {
+                  title: scroll.title,
+                  content: scroll.content
+                }
+              ]
+            };
+            
+            setScrollData(simpleScrollData);
+          } catch (error) {
+            console.error("API fetch error:", error);
+            console.log("Not the Legacy scroll, redirecting to scrolls page");
+            navigate('/scrolls');
+            return;
+          }
         }
       } catch (error) {
         console.error("Error fetching scroll data:", error);

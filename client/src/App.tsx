@@ -33,7 +33,8 @@ function App() {
               <Switch key={location}>
                 <Route path="/" component={Home} />
                 <Route path="/scrolls" component={Scrolls} />
-                <Route path="/scrolls/:id" component={SacredScroll} />
+                <Route path="/scrolls/:id" component={ScrollDetail} />
+                <Route path="/sacred-scroll/:id" component={SacredScroll} />
                 <Route path="/lore" component={Lore} />
                 <Route path="/oracle" component={Oracle} />
                 <Route path="/keeper" component={Keeper} />
