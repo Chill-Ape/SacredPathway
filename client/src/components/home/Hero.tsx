@@ -60,6 +60,8 @@ const AncientGlyph = ({ symbol, left, top, size, rotation, delay }:
 
 export default function Hero() {
   // Removed custom cursor effects that were causing mouse visibility issues
+  // Declare isHovering state for backward compatibility
+  const [isHovering, setIsHovering] = useState(false);
 
   // Generate particles
   const particles = Array.from({ length: 15 }).map((_, i) => ({
