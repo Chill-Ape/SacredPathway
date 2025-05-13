@@ -59,6 +59,42 @@ export default function SacredScroll() {
               {
                 title: "Flood Myths Across Cultures",
                 content: "The Mesopotamian accounts describe a great flood sent by the gods to destroy humanity. In the Epic of Gilgamesh, the hero meets the survivor Utnapishtim who tells how Ea (Enki), the god of wisdom, warned him to build a boat and save his family and animals. Following a seven-day flood that destroyed mankind, the boat landed on a mountain, and Utnapishtim released birds to find dry land.\n\nThe Hebrew Bible's account of Noah's Ark (recorded ~6th century BC but based on older traditions) parallels the Mesopotamian versions in many details, including the divine warning, the ark's construction, the animals, the mountain landing, and the bird releases. This account was later inherited by Christianity and Islam.\n\nAcross the world, over 200 different flood myths exist, from ancient China (Yu the Great) and India (Manu) to the Americas (Maya, Hopi) and Pacific Islands. While some may reflect local flooding, the striking similarities in myths worldwide have led some to suggest they preserve a memory of catastrophic post-glacial sea level rise."
+              },
+              {
+                title: "Mysterious Construction Techniques",
+                content: "The construction techniques used in the oldest monuments of Egypt and Mesopotamia reveal a level of sophistication that has puzzled archaeologists. In Egypt, the Great Pyramid of Giza (c. 2550 BC) features stones weighing up to 80 tons fitted with sub-millimeter precision. Without modern technology, moving and placing such massive blocks with this level of accuracy remains an engineering marvel.\n\nSimilarly, ancient Mesopotamian ziggurats like the one at Ur featured complex drainage systems and precisely laid brickwork on a monumental scale. The earliest temples of Eridu show remarkable structural understanding from the very beginning of the architectural record.\n\nThese achievements raise questions about how such advanced techniques emerged so early in civilization's development. Some researchers suggest these societies inherited architectural knowledge from earlier, unrecorded cultures."
+              },
+              {
+                title: "Mathematical Knowledge",
+                content: "The mathematical understanding demonstrated by ancient Mesopotamians and Egyptians appears surprisingly sophisticated from very early periods. Babylonian clay tablets (c. 1800-1600 BC) show knowledge of Pythagorean triples a thousand years before Pythagoras. The famous Plimpton 322 tablet displays complex numerical relationships and possibly trigonometric functions.\n\nIn Egypt, the Rhind Mathematical Papyrus (c. 1650 BC) demonstrates sophisticated understanding of geometry, algebra, and arithmetical operations. The dimensions of the Great Pyramid incorporate mathematical principles including π (pi) to a remarkable degree of accuracy.\n\nThe question remains: how did these early civilizations develop such mathematical sophistication so rapidly after transitioning from simple agricultural communities?"
+              },
+              {
+                title: "Astronomical Alignments",
+                content: "Many ancient monuments demonstrate precise astronomical alignments that required detailed celestial observations over extended periods. The Great Pyramid's sides are aligned to the cardinal directions with an accuracy of 0.05 degrees. Monuments like Nabta Playa in Egypt (c. 7000 BC) and Göbekli Tepe in Turkey (c. 9500 BC) show astronomical alignments predating written history.\n\nIn Mesopotamia, the earliest ziggurats were carefully oriented to celestial phenomena. Ancient texts reveal detailed knowledge of astronomical cycles, including the 25,920-year precession of the equinoxes, a phenomenon requiring generational observation to detect.\n\nThe sophistication of these astronomical observations and their integration into monumental architecture suggests a transfer of knowledge across generations that predates our conventional understanding of civilization's development."
+              },
+              {
+                title: "Sophisticated Writing Systems",
+                content: "The emergence of writing systems in Mesopotamia (cuneiform) and Egypt (hieroglyphics) around 3200-3000 BC shows remarkable sophistication from their earliest appearances. Both systems emerged nearly fully-formed, with over 1,000 distinct signs in early Egyptian hieroglyphics and hundreds of cuneiform symbols.\n\nEarly tablets from Uruk (c. 3300 BC) already show a complex accounting system and administrative organization. The traditional view that writing evolved slowly from simple pictograms is challenged by evidence suggesting these systems were implemented rather suddenly with already established conventions.\n\nSome scholars propose that these writing systems may have developed from earlier proto-writing or symbolic systems that haven't survived in the archaeological record, suggesting a longer developmental period than conventionally understood."
+              },
+              {
+                title: "Ancient Maps and Navigation",
+                content: "Evidence suggests ancient cultures possessed sophisticated navigational knowledge and possibly maps that indicated distant lands. Mesopotamian world maps like the Babylonian Map of the World (c. 600 BC) show conceptual understanding of geographical relationships. Egyptian trading expeditions to distant lands like Punt demonstrate navigational abilities that would require considerable knowledge.\n\nPolynesian navigators crossed thousands of miles of open ocean using sophisticated star navigation techniques, wave patterns, and other natural signals. These navigational traditions were passed down through oral histories dating back thousands of years.\n\nSome controversial interpretations of ancient maps, such as the Piri Reis map (1513 AD, claimed to be based on much older sources), suggest knowledge of coastlines that were only visible before post-glacial sea level rise, though these claims remain highly debated in mainstream scholarship."
+              },
+              {
+                title: "Mythology and Memory",
+                content: "Ancient myths often preserve cultural memories of historical events and transitions, though wrapped in supernatural narratives. The Sumerian King List records incredibly long reigns for early kings, with a clear division between kings \"before the flood\" and more historical rulers after. Egyptian traditions similarly spoke of a time when gods ruled directly before human pharaohs.\n\nPlato's account of Atlantis (4th century BC) describes an advanced civilization destroyed by flooding \"in a single day and night of misfortune\" causing it to sink beneath the sea. While considered allegorical by most scholars, some have suggested it might preserve cultural memory of catastrophic flooding at the end of the Ice Age.\n\nComparative mythology reveals consistent themes across cultures about a previous \"golden age\" of humanity followed by decline, often associated with floods or other catastrophes. These persistent motifs raise questions about whether such myths preserve dim memories of actual historical transitions."
+              },
+              {
+                title: "Submerged Sites and Rising Seas",
+                content: "The dramatic rise in sea levels at the end of the last Ice Age (c. 15,000-8,000 years ago) transformed coastlines worldwide, submerging vast areas of previously habitable land. The most dramatic period, Meltwater Pulse 1A (c. 14,000 years ago), saw sea levels rise approximately 20 meters in just 500 years.\n\nMarine archaeology has discovered numerous submerged sites worldwide, including settlements in the Persian Gulf, North Sea, Mediterranean, and Indian Ocean. Notable examples include Pavlopetri off Greece (submerged c. 3000 BC) and Dwarka off India's western coast.\n\nGeological studies of the Persian Gulf indicate it was a fertile river valley until about 8,000 years ago when rising seas flooded it completely. Intriguingly, this timeframe aligns with Mesopotamian flood accounts and the sudden appearance of developed settlements in southern Mesopotamia."
+              },
+              {
+                title: "Göbekli Tepe: Rewriting History",
+                content: "The discovery of Göbekli Tepe in southeastern Turkey has forced archaeologists to reconsider conventional timelines of civilization's development. Dated to approximately 9500 BC, this monumental complex predates pottery, metallurgy, writing, and even agriculture.\n\nThe site features massive T-shaped pillars weighing up to 20 tons, arranged in circles and decorated with sophisticated animal carvings. The construction required coordinated labor from hundreds of individuals at a time when humans were supposedly simple hunter-gatherers.\n\nPerhaps most mysteriously, after being in use for approximately 2,000 years, the entire complex was deliberately buried under thousands of tons of soil around 8000 BC. The purpose of this burial remains unknown, as does the full purpose of the site itself, though evidence suggests it was primarily ceremonial rather than residential."
+              },
+              {
+                title: "Conclusion: Rethinking Our Past",
+                content: "The conventional narrative of human civilization—emerging slowly from simple agricultural beginnings around 10,000 years ago—is increasingly challenged by archaeological discoveries and interdisciplinary research. The sophisticated knowledge demonstrated in the earliest known civilizations of Mesopotamia and Egypt suggests they may have inherited wisdom from earlier cultures.\n\nThe geological record confirms dramatic climate and sea level changes at the end of the last Ice Age, potentially disrupting coastal settlements worldwide. Flood myths across cultures may preserve memories of these traumatic transitions, while the sudden emergence of advanced civilizations in the archaeological record might represent the reorganization of human societies after catastrophic disruption.\n\nWhile speculative elements remain in these alternative interpretations of prehistory, the growing body of evidence suggests our understanding of human civilization's earliest chapters continues to evolve as new discoveries challenge old assumptions."
               }
             ]
           };
@@ -178,7 +214,9 @@ export default function SacredScroll() {
           }}
         >
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-sacred-gold/5"></div>
+          <div className={`absolute inset-0 ${
+            scrollId === 37 ? 'bg-gray-900/60' : 'bg-sacred-gold/5'
+          }`}></div>
           
           {/* Content */}
           <div className="relative p-8 md:p-12">
@@ -188,7 +226,9 @@ export default function SacredScroll() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-3xl md:text-4xl font-cinzel text-sacred-blue text-center mb-8"
+                className={`text-3xl md:text-4xl font-cinzel text-center mb-8 ${
+                  scrollId === 37 ? 'text-sacred-gold drop-shadow-lg' : 'text-sacred-blue'
+                }`}
               >
                 {scrollData.title}
               </motion.h1>
@@ -200,7 +240,9 @@ export default function SacredScroll() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="text-xl md:text-2xl font-cinzel text-sacred-blue-dark mb-6"
+              className={`text-xl md:text-2xl font-cinzel mb-6 ${
+                scrollId === 37 ? 'text-sacred-gold drop-shadow-md' : 'text-sacred-blue-dark'
+              }`}
             >
               {currentPageData.title}
             </motion.h2>
@@ -211,7 +253,9 @@ export default function SacredScroll() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="prose prose-lg max-w-none font-serif text-sacred-gray-dark"
+              className={`prose prose-lg max-w-none font-serif ${
+                scrollId === 37 ? 'text-sacred-white drop-shadow-md prose-headings:text-sacred-gold prose-strong:text-sacred-gold-light' : 'text-sacred-gray-dark'
+              }`}
             >
               {currentPageData.content.split('\n\n').map((paragraph, idx) => (
                 <p key={idx} className="mb-4 leading-relaxed">
