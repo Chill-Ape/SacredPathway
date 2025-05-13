@@ -38,9 +38,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-8 text-sacred-blue text-sm">
             {navLinks.map((link) => (
               <Link key={link.path} href={link.path}>
-                <a className={`font-cinzel hover:text-sacred-blue-light transition-colors duration-300 ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}>
+                <span className={`font-cinzel hover:text-sacred-blue-light transition-colors duration-300 cursor-pointer ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}>
                   {link.name}
-                </a>
+                </span>
               </Link>
             ))}
           </div>
@@ -77,12 +77,12 @@ export default function Navbar() {
             <div className="px-2 pt-2 pb-3 space-y-1 font-cinzel text-center">
               {navLinks.map((link) => (
                 <Link key={link.path} href={link.path}>
-                  <a 
-                    className={`block w-full py-2 font-cinzel hover:bg-sacred-blue/5 rounded transition-colors duration-300 ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}
+                  <span 
+                    className={`block w-full py-2 font-cinzel hover:bg-sacred-blue/5 rounded transition-colors duration-300 cursor-pointer ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
-                  </a>
+                  </span>
                 </Link>
               ))}
             </div>

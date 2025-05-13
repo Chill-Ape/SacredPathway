@@ -12,7 +12,7 @@ export default function Scrolls() {
   const queryClient = useQueryClient();
   
   // Fetch all scrolls
-  const { data: scrolls = [], isLoading } = useQuery({ 
+  const { data: scrolls = [], isLoading } = useQuery<Scroll[]>({ 
     queryKey: ["/api/scrolls"]
   });
   
@@ -79,7 +79,7 @@ export default function Scrolls() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {scrolls.map((scroll: Scroll) => (
+            {scrolls && scrolls.map((scroll) => (
               <ScrollCard 
                 key={scroll.id} 
                 scroll={scroll} 

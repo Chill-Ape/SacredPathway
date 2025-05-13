@@ -16,11 +16,37 @@ export default function Hero() {
             ease: "easeInOut"
           }}
         >
-          <img 
-            src="https://pixabay.com/get/ge043c49402dfad70a344bf06bded9a10c19000fb7bb23a7fa181546b31b878a115d0bd05f696acf11f7442d05b416afef4a1e24295f4867865edc41be323a004_1280.jpg" 
-            alt="Sacred geometric symbol" 
-            className="rounded-full shadow-lg"
-          />
+          <div className="w-full h-full relative bg-white rounded-full shadow-lg flex items-center justify-center">
+            <svg 
+              viewBox="0 0 100 100" 
+              className="w-4/5 h-4/5"
+              style={{ filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))" }}
+            >
+              {/* Triangle */}
+              <polygon 
+                points="50,15 10,85 90,85" 
+                fill="none" 
+                stroke="hsl(214, 60%, 24%)" 
+                strokeWidth="2"
+              />
+              {/* Circle inside */}
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="20" 
+                fill="none" 
+                stroke="hsl(214, 60%, 24%)" 
+                strokeWidth="2"
+              />
+              {/* Dot in center */}
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="3" 
+                fill="hsl(214, 60%, 24%)" 
+              />
+            </svg>
+          </div>
           <motion.div 
             className="absolute inset-0 bg-sacred-blue/10 rounded-full blur-md"
             animate={{ opacity: [0.6, 0.8, 0.6] }}
