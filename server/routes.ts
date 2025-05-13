@@ -48,6 +48,16 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Add health check endpoint for deployment
+  app.get('/health', (_req, res) => {
+    res.status(200).send('OK');
+  });
+  
+  // Add explicit root path handler
+  app.get('/', (_req, res, next) => {
+    // This will be handled by Vite for the SPA frontend
+    next();
+  });
   // Set up session and authentication using persistent storage
   const sessionSettings = {
     secret: 'sacred-archive-session-secret',
