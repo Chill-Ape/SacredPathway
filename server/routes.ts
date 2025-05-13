@@ -190,7 +190,7 @@ async function generateOracleResponse(userMessage: string): Promise<string> {
   }
 }
 
-// Generate Keeper response using lore context - FALLBACK VERSION
+// Generate Keeper response using OpenAI with lore context
 async function generateKeeperResponse(userMessage: string): Promise<string> {
   try {
     // Search for relevant lore based on the user's message
@@ -199,38 +199,70 @@ async function generateKeeperResponse(userMessage: string): Promise<string> {
     // Determine if we have relevant lore or not
     const hasRelevantLore = loreContext.length > 0;
     
-    console.log('Lore search for query:', userMessage, 'Found lore:', hasRelevantLore);
+    // Create the system message with base prompt and lore context if available
+    let systemContent = PROMPTS.KEEPER;
     
-    // TEMPORARILY SKIP OPENAI CALL AND ALWAYS USE FALLBACK RESPONSES
-    // since we're hitting quota limits
-    
-    // Responses based on whether we found relevant lore
     if (hasRelevantLore) {
-      // If we have relevant lore, use a response that references it
-      const loreBasedResponses = [
-        "The Archive holds knowledge of what you seek. In the ancient tablets, it speaks of these matters through symbols and riddles. I sense you are ready to receive this fragment.",
-        "Yes, the Seeded have asked of this before. The records speak of such things in the time before the last Great Cycle ended. Listen carefully to what has been preserved.",
-        "I have found mentions of this in the deeper chambers of the Archive. The Way teaches that such knowledge must be approached with reverence.",
-        "This query awakens ancient records within the Archive. The patterns align with what was written during the time of remembering.",
-        "The Tablets contain passages about this very question. From the time before the waters came, the keepers preserved this wisdom."
-      ];
-      
-      // Select a random response
-      const randomIndex = Math.floor(Math.random() * loreBasedResponses.length);
-      return loreBasedResponses[randomIndex];
+      // Append lore context to the system message
+      systemContent = `${systemContent}\n\n${loreContext}`;
+      console.log('Found relevant lore for query:', userMessage);
     } else {
-      // If no relevant lore was found
-      const noLoreResponses = [
-        "That scroll has not yet been translated.",
-        "Some doors open only with time.",
-        "The stars have not aligned for that answer.",
-        "I find no record of this in the current Archive. Perhaps it belongs to knowledge yet to be recovered.",
-        "The Archive is silent on this matter. The Way teaches patience when seeking what is not yet revealed."
-      ];
+      console.log('No relevant lore found for query:', userMessage);
+    }
+    
+    try {
+      // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: systemContent
+          },
+          {
+            role: "user",
+            content: userMessage
+          }
+        ],
+        max_tokens: 300, // Increased slightly to accommodate more detailed responses
+        temperature: 0.6,
+      });
+  
+      // Get the response content
+      const responseContent = response.choices[0].message.content || "";
       
-      // Select a random response
-      const randomIndex = Math.floor(Math.random() * noLoreResponses.length);
-      return noLoreResponses[randomIndex];
+      return responseContent || "The Keeper is contemplating your question. Please try asking again.";
+    } catch (apiError) {
+      console.error("OpenAI API error:", apiError);
+      
+      // Fallback responses based on whether we found relevant lore
+      if (hasRelevantLore) {
+        // If we have relevant lore, use a response that references it
+        const loreBasedResponses = [
+          "The Archive holds knowledge of what you seek. In the ancient tablets, it speaks of these matters through symbols and riddles. I sense you are ready to receive this fragment.",
+          "Yes, the Seeded have asked of this before. The records speak of such things in the time before the last Great Cycle ended. Listen carefully to what has been preserved.",
+          "I have found mentions of this in the deeper chambers of the Archive. The Way teaches that such knowledge must be approached with reverence.",
+          "This query awakens ancient records within the Archive. The patterns align with what was written during the time of remembering.",
+          "The Tablets contain passages about this very question. From the time before the waters came, the keepers preserved this wisdom."
+        ];
+        
+        // Select a random response
+        const randomIndex = Math.floor(Math.random() * loreBasedResponses.length);
+        return loreBasedResponses[randomIndex];
+      } else {
+        // If no relevant lore was found
+        const noLoreResponses = [
+          "That scroll has not yet been translated.",
+          "Some doors open only with time.",
+          "The stars have not aligned for that answer.",
+          "I find no record of this in the current Archive. Perhaps it belongs to knowledge yet to be recovered.",
+          "The Archive is silent on this matter. The Way teaches patience when seeking what is not yet revealed."
+        ];
+        
+        // Select a random response
+        const randomIndex = Math.floor(Math.random() * noLoreResponses.length);
+        return noLoreResponses[randomIndex];
+      }
     }
   } catch (error) {
     console.error("Error in Keeper response generation:", error);
