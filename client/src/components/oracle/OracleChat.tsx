@@ -18,6 +18,7 @@ type SessionState = {
 export default function OracleChat() {
   const [message, setMessage] = useState("");
   const [session, setSession] = useState<SessionState | null>(null);
+  const [lastMessageId, setLastMessageId] = useState<number>(0); // Track the last message ID
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -65,7 +66,18 @@ export default function OracleChat() {
       
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Update last message ID to track which messages are new
+      if (data && data.oracleMessage && data.oracleMessage.id) {
+        setLastMessageId(data.oracleMessage.id);
+      }
+      if (data && data.userMessage && data.userMessage.id) {
+        // If the user message ID is higher, use that instead
+        if (data.userMessage.id > lastMessageId) {
+          setLastMessageId(data.userMessage.id);
+        }
+      }
+      
       queryClient.invalidateQueries({ queryKey: ["/api/oracle", session?.sessionId] });
     },
     onError: (error) => {
@@ -169,6 +181,7 @@ export default function OracleChat() {
               key={msg.id}
               isUser={msg.isUser}
               message={msg.message}
+              isNew={msg.id > lastMessageId - 2} // Consider only the newest messages as "new"
             />
           ))}
           

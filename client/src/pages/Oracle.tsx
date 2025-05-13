@@ -79,6 +79,13 @@ export default function Oracle() {
             <div className="absolute bottom-1/3 left-2/3 w-1.5 h-1.5 rounded-full bg-blue-200/70 animate-pulse-med"></div>
             <div className="absolute bottom-1/4 right-1/4 w-1 h-1 rounded-full bg-oracle-gold/60 animate-pulse-slow"></div>
           </div>
+          
+          {/* Oracle title */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <h1 className="text-4xl font-cinzel text-white/90 tracking-wider">
+              The Oracle
+            </h1>
+          </div>
         </motion.div>
         
         <OracleChat />
