@@ -12,6 +12,12 @@ import Stripe from "stripe";
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Initialize Stripe client (will be properly initialized when STRIPE_SECRET_KEY is available)
+let stripe: Stripe | null = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+}
+
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
@@ -29,6 +35,8 @@ declare global {
       password: string;
       email: string;
       phone: string | null;
+      manaBalance: number;
+      stripeCustomerId: string | null;
       createdAt: Date;
     }
   }
@@ -155,14 +163,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post('/api/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('local', (err: any, user: User | false, info: { message?: string }) => {
       if (err) {
         return next(err);
       }
       if (!user) {
         return res.status(401).json({ message: info?.message || 'Invalid credentials' });
       }
-      req.login(user, (err) => {
+      req.login(user, (err: any) => {
         if (err) {
           return next(err);
         }
@@ -542,6 +550,156 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error spending mana:", error);
       res.status(500).json({ message: "Failed to process mana transaction" });
+    }
+  });
+
+  // Create a Stripe payment intent for purchasing Mana
+  app.post("/api/mana/purchase/create-payment-intent", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const { packageId } = req.body;
+      
+      if (!packageId) {
+        return res.status(400).json({ message: "Package ID is required" });
+      }
+      
+      // Get the mana package
+      const manaPackage = await storage.getManaPackageById(Number(packageId));
+      if (!manaPackage) {
+        return res.status(404).json({ message: "Mana package not found" });
+      }
+      
+      // Check if Stripe is initialized
+      if (!stripe || !process.env.STRIPE_SECRET_KEY) {
+        return res.status(503).json({ 
+          message: "Payment service is unavailable. Stripe keys are not configured." 
+        });
+      }
+      
+      // Get or create Stripe customer ID
+      let { stripeCustomerId } = req.user;
+      
+      if (!stripeCustomerId) {
+        // Create a new customer in Stripe
+        const customer = await stripe.customers.create({
+          email: req.user.email,
+          name: req.user.username,
+          metadata: {
+            userId: req.user.id.toString()
+          }
+        });
+        
+        stripeCustomerId = customer.id;
+        
+        // Save the customer ID to the user record
+        await storage.updateUserStripeCustomerId(req.user.id, stripeCustomerId);
+      }
+      
+      // Create a payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: manaPackage.price,
+        currency: 'usd',
+        customer: stripeCustomerId,
+        metadata: {
+          packageId: manaPackage.id.toString(),
+          userId: req.user.id.toString(),
+          packageName: manaPackage.name,
+          manaAmount: manaPackage.amount.toString()
+        }
+      });
+      
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+        packageDetails: manaPackage
+      });
+    } catch (error) {
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ message: "Failed to create payment intent" });
+    }
+  });
+
+  // Handle successful Stripe payment webhook 
+  app.post("/api/mana/purchase/webhook", async (req: Request, res: Response) => {
+    // This endpoint will be implemented with proper webhook verification 
+    // once Stripe keys are available
+    
+    if (!stripe || !process.env.STRIPE_SECRET_KEY) {
+      return res.status(503).json({ 
+        message: "Payment service is unavailable. Stripe keys are not configured." 
+      });
+    }
+    
+    // Placeholder for webhook handling logic
+    res.status(200).send('Webhook received');
+  });
+  
+  // Complete a Mana purchase after successful payment
+  app.post("/api/mana/purchase/complete", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const { paymentIntentId } = req.body;
+      
+      if (!paymentIntentId) {
+        return res.status(400).json({ message: "Payment intent ID is required" });
+      }
+      
+      // Check if Stripe is initialized
+      if (!stripe || !process.env.STRIPE_SECRET_KEY) {
+        return res.status(503).json({ 
+          message: "Payment service is unavailable. Stripe keys are not configured." 
+        });
+      }
+      
+      // Retrieve the payment intent to verify payment and get metadata
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      // Verify that the payment was successful
+      if (paymentIntent.status !== 'succeeded') {
+        return res.status(400).json({ message: "Payment has not been completed" });
+      }
+      
+      // Get metadata from the payment intent
+      const { packageId, userId, manaAmount } = paymentIntent.metadata;
+      
+      // Verify that the payment intent belongs to the authenticated user
+      if (Number(userId) !== req.user.id) {
+        return res.status(403).json({ message: "Unauthorized payment intent" });
+      }
+      
+      // Get the mana package to double-check the amount
+      const manaPackage = await storage.getManaPackageById(Number(packageId));
+      if (!manaPackage) {
+        return res.status(404).json({ message: "Mana package not found" });
+      }
+      
+      // Create a transaction record
+      const transaction = await storage.createManaTransaction({
+        userId: req.user.id,
+        amount: manaPackage.amount,
+        description: `Purchased ${manaPackage.amount} mana (${manaPackage.name})`,
+        transactionType: 'purchase',
+        referenceId: packageId,
+        stripePaymentIntentId: paymentIntentId
+      });
+      
+      // Update the user's mana balance
+      const newBalance = await storage.updateUserManaBalance(req.user.id, manaPackage.amount);
+      
+      res.json({
+        success: true,
+        transaction,
+        newBalance,
+        message: `Successfully purchased ${manaPackage.amount} mana!`
+      });
+    } catch (error) {
+      console.error("Error completing mana purchase:", error);
+      res.status(500).json({ message: "Failed to complete mana purchase" });
     }
   });
 
