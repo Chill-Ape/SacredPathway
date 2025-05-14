@@ -3,43 +3,45 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import fs from "fs";
+import { healthCheckMiddleware } from "./middleware/health-check";
+import { healthErrorHandler } from "./middleware/health-error-handler";
+import { staticRoutes } from "./static-routes";
 
-// Create express app with extreme priority for health check routes
+// Create express app
 const app = express();
 
-// *** HEALTH CHECK ROUTES - ABSOLUTE TOP PRIORITY ***
-// Handle any request to '/' that's not from a browser or is a health check
-app.use('/', (req, res, next) => {
-  if (req.path === '/' || req.path === '/health' || req.path === '/_health') {
-    // For health checks or deployment checks (no Accept header or not HTML)
-    if (!req.headers.accept || 
-        !req.headers.accept.includes('text/html') ||
-        req.headers['user-agent']?.includes('Health') ||
-        req.headers['user-agent']?.includes('health') ||
-        req.method !== 'GET') {
-      
-      log(`Health check detected at ${req.path}`, 'health');
-      return res.status(200).send('OK');
-    }
+// ***********************************************
+// HEALTH CHECK HANDLING - ABSOLUTE TOP PRIORITY
+// ***********************************************
+
+// Layer 1: First middleware - dedicated health check middleware
+app.use(healthCheckMiddleware);
+
+// Layer 2: Static routes for health checks with its own router
+app.use(staticRoutes);
+
+// Layer 3: Raw handlers for maximum reliability
+app.get('/', (req, res, next) => {
+  // Bare minimum health check for the root path
+  // This will handle ELB health checks
+  log('Root health check - highest priority', 'health');
+  if (!req.headers.accept || !req.headers.accept.includes('text/html')) {
+    return res.status(200).send('OK');
   }
   next();
 });
 
-// Static file for health checks
+// Layer 4: Additional health check paths
 app.get('/health', (req, res) => {
-  log('Serving static health check file', 'health');
-  res.status(200).sendFile(path.join(process.cwd(), 'public', 'health'));
+  log('Direct health check call', 'health');
+  res.status(200).send('OK');
 });
 
-// JSON health check endpoint
-app.get('/_health', (_req, res) => {
-  log('Serving JSON health status', 'health');
+app.get('/_health', (req, res) => {
+  log('Direct JSON health check call', 'health');
   res.status(200).json({
     status: 'OK',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    memory: process.memoryUsage(),
-    message: 'Akashic Archive is running properly'
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -79,12 +81,15 @@ app.use((req, res, next) => {
 
 (async () => {
   const server = await registerRoutes(app);
-
+  
+  // Use our dedicated health check error handler FIRST
+  app.use(healthErrorHandler);
+  
+  // Then use the regular error handler for everything else
   app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
-    // ABSOLUTE TOP PRIORITY: Always respond with OK for health checks
-    // This is critical for deployment
+    // Double check for health checks (belt and suspenders approach)
     if (req.path === '/' || req.path === '/health' || req.path === '/_health') {
-      log(`Health check at ${req.path} (ignoring error)`, 'health');
+      log(`Backup health check error handler at ${req.path}`, 'health');
       return res.status(200).send('OK');
     }
     
