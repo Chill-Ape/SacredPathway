@@ -6,6 +6,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Top-level health check for deployment that will always respond
+app.get('/', (req, res, next) => {
+  if (req.headers['user-agent']?.includes('ELB-HealthChecker') || 
+      !req.headers.accept?.includes('text/html')) {
+    return res.status(200).send('OK');
+  }
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
