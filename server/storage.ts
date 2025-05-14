@@ -102,6 +102,26 @@ export interface IStorage {
   equipItem(id: number, isEquipped: boolean): Promise<InventoryItem | undefined>;
   getEquippedItems(userId: number): Promise<InventoryItem[]>;
   
+  // Crafting methods
+  getAllCraftingRecipes(): Promise<CraftingRecipe[]>;
+  getDiscoveredRecipes(userId: number): Promise<CraftingRecipe[]>;
+  getCraftingRecipeById(recipeId: number): Promise<CraftingRecipe | undefined>;
+  createCraftingRecipe(recipe: InsertCraftingRecipe): Promise<CraftingRecipe>;
+  discoverRecipe(userId: number, recipeId: number): Promise<UserRecipe | undefined>;
+  isRecipeDiscovered(userId: number, recipeId: number): Promise<boolean>;
+  
+  // Crafting queue methods
+  getUserCraftingQueue(userId: number): Promise<CraftingQueueItem[]>;
+  addToCraftingQueue(queueItem: InsertCraftingQueueItem): Promise<CraftingQueueItem>;
+  getQueueItemById(queueId: number): Promise<CraftingQueueItem | undefined>;
+  updateQueueItemStatus(queueId: number, isCompleted: boolean): Promise<CraftingQueueItem | undefined>;
+  claimCraftedItem(queueId: number): Promise<InventoryItem | undefined>;
+  
+  // Check if user has required ingredients
+  checkIngredients(userId: number, recipeId: number): Promise<{hasIngredients: boolean, missingItems?: string[]}>;
+  // Use ingredients from inventory
+  useIngredients(userId: number, recipeId: number): Promise<boolean>;
+  
   // Session store
   sessionStore: session.Store;
 }
@@ -511,6 +531,218 @@ export class DatabaseStorage implements IStorage {
           eq(inventoryItems.isEquipped, true)
         )
       );
+  }
+  
+  // Crafting methods implementation
+  async getAllCraftingRecipes(): Promise<CraftingRecipe[]> {
+    return await db.select().from(craftingRecipes);
+  }
+
+  async getDiscoveredRecipes(userId: number): Promise<CraftingRecipe[]> {
+    const result = await db
+      .select({
+        recipe: craftingRecipes
+      })
+      .from(userRecipes)
+      .innerJoin(craftingRecipes, eq(userRecipes.recipeId, craftingRecipes.id))
+      .where(eq(userRecipes.userId, userId));
+    
+    return result.map(r => r.recipe);
+  }
+
+  async getCraftingRecipeById(recipeId: number): Promise<CraftingRecipe | undefined> {
+    const [recipe] = await db.select().from(craftingRecipes).where(eq(craftingRecipes.id, recipeId));
+    return recipe;
+  }
+
+  async createCraftingRecipe(recipe: InsertCraftingRecipe): Promise<CraftingRecipe> {
+    const [newRecipe] = await db.insert(craftingRecipes).values(recipe).returning();
+    return newRecipe;
+  }
+
+  async discoverRecipe(userId: number, recipeId: number): Promise<UserRecipe | undefined> {
+    // Check if already discovered
+    const alreadyDiscovered = await this.isRecipeDiscovered(userId, recipeId);
+    if (alreadyDiscovered) {
+      const [existing] = await db
+        .select()
+        .from(userRecipes)
+        .where(and(
+          eq(userRecipes.userId, userId),
+          eq(userRecipes.recipeId, recipeId)
+        ));
+      return existing;
+    }
+    
+    // Create new discovery
+    const [discovery] = await db
+      .insert(userRecipes)
+      .values({ userId, recipeId })
+      .returning();
+      
+    return discovery;
+  }
+
+  async isRecipeDiscovered(userId: number, recipeId: number): Promise<boolean> {
+    const [discovered] = await db
+      .select()
+      .from(userRecipes)
+      .where(and(
+        eq(userRecipes.userId, userId),
+        eq(userRecipes.recipeId, recipeId)
+      ));
+      
+    return !!discovered;
+  }
+  
+  // Crafting queue methods
+  async getUserCraftingQueue(userId: number): Promise<CraftingQueueItem[]> {
+    return await db
+      .select()
+      .from(craftingQueue)
+      .where(eq(craftingQueue.userId, userId));
+  }
+
+  async addToCraftingQueue(queueItem: InsertCraftingQueueItem): Promise<CraftingQueueItem> {
+    const [newQueueItem] = await db
+      .insert(craftingQueue)
+      .values(queueItem)
+      .returning();
+      
+    return newQueueItem;
+  }
+
+  async getQueueItemById(queueId: number): Promise<CraftingQueueItem | undefined> {
+    const [queueItem] = await db
+      .select()
+      .from(craftingQueue)
+      .where(eq(craftingQueue.id, queueId));
+      
+    return queueItem;
+  }
+
+  async updateQueueItemStatus(queueId: number, isCompleted: boolean): Promise<CraftingQueueItem | undefined> {
+    const [updatedItem] = await db
+      .update(craftingQueue)
+      .set({ isCompleted })
+      .where(eq(craftingQueue.id, queueId))
+      .returning();
+      
+    return updatedItem;
+  }
+
+  async claimCraftedItem(queueId: number): Promise<InventoryItem | undefined> {
+    // Get the queue item
+    const queueItem = await this.getQueueItemById(queueId);
+    if (!queueItem || !queueItem.isCompleted || queueItem.isClaimed) {
+      return undefined;
+    }
+    
+    // Get the recipe
+    const recipe = await this.getCraftingRecipeById(queueItem.recipeId);
+    if (!recipe) {
+      return undefined;
+    }
+    
+    // Mark as claimed
+    await db
+      .update(craftingQueue)
+      .set({ isClaimed: true })
+      .where(eq(craftingQueue.id, queueId));
+      
+    // Add item to inventory
+    const newItem = await this.addInventoryItem({
+      userId: queueItem.userId,
+      name: recipe.resultItemName,
+      description: recipe.resultItemDescription,
+      type: recipe.resultItemType,
+      imageUrl: recipe.resultItemImageUrl,
+      rarity: recipe.resultItemRarity,
+      quantity: recipe.resultItemQuantity,
+      isEquipped: false,
+      usesLeft: null,
+      attributes: recipe.resultItemAttributes
+    });
+    
+    return newItem;
+  }
+  
+  // Ingredient checking and consumption
+  async checkIngredients(userId: number, recipeId: number): Promise<{hasIngredients: boolean, missingItems?: string[]}> {
+    // Get the recipe
+    const recipe = await this.getCraftingRecipeById(recipeId);
+    if (!recipe) {
+      return { hasIngredients: false, missingItems: ["Recipe not found"] };
+    }
+    
+    // Get user's inventory
+    const inventory = await this.getUserInventory(userId);
+    
+    // Check if user has all required ingredients
+    const ingredients = recipe.ingredients as {itemName: string, quantity: number}[];
+    const missingItems: string[] = [];
+    
+    for (const ingredient of ingredients) {
+      const userItem = inventory.find(item => item.name === ingredient.itemName);
+      
+      if (!userItem || userItem.quantity < ingredient.quantity) {
+        missingItems.push(ingredient.itemName);
+      }
+    }
+    
+    return {
+      hasIngredients: missingItems.length === 0,
+      missingItems: missingItems.length > 0 ? missingItems : undefined
+    };
+  }
+  
+  async useIngredients(userId: number, recipeId: number): Promise<boolean> {
+    // Check if user has the ingredients
+    const { hasIngredients } = await this.checkIngredients(userId, recipeId);
+    if (!hasIngredients) {
+      return false;
+    }
+    
+    // Get the recipe
+    const recipe = await this.getCraftingRecipeById(recipeId);
+    if (!recipe) {
+      return false;
+    }
+    
+    // Get user's inventory
+    const inventory = await this.getUserInventory(userId);
+    
+    // Consume the ingredients
+    const ingredients = recipe.ingredients as {itemName: string, quantity: number}[];
+    
+    try {
+      for (const ingredient of ingredients) {
+        const userItem = inventory.find(item => item.name === ingredient.itemName);
+        
+        if (!userItem) {
+          throw new Error(`Item ${ingredient.itemName} not found in inventory`);
+        }
+        
+        const newQuantity = userItem.quantity - ingredient.quantity;
+        
+        if (newQuantity < 0) {
+          throw new Error(`Not enough quantity of ${ingredient.itemName}`);
+        }
+        
+        if (newQuantity === 0) {
+          // Remove the item if quantity becomes zero
+          await this.removeInventoryItem(userItem.id);
+        } else {
+          // Update the quantity
+          await this.updateItemQuantity(userItem.id, newQuantity);
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error using ingredients:", error);
+      return false;
+    }
   }
   
   // Oracle usage tracking for session-based limitations
