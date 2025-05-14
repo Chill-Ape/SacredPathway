@@ -1,7 +1,15 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOracleMessageSchema, insertContactMessageSchema, insertKeeperMessageSchema, scrolls, insertManaTransactionSchema } from "@shared/schema";
+import { 
+  insertOracleMessageSchema, 
+  insertContactMessageSchema, 
+  insertKeeperMessageSchema, 
+  scrolls, 
+  insertManaTransactionSchema,
+  insertInventoryItemSchema 
+} from "@shared/schema";
+import { ITEM_TYPES, RARITY_LEVELS } from "@shared/constants";
 import OpenAI from "openai";
 import { PROMPTS } from "./config/prompts";
 import { getLoreContext } from "./utils/loreSearch";

@@ -644,6 +644,7 @@ export class MemStorage implements IStorage {
   private contactMessages: Map<number, ContactMessage>;
   private manaTransactions: Map<number, ManaTransaction>;
   private manaPackages: Map<number, ManaPackage>;
+  private inventoryItems: Map<number, InventoryItem>; // New: for inventory items
   private oracleUsageBySession: Map<string, Map<string, number>>; // Track Oracle usage per session per date
   sessionStore: session.Store;
   
@@ -654,6 +655,7 @@ export class MemStorage implements IStorage {
   private currentContactMessageId: number;
   private currentManaTransactionId: number;
   private currentManaPackageId: number;
+  private currentInventoryItemId: number; // New: for tracking inventory item IDs
 
   constructor() {
     this.users = new Map();
@@ -664,6 +666,7 @@ export class MemStorage implements IStorage {
     this.contactMessages = new Map();
     this.manaTransactions = new Map();
     this.manaPackages = new Map();
+    this.inventoryItems = new Map();
     this.oracleUsageBySession = new Map();
     
     // Initialize robust session store with explicit configuration
@@ -681,6 +684,7 @@ export class MemStorage implements IStorage {
     this.currentContactMessageId = 1;
     this.currentManaTransactionId = 1;
     this.currentManaPackageId = 1;
+    this.currentInventoryItemId = 1;
     
     // Initialize data in an async way
     this.initializeData();
@@ -991,6 +995,89 @@ export class MemStorage implements IStorage {
     this.scrolls.set(id, scroll);
     
     return scroll;
+  }
+  
+  // Inventory system methods
+  async getUserInventory(userId: number): Promise<InventoryItem[]> {
+    const items: InventoryItem[] = [];
+    for (const item of this.inventoryItems.values()) {
+      if (item.userId === userId) {
+        items.push(item);
+      }
+    }
+    return items;
+  }
+  
+  async getInventoryItemById(id: number): Promise<InventoryItem | undefined> {
+    return this.inventoryItems.get(id);
+  }
+  
+  async addInventoryItem(item: InsertInventoryItem): Promise<InventoryItem> {
+    const id = this.currentInventoryItemId++;
+    const createdAt = new Date();
+    
+    const newItem: InventoryItem = {
+      ...item,
+      id,
+      createdAt
+    };
+    
+    this.inventoryItems.set(id, newItem);
+    return newItem;
+  }
+  
+  async updateInventoryItem(id: number, updates: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined> {
+    const item = await this.getInventoryItemById(id);
+    
+    if (!item) {
+      return undefined;
+    }
+    
+    const updatedItem: InventoryItem = {
+      ...item,
+      ...updates
+    };
+    
+    this.inventoryItems.set(id, updatedItem);
+    return updatedItem;
+  }
+  
+  async removeInventoryItem(id: number): Promise<boolean> {
+    return this.inventoryItems.delete(id);
+  }
+  
+  async updateItemQuantity(id: number, quantity: number): Promise<InventoryItem | undefined> {
+    const item = await this.getInventoryItemById(id);
+    
+    if (!item) {
+      return undefined;
+    }
+    
+    item.quantity = quantity;
+    this.inventoryItems.set(id, item);
+    return item;
+  }
+  
+  async equipItem(id: number, isEquipped: boolean): Promise<InventoryItem | undefined> {
+    const item = await this.getInventoryItemById(id);
+    
+    if (!item) {
+      return undefined;
+    }
+    
+    item.isEquipped = isEquipped;
+    this.inventoryItems.set(id, item);
+    return item;
+  }
+  
+  async getEquippedItems(userId: number): Promise<InventoryItem[]> {
+    const items: InventoryItem[] = [];
+    for (const item of this.inventoryItems.values()) {
+      if (item.userId === userId && item.isEquipped) {
+        items.push(item);
+      }
+    }
+    return items;
   }
   
   // Oracle usage tracking methods
