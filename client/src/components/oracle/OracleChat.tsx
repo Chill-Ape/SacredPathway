@@ -105,8 +105,23 @@ export default function OracleChat() {
       queryClient.invalidateQueries({ queryKey: ["/api/oracle", session?.sessionId] });
     },
     onError: (error: any) => {
-      // Check if it's a Mana-related error
-      if (error.message.includes("Mana")) {
+      // Check if it's a limit-related error for anonymous users
+      if (error.response?.data?.requiresMana && !user) {
+        toast({
+          title: "Oracle Access Limited",
+          description: "You have reached your daily limit of 3 free Oracle consultations. Create an account to continue your journey with the Oracle.",
+          variant: "default",
+          action: (
+            <a href="/auth">
+              <Button variant="default" className="bg-gradient-to-r from-blue-600 to-purple-600">
+                Sign Up / Login
+              </Button>
+            </a>
+          ),
+        });
+      }
+      // Check if it's a Mana-related error for authenticated users
+      else if (user && error.message.includes("Mana")) {
         toast({
           title: "Oracle Access Limited",
           description: error.message,
@@ -203,13 +218,29 @@ export default function OracleChat() {
       {/* Oracle chat interface */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         {/* Info about Oracle usage costs */}
-        <div className="mb-2 flex justify-end">
-          <div className="inline-flex items-center py-1 px-3 rounded-full bg-blue-50 text-sm text-blue-600 border border-blue-200">
-            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+        <div className="mb-2 flex justify-between items-center">
+          {!user && remainingQueries.count <= 1 && (
+            <div className="inline-flex items-center">
+              <a href="/auth">
+                <Button variant="outline" className="text-sm border-amber-300 text-amber-800 hover:bg-amber-50">
+                  <span className="mr-1.5">✨</span> Sign Up for Unlimited Access
+                </Button>
+              </a>
+            </div>
+          )}
+          
+          <div className={`inline-flex items-center py-1 px-3 rounded-full ${
+            !user && remainingQueries.count <= 1 
+              ? "bg-amber-50 text-amber-700 border border-amber-200" 
+              : "bg-blue-50 text-blue-600 border border-blue-200"
+          } text-sm ${!user && remainingQueries.count <= 1 ? "ml-auto" : ""}`}>
+            <Sparkles className={`h-3.5 w-3.5 mr-1.5 ${
+              !user && remainingQueries.count <= 1 ? "text-amber-500" : "text-blue-500"
+            }`} />
             {user ? (
               <span>Each inquiry costs <strong>{ORACLE_COST} Mana</strong></span>
             ) : (
-              <span><strong>{remainingQueries.count}</strong> free inquiries remaining today</span>
+              <span><strong>{remainingQueries.count}</strong> free inquir{remainingQueries.count === 1 ? "y" : "ies"} remaining today</span>
             )}
           </div>
         </div>
@@ -226,6 +257,19 @@ export default function OracleChat() {
               isUser={false}
               message="Welcome to the Akashic Archive. I am here to assist with your questions about ancient knowledge, history, and mysteries. What would you like to know?"
             />
+          )}
+          
+          {/* No remaining free queries message */}
+          {!user && remainingQueries.count === 0 && !messagesLoading && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-700 p-4 rounded-lg mb-4">
+              <h4 className="font-bold text-amber-800 mb-2">You've reached your free limit</h4>
+              <p className="mb-3">You have used all your free Oracle consultations for today. Create an account to continue your journey.</p>
+              <a href="/auth">
+                <Button className="bg-oracle-gold hover:bg-oracle-gold/90 text-white">
+                  Sign Up / Login
+                </Button>
+              </a>
+            </div>
           )}
           
           {/* Loading state */}
@@ -280,17 +324,17 @@ export default function OracleChat() {
         <form onSubmit={handleSendMessage} className="flex items-center">
           <Input
             type="text"
-            placeholder="Ask your question..."
-            className="flex-grow bg-white border-oracle-gold/40 rounded-l-lg py-3 px-4 font-garamond text-oracle-deep-purple placeholder:text-oracle-navy/60 focus:outline-none focus:ring-2 focus:ring-oracle-gold/40"
+            placeholder={!user && remainingQueries.count === 0 ? "You've reached your free limit..." : "Ask your question..."}
+            className={`flex-grow bg-white border-oracle-gold/40 rounded-l-lg py-3 px-4 font-garamond text-oracle-deep-purple placeholder:${!user && remainingQueries.count === 0 ? "text-amber-400" : "text-oracle-navy/60"} focus:outline-none focus:ring-2 focus:ring-oracle-gold/40`}
             style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.05rem" }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            disabled={isPending}
+            disabled={isPending || (!user && remainingQueries.count === 0)}
           />
           <Button
             type="submit"
             className="bg-oracle-navy hover:bg-oracle-deep-purple border border-oracle-gold/40 text-oracle-gold font-cinzel tracking-wide py-6 rounded-r-lg transition-colors duration-300"
-            disabled={isPending || !message.trim()}
+            disabled={isPending || !message.trim() || (!user && remainingQueries.count === 0)}
           >
             <Send className="h-5 w-5 mr-2" />
             Ask
