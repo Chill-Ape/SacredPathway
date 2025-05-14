@@ -71,12 +71,12 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
             
             {/* Show "read more" message */}
             <p className="text-sacred-blue italic mt-6 text-center">
-              Continue reading the full scroll for more ancient wisdom...
+              Continue reading the full {scroll.type || 'scroll'} for more ancient wisdom...
             </p>
           </motion.div>
           
           <div className="mt-8 text-center text-sacred-blue/80 italic font-playfair text-sm">
-            "This scroll contains ancient wisdom from the Fourth Cycle. Meditate on its contents to unlock deeper understanding."
+            "This {scroll.type || 'scroll'} contains ancient wisdom from the Fourth Cycle. Meditate on its contents to unlock deeper understanding."
           </div>
         </div>
         
@@ -93,7 +93,7 @@ export default function ScrollDialog({ scroll, isOpen, onClose }: ScrollDialogPr
             <Button 
               className="font-cinzel bg-sacred-blue text-sacred-white hover:bg-sacred-blue-light"
             >
-              {scroll.id === 37 ? "View Sacred Scroll Pages" : "View Full Scroll"}
+              {scroll.id === 37 ? "View Sacred Scroll Pages" : `View Full ${scroll.type ? scroll.type.charAt(0).toUpperCase() + scroll.type.slice(1) : 'Scroll'}`}
             </Button>
           </Link>
         </div>

@@ -117,7 +117,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
                     onClick={handleUnlockAttempt}
                     disabled={isUnlocking}
                   >
-                    {isUnlocking ? "Attempting to unlock..." : `Unlock ${scroll.contentType || 'Scroll'}`}
+                    {isUnlocking ? "Attempting to unlock..." : `Unlock ${scroll.type ? scroll.type.charAt(0).toUpperCase() + scroll.type.slice(1) : 'Scroll'}`}
                   </Button>
                 </div>
               ) : (
@@ -135,7 +135,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
                 className="w-full bg-sacred-blue hover:bg-sacred-blue-light text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
                 onClick={handlePreviewScroll}
               >
-                Preview {scroll.contentType || 'Scroll'}
+                Preview {scroll.type ? scroll.type.charAt(0).toUpperCase() + scroll.type.slice(1) : 'Scroll'}
               </Button>
               
               {/* Special handling for Legacy of the Lost Age scroll (ID 37) */}
@@ -154,7 +154,7 @@ export default function ScrollCard({ scroll, onUnlock }: ScrollCardProps) {
                     variant="outline"
                     className="w-full border-sacred-blue text-sacred-blue hover:bg-sacred-blue-light hover:text-sacred-white font-cinzel tracking-wide py-2 rounded transition-colors duration-300"
                   >
-                    Open Full Scroll
+                    Open Full {scroll.type ? scroll.type.charAt(0).toUpperCase() + scroll.type.slice(1) : 'Scroll'}
                   </Button>
                 </Link>
               )}

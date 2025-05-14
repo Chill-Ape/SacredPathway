@@ -31,7 +31,7 @@ export default function Scrolls() {
         // Redirect non-authenticated users to auth page (handled in UI)
         toast({
           title: "Authentication Required",
-          description: "You must create an account to unlock scrolls and track your progress.",
+          description: "You must create an account to unlock items and track your progress.",
         });
         return false;
       }
