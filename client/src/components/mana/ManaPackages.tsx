@@ -128,20 +128,22 @@ const ManaPackages: React.FC = () => {
       console.log(`[${new Date().toISOString()}] Redirecting to Stripe checkout:`, 
         `https://checkout.stripe.com/c/pay/${data.sessionId}`);
       
-      // Use Stripe's redirectToCheckout function instead of direct window.location
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId
-      });
-      
-      // Handle any errors from redirectToCheckout
-      if (error) {
-        console.error('Redirect to checkout error:', error);
-        throw new Error(error.message || 'Failed to redirect to checkout page');
+      // Go back to direct URL approach which is more reliable
+      try {
+        // Use a standard window location redirect instead of Stripe's redirect
+        const checkoutUrl = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
+        console.log(`[${new Date().toISOString()}] Opening checkout URL: ${checkoutUrl}`);
+        
+        // Open in a new tab - this is less likely to be blocked
+        window.open(checkoutUrl, '_blank');
+      } catch (redirectError) {
+        console.error('Error with direct URL redirect:', redirectError);
+        toast({
+          title: 'Checkout Error',
+          description: 'Unable to open checkout page. Please try again.',
+          variant: 'destructive',
+        });
       }
-      
-      // This code should never be reached unless the redirect fails
-      console.log("Redirect didn't immediately happen - fallback to direct URL");
-      window.location.href = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
     } catch (error: any) {
       // Log and display errors
       console.error(`[${new Date().toISOString()}] Purchase error:`, error);

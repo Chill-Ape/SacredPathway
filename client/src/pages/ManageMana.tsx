@@ -27,9 +27,21 @@ function ManageMana(): React.JSX.Element {
   // Show toast for status messages
   useEffect(() => {
     if (status === 'success' && amount) {
+      // Refetch mana balance to show updated amount
+      refetchManaBalance();
+      
       toast({
         title: 'Purchase Successful',
         description: `You have successfully added ${amount} Mana to your account.`,
+        variant: 'default',
+      });
+      
+      // Clear query parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (status === 'canceled') {
+      toast({
+        title: 'Purchase Canceled',
+        description: 'Your mana purchase has been canceled.',
         variant: 'default',
       });
       
@@ -45,12 +57,12 @@ function ManageMana(): React.JSX.Element {
       // Clear query parameters
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, [status, amount, errorMessage, toast]);
+  }, [status, amount, errorMessage, toast, refetchManaBalance]);
   
   console.log(`ManageMana at ${new Date().toISOString()} - Location: ${location}, User:`, user ? "Authenticated" : "Not authenticated");
   
   // Query for user's mana balance
-  const { data: manaData, isLoading: isManaLoading } = useQuery<{ balance: number }>({
+  const { data: manaData, isLoading: isManaLoading, refetch: refetchManaBalance } = useQuery<{ balance: number }>({
     queryKey: ['/api/user/mana'],
     enabled: !!user,
   });
