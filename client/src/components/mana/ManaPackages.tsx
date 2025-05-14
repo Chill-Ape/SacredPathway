@@ -47,13 +47,18 @@ const ManaPackages: React.FC = () => {
     enabled: true,
   });
 
-  // Handle purchase button click
+  // Handle purchase button click - using payment method choice
   const handlePurchase = async (pkg: ManaPackage) => {
+    // If already processing a package, prevent multiple requests
+    if (processingPackageId !== null) {
+      return;
+    }
+    
     // Check if Stripe is available
     if (!stripePublicKey || !stripePromise) {
       toast({
-        title: "Payment System Not Available",
-        description: "The Stripe payment system is currently unavailable. Please try again later or contact support.",
+        title: "Payment System Configuration",
+        description: "The payment system is currently being configured. Please try again later.",
         variant: "destructive"
       });
       return;
@@ -119,17 +124,12 @@ const ManaPackages: React.FC = () => {
         throw new Error('Stripe failed to load. Please check your Stripe public key.');
       }
       
-      // Redirect to Stripe checkout
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
+      // Important: We need to use window.location for the redirect for better compatibility
+      // instead of the Stripe redirect API to prevent the multiple redirects issue
+      window.location.href = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
       
-      // Handle redirect errors
-      if (error) {
-        console.error(`[${new Date().toISOString()}] Stripe redirect error:`, error);
-        throw new Error(error.message || 'Failed to redirect to payment page');
-      }
-      
+      // Never reached - but needed in case the redirect fails somehow
+      return;
     } catch (error: any) {
       // Log and display errors
       console.error(`[${new Date().toISOString()}] Purchase error:`, error);
