@@ -80,6 +80,16 @@ export interface IStorage {
   updateManaPackage(id: number, updates: Partial<InsertManaPackage>): Promise<ManaPackage | undefined>;
   updateUserStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User>;
   
+  // Inventory methods
+  getUserInventory(userId: number): Promise<InventoryItem[]>;
+  getInventoryItemById(id: number): Promise<InventoryItem | undefined>;
+  addInventoryItem(item: InsertInventoryItem): Promise<InventoryItem>;
+  updateInventoryItem(id: number, updates: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined>;
+  removeInventoryItem(id: number): Promise<boolean>;
+  updateItemQuantity(id: number, quantity: number): Promise<InventoryItem | undefined>;
+  equipItem(id: number, isEquipped: boolean): Promise<InventoryItem | undefined>;
+  getEquippedItems(userId: number): Promise<InventoryItem[]>;
+  
   // Session store
   sessionStore: session.Store;
 }

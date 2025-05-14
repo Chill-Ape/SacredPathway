@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, primaryKey, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -38,12 +38,36 @@ export const userScrolls = pgTable("user_scrolls", {
 
 // Define relationships
 
+// Inventory Items Table
+export const inventoryItems = pgTable("inventory_items", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // artifact, key, resource, relic, scroll, book, etc.
+  imageUrl: text("image_url"),
+  rarity: text("rarity").default("common"),
+  quantity: integer("quantity").default(1),
+  isEquipped: boolean("is_equipped").default(false),
+  usesLeft: integer("uses_left").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  attributes: jsonb("attributes"), // Flexible attributes as JSON
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   unlockedScrolls: many(userScrolls),
+  inventoryItems: many(inventoryItems),
 }));
 
 export const scrollsRelations = relations(scrolls, ({ many }) => ({
   unlockedBy: many(userScrolls),
+}));
+
+export const inventoryItemsRelations = relations(inventoryItems, ({ one }) => ({
+  user: one(users, {
+    fields: [inventoryItems.userId],
+    references: [users.id],
+  }),
 }));
 
 export const userScrollsRelations = relations(userScrolls, ({ one }) => ({
@@ -220,3 +244,13 @@ export type InsertManaTransaction = z.infer<typeof insertManaTransactionSchema>;
 
 export type ManaPackage = typeof manaPackages.$inferSelect;
 export type InsertManaPackage = z.infer<typeof insertManaPackageSchema>;
+
+// Inventory item schema and types
+export const insertInventoryItemSchema = createInsertSchema(inventoryItems)
+  .omit({
+    id: true,
+    createdAt: true,
+  });
+
+export type InventoryItem = typeof inventoryItems.$inferSelect;
+export type InsertInventoryItem = z.infer<typeof insertInventoryItemSchema>;
