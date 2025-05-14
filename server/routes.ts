@@ -8,6 +8,9 @@ import { getLoreContext } from "./utils/loreSearch";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
+import { profileUpload, getProfilePictureUrl } from './utils/uploads';
+import fs from 'fs';
+import path from 'path';
 
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -236,6 +239,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Failed to update profile picture' });
     }
   });
+
+  // Upload profile picture (file upload)
+  app.post('/api/user/upload-profile-picture', (req, res) => {
+    if (!req.isAuthenticated() || !req.user) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
+    // Handle file upload with multer
+    profileUpload.single('profileImage')(req, res, async (err) => {
+      if (err) {
+        console.error('File upload error:', err);
+        return res.status(400).json({ message: err.message || 'File upload failed' });
+      }
+
+      try {
+        // If no file was uploaded
+        if (!req.file) {
+          return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Get the relative URL path for the uploaded file
+        const filePath = req.file.path;
+        const profilePictureUrl = getProfilePictureUrl(filePath);
+
+        // Update user's profile picture in the database
+        const updatedUser = await storage.updateUserProfilePicture(req.user.id, profilePictureUrl);
+
+        res.json({
+          user: {
+            id: updatedUser.id,
+            username: updatedUser.username,
+            profilePicture: updatedUser.profilePicture
+          },
+          message: 'Profile picture uploaded successfully'
+        });
+      } catch (error) {
+        console.error('Error processing uploaded profile picture:', error);
+        
+        // Delete the uploaded file in case of error
+        if (req.file && req.file.path) {
+          try {
+            fs.unlinkSync(req.file.path);
+          } catch (unlinkError) {
+            console.error('Failed to remove uploaded file:', unlinkError);
+          }
+        }
+        
+        res.status(500).json({ message: 'Failed to process uploaded profile picture' });
+      }
+    });
+  });
+  
   const httpServer = createServer(app);
 
   // Get all scrolls

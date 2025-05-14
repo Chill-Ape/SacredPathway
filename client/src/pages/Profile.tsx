@@ -2,11 +2,11 @@ import { useAuth } from "@/hooks/use-auth";
 import { useUserScrolls } from "@/hooks/use-user-scrolls";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
-import { Loader2, Scroll as ScrollIcon, Lock, LockOpen, Upload, Camera, UserCircle } from "lucide-react";
+import { Loader2, Scroll as ScrollIcon, Lock, LockOpen, Upload, Camera, UserCircle, FileImage } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +26,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 // Define types for the component props
 interface ProfilePictureSectionProps {
@@ -37,6 +43,10 @@ interface ProfilePictureSectionProps {
 function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
   // Predefined avatar options
@@ -48,6 +58,7 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
     '/assets/avatars/mystical_4.svg',
   ];
   
+  // Handle avatar selection from predefined options
   const handleAvatarSelect = async (avatarPath: string) => {
     try {
       setIsUploading(true);
@@ -86,6 +97,118 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
     }
   };
   
+  // Handle file selection
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // File size validation (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image under 5MB in size.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Create a preview URL
+    const url = URL.createObjectURL(file);
+    setSelectedFile(file);
+    setPreviewUrl(url);
+  };
+  
+  // Handle file upload
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
+      toast({
+        title: "No file selected",
+        description: "Please select an image to upload.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      setIsUploading(true);
+      setUploadProgress(10);
+      
+      // Create form data for file upload
+      const formData = new FormData();
+      formData.append('profileImage', selectedFile);
+      
+      // Simulate progress (in a real app, you'd use upload progress events)
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          const next = prev + 20;
+          return next < 90 ? next : 90;
+        });
+      }, 500);
+      
+      // Upload the file
+      const response = await fetch('/api/user/upload-profile-picture', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to upload profile picture");
+      }
+      
+      const data = await response.json();
+      
+      // Update the user data in the cache
+      queryClient.setQueryData(["/api/user"], { user: data.user });
+      
+      // Call the parent's update function
+      if (onUpdate) onUpdate(data.user);
+      
+      // Cleanup the preview URL
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      
+      toast({
+        title: "Profile Updated",
+        description: "Your profile picture has been uploaded successfully.",
+      });
+      
+      // Close the dialog
+      setIsDialogOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Upload Failed",
+        description: error.message || "Failed to upload profile picture",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+  
+  // Trigger file input click
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  
+  // Reset selected file
+  const resetFileSelection = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+  
   return (
     <div className="flex flex-col items-center mb-8">
       <Avatar className="h-24 w-24 border-2 border-sacred-blue/30 mb-4">
@@ -102,7 +225,12 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
         )}
       </Avatar>
       
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open) {
+          resetFileSelection();
+        }
+      }}>
         <DialogTrigger asChild>
           <Button variant="outline" className="text-sacred-blue border-sacred-blue/20 font-raleway">
             <Camera className="h-4 w-4 mr-2" />
@@ -113,32 +241,123 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
           <DialogHeader>
             <DialogTitle className="font-cinzel text-sacred-blue">Choose Your Avatar</DialogTitle>
             <DialogDescription className="font-raleway text-sacred-gray">
-              Select a mystical avatar to represent your journey in the Archive.
+              Select a mystical avatar or upload your own photo.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid grid-cols-3 gap-4 py-4">
-            {avatarOptions.map((avatar, index) => (
-              <div 
-                key={index}
-                className={`relative cursor-pointer rounded-full overflow-hidden border-2 ${
-                  user.profilePicture === avatar ? 'border-sacred-blue' : 'border-transparent hover:border-sacred-blue/50'
-                }`}
-                onClick={() => handleAvatarSelect(avatar)}
-              >
-                <img 
-                  src={avatar} 
-                  alt={`Avatar option ${index + 1}`} 
-                  className="h-20 w-20 object-cover"
-                />
-                {isUploading && user.profilePicture === avatar && (
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                    <Loader2 className="h-6 w-6 animate-spin text-white" />
+          <Tabs defaultValue="avatars" className="w-full">
+            <TabsList className="grid grid-cols-2 mb-4">
+              <TabsTrigger value="avatars">Preset Avatars</TabsTrigger>
+              <TabsTrigger value="upload">Upload Photo</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="avatars">
+              <div className="grid grid-cols-3 gap-4 py-4">
+                {avatarOptions.map((avatar, index) => (
+                  <div 
+                    key={index}
+                    className={`relative cursor-pointer rounded-full overflow-hidden border-2 ${
+                      user.profilePicture === avatar ? 'border-sacred-blue' : 'border-transparent hover:border-sacred-blue/50'
+                    }`}
+                    onClick={() => handleAvatarSelect(avatar)}
+                  >
+                    <img 
+                      src={avatar} 
+                      alt={`Avatar option ${index + 1}`} 
+                      className="h-20 w-20 object-cover"
+                    />
+                    {isUploading && user.profilePicture === avatar && (
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                        <Loader2 className="h-6 w-6 animate-spin text-white" />
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
+            </TabsContent>
+            
+            <TabsContent value="upload">
+              <div className="flex flex-col items-center py-4">
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  className="hidden"
+                />
+                
+                {/* Preview or drop zone */}
+                <div 
+                  className={`w-full h-48 border-2 border-dashed rounded-md flex items-center justify-center mb-4 ${
+                    previewUrl ? 'border-sacred-blue' : 'border-sacred-blue/30 hover:border-sacred-blue/60'
+                  }`}
+                  onClick={!isUploading && !previewUrl ? triggerFileInput : undefined}
+                  style={{ cursor: !isUploading && !previewUrl ? 'pointer' : 'default' }}
+                >
+                  {previewUrl ? (
+                    <div className="relative w-full h-full">
+                      <img 
+                        src={previewUrl} 
+                        alt="Preview" 
+                        className="w-full h-full object-contain"
+                      />
+                      {!isUploading && (
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            resetFileSelection();
+                          }}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <path d="M18 6L6 18"></path>
+                            <path d="M6 6L18 18"></path>
+                          </svg>
+                        </Button>
+                      )}
+                    </div>
+                  ) : isUploading ? (
+                    <div className="text-center">
+                      <Loader2 className="h-10 w-10 animate-spin text-sacred-blue mx-auto mb-2" />
+                      <p className="text-sm text-sacred-gray">{uploadProgress}% Uploading...</p>
+                    </div>
+                  ) : (
+                    <div className="text-center p-4">
+                      <FileImage className="h-12 w-12 text-sacred-blue/60 mx-auto mb-2" />
+                      <p className="text-sacred-blue font-medium">Click to select an image</p>
+                      <p className="text-sacred-gray text-sm mt-1">JPEG, PNG, GIF or WebP (max 5MB)</p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Action buttons */}
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={triggerFileInput}
+                    disabled={isUploading}
+                  >
+                    Select Image
+                  </Button>
+                  <Button 
+                    onClick={handleFileUpload}
+                    disabled={!selectedFile || isUploading}
+                    className="bg-sacred-blue hover:bg-sacred-blue/80"
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        Uploading...
+                      </>
+                    ) : 'Upload Image'}
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>
