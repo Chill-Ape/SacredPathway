@@ -8,6 +8,7 @@ import { insertUserSchema, User } from "@shared/schema";
 import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import WelcomeModal from "@/components/mana/WelcomeModal";
 
 // Define UserType for consistent use throughout the hook
 type UserType = { 
@@ -22,7 +23,9 @@ type AuthContextType = {
   error: Error | null;
   loginMutation: UseMutationResult<{ user: UserType }, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
-  registerMutation: UseMutationResult<{ user: UserType }, Error, RegisterData>;
+  registerMutation: UseMutationResult<{ user: UserType, welcomeBonus?: number }, Error, RegisterData>;
+  showWelcomeModal: boolean;
+  setShowWelcomeModal: (show: boolean) => void;
 };
 
 type LoginData = {
@@ -44,6 +47,8 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [newUsername, setNewUsername] = useState<string>("");
   
   // Try to get user from localStorage if available
   const [localUser, setLocalUser] = useState<UserType | null>(() => {
@@ -113,15 +118,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Force refetch of mana balance to show the welcome bonus
       queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
       
+      // Store the new username and show welcome modal
+      setNewUsername(data.user.username);
+      setShowWelcomeModal(true);
+      
       toast({
         title: "Registration successful",
         description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
       });
       
-      // Add a small delay before forcing a navigation
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
+      // Store user in localStorage immediately to prevent UI flicker
+      localStorage.setItem('akashic_user', JSON.stringify(data.user));
+      
+      // No need to redirect here - let user explore the welcome modal first
     },
     onError: (error: Error) => {
       toast({
@@ -185,8 +194,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loginMutation,
         logoutMutation,
         registerMutation,
+        showWelcomeModal,
+        setShowWelcomeModal,
       }}
     >
+      {/* Render welcome modal if it's visible */}
+      {showWelcomeModal && user && (
+        <WelcomeModal 
+          isOpen={showWelcomeModal} 
+          onClose={() => setShowWelcomeModal(false)}
+          username={newUsername || user.username}
+        />
+      )}
       {children}
     </AuthContext.Provider>
   );
