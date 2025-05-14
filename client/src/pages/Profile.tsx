@@ -145,10 +145,13 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
         });
       }, 500);
       
-      // Upload the file
+      // Upload the file using fetch with proper auth headers
       const response = await fetch('/api/user/upload-profile-picture', {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'include', // Include cookies for authentication
+        headers: {
+          // No Content-Type header is set intentionally as it will be set automatically for FormData
+        },
         body: formData,
       });
       
