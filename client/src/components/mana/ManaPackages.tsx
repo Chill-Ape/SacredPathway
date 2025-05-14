@@ -128,16 +128,30 @@ const ManaPackages: React.FC = () => {
       console.log(`[${new Date().toISOString()}] Redirecting to Stripe checkout:`, 
         `https://checkout.stripe.com/c/pay/${data.sessionId}`);
       
-      // Go back to direct URL approach which is more reliable
+      // Use a more reliable approach - create a form and submit it
       try {
-        // Use a standard window location redirect instead of Stripe's redirect
         const checkoutUrl = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
-        console.log(`[${new Date().toISOString()}] Opening checkout URL: ${checkoutUrl}`);
+        console.log(`[${new Date().toISOString()}] Creating checkout form: ${checkoutUrl}`);
         
-        // Open in a new tab - this is less likely to be blocked
-        window.open(checkoutUrl, '_blank');
+        // Create a temporary form element
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = checkoutUrl;
+        form.target = '_blank'; // Open in new tab
+        document.body.appendChild(form);
+        
+        // Submit the form
+        form.submit();
+        
+        // Clean up
+        document.body.removeChild(form);
+        
+        toast({
+          title: 'Opening Checkout',
+          description: 'Stripe checkout is opening in a new tab. Please complete your payment there.',
+        });
       } catch (redirectError) {
-        console.error('Error with direct URL redirect:', redirectError);
+        console.error('Error creating checkout form:', redirectError);
         toast({
           title: 'Checkout Error',
           description: 'Unable to open checkout page. Please try again.',

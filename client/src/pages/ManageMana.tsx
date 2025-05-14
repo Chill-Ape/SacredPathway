@@ -18,6 +18,12 @@ function ManageMana(): React.JSX.Element {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<string>("packages");
   
+  // Query for user's mana balance
+  const { data: manaData, isLoading: isManaLoading, refetch: refetchManaBalance } = useQuery<{ balance: number }>({
+    queryKey: ['/api/user/mana'],
+    enabled: !!user,
+  });
+  
   // Get query parameters
   const searchParams = new URLSearchParams(window.location.search);
   const status = searchParams.get('status');
@@ -60,12 +66,6 @@ function ManageMana(): React.JSX.Element {
   }, [status, amount, errorMessage, toast, refetchManaBalance]);
   
   console.log(`ManageMana at ${new Date().toISOString()} - Location: ${location}, User:`, user ? "Authenticated" : "Not authenticated");
-  
-  // Query for user's mana balance
-  const { data: manaData, isLoading: isManaLoading, refetch: refetchManaBalance } = useQuery<{ balance: number }>({
-    queryKey: ['/api/user/mana'],
-    enabled: !!user,
-  });
   
   // Extract the balance value
   const manaBalance = manaData?.balance || 0;
