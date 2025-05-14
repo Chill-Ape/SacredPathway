@@ -124,6 +124,9 @@ export default function Footer() {
             <Link href="/accessibility">
               <span className="text-sm hover:text-sacred-white transition-colors cursor-pointer">Accessibility</span>
             </Link>
+            <Link href="/deploy">
+              <span className="text-sm hover:text-sacred-white transition-colors cursor-pointer">Deployment</span>
+            </Link>
           </div>
         </div>
       </div>

@@ -66,6 +66,7 @@ function App() {
                 <Route path="/scrolls/:id" component={ScrollDetail} />
                 <Route path="/sacred-scroll/:id" component={SacredScroll} />
                 <Route path="/lore" component={Lore} />
+                <Route path="/deploy" component={DeploymentReadyPage} />
                 <Route path="/oracle" component={Oracle} />
                 <Route path="/keeper" component={Keeper} />
                 <Route path="/contact" component={Contact} />

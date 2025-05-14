@@ -1,17 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
 // This is a simplified landing page for successful deployment
 // It's designed to be lightweight and deploy easily
 const DeploymentReadyPage = () => {
+  // Simple animation effect for the glow
+  const [glowIntensity, setGlowIntensity] = useState(0);
+  
+  useEffect(() => {
+    // Create a pulsing glow effect
+    const interval = setInterval(() => {
+      setGlowIntensity((prev) => {
+        const newValue = prev + 0.02;
+        return newValue > 1 ? 0 : newValue;
+      });
+    }, 50);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
-    <div className="min-h-screen bg-slate-900 text-amber-100 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-900 text-amber-100 flex flex-col items-center justify-center p-4 overflow-hidden relative">
       <Helmet>
         <title>Akashic Archive | Deployment Successful</title>
         <meta name="description" content="The Akashic Archive has been successfully deployed." />
       </Helmet>
       
-      <div className="max-w-xl w-full bg-slate-800/50 backdrop-blur-md p-8 rounded-lg border border-amber-600/30 shadow-lg">
+      {/* Background glow effect */}
+      <div 
+        className="absolute inset-0 bg-gradient-radial from-amber-500/5 to-transparent rounded-full blur-3xl"
+        style={{
+          opacity: 0.3 + glowIntensity * 0.2,
+          transform: `scale(${1 + glowIntensity * 0.2})`,
+          transition: 'opacity 0.5s, transform 0.5s',
+        }}
+      />
+      
+      <div className="max-w-xl w-full bg-slate-800/50 backdrop-blur-md p-8 rounded-lg border border-amber-600/30 shadow-lg relative z-10">
         <h1 className="text-3xl font-bold text-center mb-6 text-amber-400">
           Akashic Archive Deployment Successful
         </h1>
@@ -43,6 +68,12 @@ const DeploymentReadyPage = () => {
             className="px-5 py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-amber-100 rounded-md font-medium shadow-md transition-colors"
           >
             Enter The Archive
+          </a>
+          <a 
+            href="/"
+            className="ml-4 px-5 py-2.5 bg-transparent border border-amber-500 hover:bg-amber-500/10 text-amber-100 rounded-md font-medium shadow-md transition-colors"
+          >
+            Return to Homepage
           </a>
         </div>
       </div>
