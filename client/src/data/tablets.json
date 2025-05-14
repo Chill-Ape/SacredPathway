@@ -5,7 +5,7 @@
     "subtitle": "Etched within the Ark for those who remember",
     "image": "/assets/crystal_tablet.png",
     "description": "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
-    "isLocked": true,
+    "isLocked": false,
     "key": "ENKI",
     "backgroundColor": "#111827",
     "fontFamily": "Cormorant Garamond, serif",

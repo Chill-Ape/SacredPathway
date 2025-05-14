@@ -25,10 +25,14 @@ export default function TabletDetail() {
     const foundTablet = tabletsData.find(item => item.id === id);
     if (foundTablet) {
       setTablet(foundTablet);
-      // Check if this tablet is already unlocked for the user
-      // For now, we'll use local storage as a simple way to track this
-      const unlockedItems = JSON.parse(localStorage.getItem('unlockedItems') || '[]');
-      setIsUnlocked(unlockedItems.includes(id));
+      // Always set the Crystal Tablet of Enki as unlocked
+      if (id === 'crystal-tablet-of-enki') {
+        setIsUnlocked(true);
+      } else {
+        // For other tablets, check local storage
+        const unlockedItems = JSON.parse(localStorage.getItem('unlockedItems') || '[]');
+        setIsUnlocked(unlockedItems.includes(id));
+      }
     } else {
       // Tablet not found
       toast({

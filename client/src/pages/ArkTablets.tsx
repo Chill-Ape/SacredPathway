@@ -96,7 +96,7 @@ export default function ArkTablets() {
       id: "crystal-tablet-of-enki",
       title: "🜂 The Crystal Tablet of Enki",
       description: "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
-      isLocked: true,
+      isLocked: false,
       key: "ENKI",
       image: crystalTabletImage
     },
