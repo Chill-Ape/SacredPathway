@@ -7,6 +7,7 @@ import { Helmet } from "react-helmet";
 import ancientTabletDark from "@assets/ChatGPT Image May 10, 2025, 05_25_40 PM.png";
 import keeperImage from "@assets/ChatGPT Image Apr 24, 2025, 06_22_14 PM.png";
 import loreImage from "@assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png";
+import simulationImage from "@assets/ChatGPT Image May 10, 2025, 05_27_25 PM.png";
 
 export default function Home() {
   const features = [
@@ -30,6 +31,13 @@ export default function Home() {
       image: loreImage, // Sacred geometry symbol
       href: "/lore",
       delay: 1.1
+    },
+    {
+      title: "The Simulation",
+      description: "Enter a real-time memory interface where you can gather Mana through sacred rituals and quests.",
+      image: simulationImage, // Simulation interface image
+      href: "/simulation",
+      delay: 1.3
     }
   ];
 
@@ -62,7 +70,7 @@ export default function Home() {
           </svg>
         </div>
         
-        <div className="mt-16 mb-24 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto px-4 relative z-10">
+        <div className="mt-16 mb-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4 relative z-10">
           {features.map((feature, index) => (
             <FeatureCard
               key={index}
