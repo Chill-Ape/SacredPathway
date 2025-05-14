@@ -132,7 +132,7 @@ export default function ArkContents() {
       description: "Ancient devices of mysterious origin",
       poeticDescription: "Remnants of impossible technology. Echoes of forgotten stars.",
       imagePath: "/assets/content-types/crystal_artifact.jpg", 
-      glyphPath: "/assets/ChatGPT Image Apr 24, 2025, 07_23_59 PM.png", 
+      glyphPath: "/assets/sacred_symbol.svg", 
       linkTo: "/ark/artifacts",
       delay: 0.4
     },
@@ -141,8 +141,8 @@ export default function ArkContents() {
       title: "Tablets",
       description: "Stone records of forbidden knowledge",
       poeticDescription: "Inscribed in crystal. Memory carved in vibration.",
-      imagePath: "/assets/content-types/ancient_tablet.png",
-      glyphPath: "/assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png",
+      imagePath: "/assets/tablets/stone_tablet.png",
+      glyphPath: "/assets/sacred_geometry.svg",
       linkTo: "/ark/tablets",
       delay: 0.6
     },
@@ -152,7 +152,7 @@ export default function ArkContents() {
       description: "Parchments containing arcane wisdom",
       poeticDescription: "Unfurled secrets. Language of the keepers.",
       imagePath: "/assets/content-types/enchanted_scroll.jpg",
-      glyphPath: "/assets/ChatGPT Image May 10, 2025, 05_27_25 PM.png",
+      glyphPath: "/assets/sacred_geometry_2.svg",
       linkTo: "/ark/scrolls",
       delay: 0.8
     },
@@ -162,7 +162,7 @@ export default function ArkContents() {
       description: "Tomes of collected mystical teachings",
       poeticDescription: "Bound chronicles. Whispers from the ages.",
       imagePath: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png",
-      glyphPath: "/assets/ChatGPT Image May 8, 2025, 09_48_16 PM.png",
+      glyphPath: "/assets/sacred_geometry_3.svg",
       linkTo: "/ark/books",
       delay: 1.0
     }
@@ -184,7 +184,7 @@ export default function ArkContents() {
       {/* Subtle animated glyph background */}
       <div className="absolute inset-0 z-0 opacity-5">
         <div className="absolute top-0 left-0 w-full h-full bg-repeat opacity-30" 
-             style={{backgroundImage: "url('/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png')", backgroundSize: "300px"}}>
+             style={{backgroundImage: "url('/assets/tablets/crystal_tablet.png')", backgroundSize: "300px"}}>
         </div>
       </div>
       
