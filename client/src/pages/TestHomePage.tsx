@@ -137,7 +137,69 @@ const MemoryProgress = () => {
 const TestHomePage = () => {
   const [isIntroOpen, setIsIntroOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [audioVolume, setAudioVolume] = useState(0);
   const [, setLocation] = useLocation();
+  
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  
+  // Initialize and handle ambient audio
+  useEffect(() => {
+    // Create audio element for ambient sound
+    const ambientAudio = new Audio('/ambient-mystical.mp3');
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0;
+    audioRef.current = ambientAudio;
+    
+    // Fade in audio over 3 seconds
+    let volume = 0;
+    const targetVolume = 0.2; // Keep volume low so it's not distracting
+    
+    // Only start playing after loading completes
+    const startAudio = () => {
+      if (!isLoading) {
+        ambientAudio.play().then(() => {
+          setIsAudioPlaying(true);
+          
+          // Gradually increase volume
+          const fadeInterval = setInterval(() => {
+            volume = Math.min(volume + 0.01, targetVolume);
+            ambientAudio.volume = volume;
+            setAudioVolume(volume);
+            
+            if (volume >= targetVolume) {
+              clearInterval(fadeInterval);
+            }
+          }, 100);
+        }).catch(err => {
+          console.log("Audio autoplay prevented:", err);
+        });
+      }
+    };
+    
+    // Start audio after a small delay to ensure everything is loaded
+    const audioTimer = setTimeout(startAudio, 2000);
+    
+    // Cleanup function: stop audio when component unmounts
+    return () => {
+      clearTimeout(audioTimer);
+      
+      // Fade out audio before stopping
+      const fadeOutInterval = setInterval(() => {
+        if (ambientAudio && ambientAudio.volume > 0.01) {
+          ambientAudio.volume = Math.max(0, ambientAudio.volume - 0.05);
+        } else {
+          clearInterval(fadeOutInterval);
+          ambientAudio.pause();
+        }
+      }, 50);
+      
+      // Ensure audio stops if component unmounts during fade
+      setTimeout(() => {
+        ambientAudio.pause();
+      }, 1000);
+    };
+  }, [isLoading]);
   
   // Simulate loading and show intro modal
   useEffect(() => {
@@ -255,11 +317,11 @@ const TestHomePage = () => {
           
           {/* Animated runes */}
           <div className="text-center mb-6">
-            <span className="ancient-rune">ᚨ</span>
-            <span className="ancient-rune">ᚱ</span>
-            <span className="ancient-rune">ᚲ</span>
-            <span className="ancient-rune">ᛇ</span>
-            <span className="ancient-rune">ᚹ</span>
+            <span className="ancient-rune" data-symbol="ᚨ">ᚨ</span>
+            <span className="ancient-rune" data-symbol="ᚱ">ᚱ</span>
+            <span className="ancient-rune" data-symbol="ᚲ">ᚲ</span>
+            <span className="ancient-rune" data-symbol="ᛇ">ᛇ</span>
+            <span className="ancient-rune" data-symbol="ᚹ">ᚹ</span>
           </div>
           
           {/* Intro text with animation */}
@@ -319,10 +381,11 @@ const TestHomePage = () => {
             transition={{ duration: 0.8, delay: 3.5 }}
           >
             <Button 
-              className="bg-amber-700/80 hover:bg-amber-600/80 text-amber-50 text-lg py-6 shadow-lg shadow-amber-900/20"
-              onClick={() => setLocation('/ark')}
+              className="bg-amber-700/80 hover:bg-amber-600/80 text-amber-50 text-lg py-6 shadow-lg shadow-amber-900/20 relative overflow-hidden group"
+              onClick={() => setLocation('/ark/contents')}
             >
-              Begin the Remembering
+              <span className="relative z-10">Begin the Journey</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-amber-600/0 via-amber-600/20 to-amber-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 transform -translate-x-full group-hover:translate-x-0 ease-out"></span>
             </Button>
             
             <Button 
