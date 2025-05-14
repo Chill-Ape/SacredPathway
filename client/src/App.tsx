@@ -24,6 +24,7 @@ import ArkTablets from "@/pages/ArkTablets";
 import ArkScrolls from "@/pages/ArkScrolls";
 import ArkBooks from "@/pages/ArkBooks";
 import TabletDetail from "@/pages/TabletDetail";
+import TestHomePage from "@/pages/TestHomePage";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -35,9 +36,14 @@ import { ProtectedRoute } from "@/lib/protected-route";
 function App() {
   const [location] = useLocation();
   
-  // Special handling for landing page - render without the normal layout
+  // Special handling for landing page and test page - render without the normal layout
   if (location === "/landing1") {
     return <Landing1 />;
+  }
+  
+  // Special handling for test homepage - custom immersive experience
+  if (location === "/test") {
+    return <TestHomePage />;
   }
 
   return (
@@ -64,6 +70,7 @@ function App() {
                 <Route path="/ark/tablets/:id" component={TabletDetail} />
                 <Route path="/ark/scrolls" component={ArkScrolls} />
                 <Route path="/ark/books" component={ArkBooks} />
+                <Route path="/test" component={TestHomePage} />
                 <ProtectedRoute 
                   path="/profile" 
                   component={Profile} 
