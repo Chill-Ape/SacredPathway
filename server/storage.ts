@@ -93,12 +93,18 @@ export class DatabaseStorage implements IStorage {
       console.error("Database pool is not initialized, using MemoryStore instead");
       this.sessionStore = new MemoryStore({
         checkPeriod: 86400000, // prune expired entries every 24h
+        stale: false, // don't serve stale sessions 
+        ttl: 86400000 * 7, // 1 week max lifetime
       });
     } else {
       console.log("Initializing PostgreSQL session store");
       this.sessionStore = new PostgresSessionStore({
         pool: pool,
-        createTableIfMissing: true
+        createTableIfMissing: true,
+        tableName: 'session', // Standard table name
+        schemaName: 'public', // Default schema
+        ttl: 86400 * 7, // 1 week in seconds
+        pruneSessionInterval: 3600 // Prune every hour
       });
       
       // Initialize database tables and default data
@@ -588,9 +594,12 @@ export class MemStorage implements IStorage {
     this.manaPackages = new Map();
     this.oracleUsageBySession = new Map();
     
-    // Initialize session store
+    // Initialize robust session store with explicit configuration
+    console.log("MemStorage: Initializing MemoryStore for sessions");
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
+      stale: false, // don't serve stale sessions
+      ttl: 86400000 * 7, // 1 week max lifetime
     });
     
     this.currentUserId = 1;
