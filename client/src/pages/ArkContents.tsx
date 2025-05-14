@@ -3,9 +3,11 @@ import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Helmet } from "react-helmet";
-// Import tablet image directly using relative path
+// Import images directly using relative paths
 // @ts-ignore
 import ancientTabletImage from '../assets/ancient_tablet_dark.png';
+// @ts-ignore
+import artifactImage from '../assets/artifact_1.png';
 
 type CategoryCardProps = { 
   id: string;
@@ -138,8 +140,8 @@ export default function ArkContents() {
       title: "Artifacts",
       description: "Ancient devices of mysterious origin",
       poeticDescription: "Remnants of impossible technology. Echoes of forgotten stars.",
-      // Using the imported ancient tablet image
-      imagePath: ancientTabletImage,
+      // Using the imported artifact image
+      imagePath: artifactImage,
       glyphPath: "/assets/sacred_symbol.svg", 
       linkTo: "/ark/artifacts",
       delay: 0.4
