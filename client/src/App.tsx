@@ -58,8 +58,35 @@ function App() {
                 />
                 <Route path="/mana">
                   {() => {
-                    console.log("Mana route matched");
+                    console.log("Mana route matched at", new Date().toISOString());
+                    setTimeout(() => {
+                      console.log("Checking if Mana route is still matched after timeout");
+                    }, 500);
                     return <ManageMana />;
+                  }}
+                </Route>
+                
+                {/* Debug route */}
+                <Route path="/mana-debug">
+                  {() => {
+                    console.log("MANA DEBUG ROUTE MATCHED");
+                    return (
+                      <div className="p-8">
+                        <h1 className="text-2xl font-bold mb-4">Debug Mana Route</h1>
+                        <p className="mb-4">This is a special debug page for the Mana route.</p>
+                        <div className="flex flex-col gap-4">
+                          <a href="/mana" className="text-blue-500 underline">
+                            Click here to go to /mana directly with a regular link
+                          </a>
+                          <button 
+                            onClick={() => window.location.href = '/mana'} 
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                          >
+                            Navigate to /mana with window.location
+                          </button>
+                        </div>
+                      </div>
+                    );
                   }}
                 </Route>
                 <Route component={NotFound} />
