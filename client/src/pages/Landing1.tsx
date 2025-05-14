@@ -92,6 +92,16 @@ const Landing1 = () => {
         
         <div className="ambient-light"></div>
         
+        {/* Additional ambient flowing lights */}
+        <div className="flowing-lights">
+          <div className="flowing-light light-1"></div>
+          <div className="flowing-light light-2"></div>
+          <div className="flowing-light light-3"></div>
+          <div className="flowing-light light-4"></div>
+          <div className="flowing-light light-5"></div>
+          <div className="flowing-light light-6"></div>
+        </div>
+        
         <div className="content-container">
           <motion.div 
             className="sacred-symbol"
@@ -103,7 +113,13 @@ const Landing1 = () => {
                 transition={{ duration: 1 }}
                 filter="none"
               >
-                {/* Main Triangle with Circle Inside */}
+                {/* Main Triangle with Circle Inside - using clipPath to contain the circle */}
+                <defs>
+                  <clipPath id="triangleClip">
+                    <path d="M50 20 L10 85 L90 85 Z" />
+                  </clipPath>
+                </defs>
+                
                 <motion.path 
                   d="M50 20 L10 85 L90 85 Z" 
                   fill="none" 
@@ -119,14 +135,15 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Circle that touches the triangle sides */}
+                {/* Circle that touches the triangle sides - clipped to stay inside triangle */}
                 <motion.circle 
                   cx="50" 
                   cy="55" 
-                  r="22" 
+                  r="20" 
                   fill="none" 
                   stroke="rgba(66, 133, 180, 0.9)" 
                   strokeWidth="3"
+                  clipPath="url(#triangleClip)"
                   animate={{ 
                     stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
                   }}
@@ -138,7 +155,7 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Line underneath */}
+                {/* Line underneath - extending to match triangle width */}
                 <motion.line 
                   x1="10" 
                   y1="95" 
@@ -157,11 +174,11 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Dot above - with enough margin to prevent cropping */}
+                {/* Dot above - smaller and positioned higher */}
                 <motion.circle 
                   cx="50" 
-                  cy="10" 
-                  r="4.5" 
+                  cy="5" 
+                  r="3.5" 
                   fill="rgba(66, 133, 180, 0.9)"
                   animate={{ 
                     fill: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
