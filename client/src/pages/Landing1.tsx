@@ -168,11 +168,11 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Circle touching the bottom of the triangle */}
+                {/* Circle aligned to touch the triangle sides properly */}
                 <motion.circle 
                   cx="50" 
-                  cy="59" 
-                  r="17" 
+                  cy="56" 
+                  r="16.5" 
                   fill="none" 
                   stroke="rgba(25, 95, 145, 0.95)" 
                   strokeWidth="3.5"
