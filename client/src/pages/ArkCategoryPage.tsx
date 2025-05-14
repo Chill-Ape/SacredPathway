@@ -214,6 +214,16 @@ const ContentDialog = ({
               src={item.image} 
               alt={item.title} 
               className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                // Use a try-catch to prevent any errors during fallback handling
+                try {
+                  console.error("Dialog image failed to load:", item.image);
+                  // Ensure we use a fallback image that definitely exists
+                  e.currentTarget.src = "/assets/sacred_geometry.svg";
+                } catch (err) {
+                  console.error("Error setting dialog fallback image:", err);
+                }
+              }}
             />
             {item.isLocked && (
               <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
@@ -338,12 +348,15 @@ const CategoryItemCard = ({
             alt={item.title}
             className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             onError={(e) => {
-              console.error("Image failed to load:", item.image);
-              // Ensure we use a fallback image that definitely exists
-              e.currentTarget.src = "/assets/sacred_geometry.svg"; 
-              
-              // Log additional error details to aid debugging
-              console.log("Setting fallback image for:", item.title);
+              // Use a try-catch to prevent any errors during fallback handling
+              try {
+                console.error("Image failed to load:", item.image);
+                // Ensure we use a fallback image that definitely exists
+                e.currentTarget.src = "/assets/sacred_geometry.svg"; 
+                console.log("Setting fallback image for:", item.title);
+              } catch (err) {
+                console.error("Error setting fallback image:", err);
+              }
             }}
           />
           
