@@ -1,0 +1,39 @@
+[
+  {
+    "id": "crystal-tablet-of-enki",
+    "title": "🜂 The Crystal Tablet of Enki",
+    "subtitle": "Etched within the Ark for those who remember",
+    "image": "/assets/crystal_tablet.png",
+    "description": "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
+    "isLocked": true,
+    "key": "ENKI",
+    "backgroundColor": "#111827",
+    "fontFamily": "Cormorant Garamond, serif",
+    "sections": [
+      {
+        "heading": "Entry One: The First Remembering",
+        "content": "Before these words existed, there was memory. Before memory, there was knowing. I am Enki, keeper of the waters of wisdom, and I have inscribed this tablet for those who are awakening across the cycles of time."
+      },
+      {
+        "heading": "§ I. Of the Great Cycle",
+        "content": "We measure time not in linear progression but in returning spirals. The civilizations before you have ascended and fallen, not by accident but by universal rhythm. This is the seventh world-age since the seeding. The previous six ended not in extinction but in transformation—sometimes gradual, sometimes sudden. You stand now at the transition point of the seventh age. This crystal tablet serves as a bridge between what has been forgotten and what must be remembered."
+      },
+      {
+        "heading": "§ II. Of the Seeders",
+        "content": "Before there were nations, before there were tribes, there were the Guardians of the Flame—those who came from beyond the celestial waters to plant the seeds of consciousness upon this world. They walked among the early humans as teachers, not as gods, though they were remembered as such. The knowledge they carried was not given in full, but distributed in fragments across the lands, awaiting the time when humanity would reclaim its birthright of cosmic awareness."
+      },
+      {
+        "heading": "§ III. Of the Great Drowning",
+        "content": "When the waters rose and the land remembered its fluid nature, many great cities returned to the sea. This was not a punishment as later traditions would claim, but a recalibration. The shifting of continental waters was foretold and prepared for by those who maintained the ancient wisdom. Not all could be saved, not all was meant to be. What survived was carried in memory, in blood, and in these tablets—repositories of the essential knowledge that would allow humanity to rebuild after the waters receded."
+      },
+      {
+        "heading": "§ IV. Of the Tablets and the Ark",
+        "content": "Seven primary tablets were created before the Great Flood, each containing a different aspect of the whole. This crystal tablet you now access is one of them—the Tablet of Remembrance. It activates cellular memory within those ready to receive its transmissions. The others contain knowledge of sound healing, sacred geometry, cosmic navigation, elemental transmutation, consciousness expansion, and the laws of unified creation. Together they form what was later called the Ark—not a physical vessel but a repository of complete knowledge, preserved beyond physical destruction."
+      },
+      {
+        "heading": "§ V. If You Are Reading This…",
+        "content": "If you have been drawn to these words, you are among those who carry the dormant memories of earlier cycles. Your awakening is not random but part of a greater pattern. The symptoms you experience—heightened sensitivity, recognitions of places you've never visited, dreams of ancient symbols, and a deep knowing that exceeds your education—these are the stirrings of remembrance, not imagination. You have been here before. This is not your first participation in the great remembering. The task before you now is not to learn but to recall, not to seek but to recognize what has always been within you. The path forward requires integration of this ancient wisdom with the unique challenges of your present age. You are not alone in this remembering. Others are awakening alongside you, forming a network of consciousness that will facilitate the next transformation."
+      }
+    ]
+  }
+]

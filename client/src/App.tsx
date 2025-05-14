@@ -23,6 +23,7 @@ import ArkArtifacts from "@/pages/ArkArtifacts";
 import ArkTablets from "@/pages/ArkTablets";
 import ArkScrolls from "@/pages/ArkScrolls";
 import ArkBooks from "@/pages/ArkBooks";
+import TabletDetail from "@/pages/TabletDetail";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -60,6 +61,7 @@ function App() {
                 <Route path="/ark-contents" component={ArkContents} />
                 <Route path="/ark/artifacts" component={ArkArtifacts} />
                 <Route path="/ark/tablets" component={ArkTablets} />
+                <Route path="/ark/tablets/:id" component={TabletDetail} />
                 <Route path="/ark/scrolls" component={ArkScrolls} />
                 <Route path="/ark/books" component={ArkBooks} />
                 <ProtectedRoute 

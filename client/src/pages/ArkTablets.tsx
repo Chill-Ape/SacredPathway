@@ -94,7 +94,7 @@ export default function ArkTablets() {
   const tablets = [
     {
       id: "crystal-tablet-of-enki",
-      title: "Crystal Tablet of Enki",
+      title: "🜂 The Crystal Tablet of Enki",
       description: "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
       isLocked: true,
       key: "ENKI",
@@ -134,6 +134,14 @@ export default function ArkTablets() {
   // Handler for tablet selection
   const handleTabletClick = (tabletId: string) => {
     console.log("Selected tablet:", tabletId);
+    
+    // For the Crystal Tablet of Enki, navigate to the dedicated tablet detail page
+    if (tabletId === "crystal-tablet-of-enki") {
+      setLocation(`/ark/tablets/${tabletId}`);
+      return;
+    }
+    
+    // For other tablets, show the modal view
     setSelectedTablet(tabletId);
   };
   
