@@ -498,11 +498,11 @@
   padding: 2rem;
 }
 
-/* Sacred Symbol */
+/* Sacred Symbol - Made larger to take up 1/3 of the screen */
 .sacred-symbol {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 33vw; /* 1/3 of viewport width */
+  height: 33vw; /* Keep aspect ratio */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -511,6 +511,8 @@
   box-shadow: none;
   padding: 15px; /* Ensure symbol doesn't get cut off when scaled */
   overflow: visible; /* Make sure the breathing animation isn't cut off */
+  max-width: 500px; /* Cap maximum size on large screens */
+  max-height: 500px;
 }
 
 .symbol-svg {
@@ -528,8 +530,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px;
-  height: 220px;
+  width: 110%;
+  height: 110%;
   background: radial-gradient(circle, rgba(100, 180, 255, 0.9) 0%, transparent 70%);
   border-radius: 50%;
   filter: blur(25px);
