@@ -15,7 +15,7 @@ import Profile from "@/pages/Profile";
 import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
 import ManageMana from "@/pages/ManageMana";
-import ManaDebug from "@/pages/ManaDebug";
+
 import Simulation from "@/pages/Simulation";
 import Landing1 from "@/pages/Landing1";
 import ArkContents from "@/pages/ArkContents";
