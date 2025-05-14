@@ -91,28 +91,37 @@ const BookReader = ({ book, onClose }: BookReaderProps) => {
   
   return (
     <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center overflow-hidden">
-      {/* Close button */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="absolute top-4 right-4 text-amber-100 hover:bg-amber-900/20 z-10"
-        onClick={onClose}
-      >
-        <X className="h-6 w-6" />
-      </Button>
+      {/* Top navigation bar */}
+      <div className="absolute top-0 left-0 right-0 flex justify-between items-center z-10 px-4 py-2 bg-black/30 backdrop-blur-sm">
+        {/* Return to first page */}
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="text-amber-100 hover:bg-amber-900/20"
+          onClick={() => setCurrentPageIndex(0)}
+        >
+          <Home className="h-5 w-5 mr-1" />
+          First Page
+        </Button>
+        
+        <h3 className="text-amber-100 font-medium hidden md:block">
+          {book.title}
+        </h3>
+        
+        {/* Close button */}
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-amber-100 hover:bg-amber-900/20"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5 mr-1" />
+          Close
+        </Button>
+      </div>
       
-      {/* Return to book info */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="absolute top-4 left-4 text-amber-100 hover:bg-amber-900/20 z-10"
-        onClick={() => setCurrentPageIndex(0)}
-      >
-        <Home className="h-6 w-6" />
-      </Button>
-      
-      {/* Page navigation */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-4 z-10">
+      {/* Page navigation - moved to bottom with improved spacing */}
+      <div className="absolute bottom-2 left-0 right-0 flex justify-center items-center gap-4 z-10 px-2 py-1 bg-black/30 backdrop-blur-sm">
         <Button 
           variant="ghost" 
           size="sm" 
@@ -121,7 +130,7 @@ const BookReader = ({ book, onClose }: BookReaderProps) => {
           disabled={currentPageIndex === 0}
         >
           <ChevronLeft className="h-5 w-5 mr-1" />
-          Previous Page
+          Previous
         </Button>
         
         <div className="text-amber-200 text-sm">
@@ -135,13 +144,13 @@ const BookReader = ({ book, onClose }: BookReaderProps) => {
           onClick={handleNextPage}
           disabled={currentPageIndex === book.pages.length - 1}
         >
-          Next Page
+          Next
           <ChevronRight className="h-5 w-5 ml-1" />
         </Button>
       </div>
       
-      {/* Page content with animation */}
-      <div className="max-w-4xl w-full h-[80vh] mx-auto relative overflow-hidden">
+      {/* Page content with animation - maximized for content display */}
+      <div className="max-w-7xl w-full h-[90vh] mx-auto relative overflow-hidden pt-12 pb-10">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={currentPageIndex}
@@ -151,26 +160,26 @@ const BookReader = ({ book, onClose }: BookReaderProps) => {
             animate="center"
             exit="exit"
             transition={{ type: "tween", duration: 0.5 }}
-            className="absolute inset-0 p-8"
+            className="absolute inset-0 px-2 py-1 md:px-4 md:py-2"
           >
-            <div className="bg-amber-50/95 border border-amber-200 rounded-lg shadow-xl h-full overflow-y-auto p-6 md:p-8">
-              <h2 className="text-2xl md:text-3xl font-serif text-amber-900 mb-4">
+            <div className="bg-amber-50/95 border border-amber-200 rounded-lg shadow-xl h-full overflow-y-auto p-3 md:p-5 lg:p-8">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-serif text-amber-900 mb-2 md:mb-3">
                 {currentPage.title}
               </h2>
               
               {currentPage.image && (
-                <div className="mb-6 flex justify-center">
+                <div className="mb-3 md:mb-4 flex justify-center">
                   <img 
                     src={currentPage.image} 
                     alt={currentPage.title} 
-                    className="max-h-64 rounded-lg shadow-md"
+                    className="max-h-48 md:max-h-60 rounded-lg shadow-md"
                   />
                 </div>
               )}
               
-              <div className="prose prose-amber max-w-none">
+              <div className="prose prose-amber prose-lg max-w-none">
                 {currentPage.content.split('\n\n').map((paragraph, idx) => (
-                  <p key={idx} className="mb-4 text-amber-800 leading-relaxed font-serif">
+                  <p key={idx} className="mb-2 md:mb-3 text-amber-800 leading-relaxed font-serif text-base md:text-lg lg:text-xl">
                     {paragraph}
                   </p>
                 ))}
