@@ -105,7 +105,7 @@ export default function ArkBooks() {
       description: "A legendary text attributed to the Egyptian deity of wisdom, containing powerful knowledge of astral realms.",
       isLocked: true,
       key: "THOTH",
-      image: "/assets/books/d6aee2c1-7a80-46e1-a32f-12d89525784f.png"
+      image: "/assets/ancient_city.png"
     },
     {
       id: "first-codex",
@@ -113,7 +113,7 @@ export default function ArkBooks() {
       description: "Believed to be the earliest written account of the journey of consciousness through the cosmos.",
       isLocked: true,
       key: "CODEX",
-      image: "/assets/sacred_geometry_3.svg"
+      image: "/assets/ancient_settlement.png"
     },
     {
       id: "akashic-compendium",
@@ -121,7 +121,7 @@ export default function ArkBooks() {
       description: "The first volume of the complete cosmic record, detailing the earliest eras of manifested reality.",
       isLocked: true,
       key: "AKASHA",
-      image: "/assets/sacred_geometry.svg"
+      image: "/assets/before_history.png"
     }
   ];
 
