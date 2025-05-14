@@ -14,7 +14,7 @@ export default function Home() {
       title: "Ark Contents",
       description: "Explore the collection of sacred artifacts, tablets, scrolls, and books containing forgotten wisdom.",
       image: ancientTabletDark, // Ancient tablet with engraved text
-      href: "/ark",
+      href: "/ark-contents",
       delay: 0.7
     },
     {

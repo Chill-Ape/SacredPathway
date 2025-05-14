@@ -56,7 +56,7 @@ function App() {
                 <Route path="/contact" component={Contact} />
                 <Route path="/simulation" component={Simulation} />
                 <Route path="/auth" component={AuthPage} />
-                <Route path="/ark" component={ArkContents} />
+                <Route path="/ark-contents" component={ArkContents} />
                 <Route path="/ark/artifacts" component={ArkArtifacts} />
                 <Route path="/ark/tablets" component={ArkTablets} />
                 <Route path="/ark/scrolls" component={ArkScrolls} />
