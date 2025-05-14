@@ -14,11 +14,13 @@ const PortalWhoosh: React.FC<{
   onComplete 
 }) => {
   const audioContextRef = useRef<AudioContext | null>(null);
-  const nodesRef = useRef<{
+  interface AudioNodes {
     oscillators: (OscillatorNode | AudioBufferSourceNode)[],
     filters: BiquadFilterNode[],
     gains: GainNode[]
-  }>({
+  }
+  
+  const nodesRef = useRef<AudioNodes>({
     oscillators: [],
     filters: [],
     gains: []
