@@ -65,9 +65,9 @@ async function addContentTypes() {
     // First check if any of these items already exist
     for (const item of contentItems) {
       // Simple check for existing items - just check exact titles
-      const existingItems = await db.select().from(scrolls).where(scroll => ({ 
+      const existingItems = await db.select().from(scrolls).where({ 
         title: item.title 
-      }));
+      });
       
       if (existingItems.length === 0) {
         // Insert new content
