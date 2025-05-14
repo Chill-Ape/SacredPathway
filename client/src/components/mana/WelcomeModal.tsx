@@ -20,13 +20,13 @@ interface WelcomeModalProps {
 const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-2xl">
+      <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Close button - more prominent for mobile */}
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-3 right-3 z-50">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="icon"
-            className="h-7 w-7 rounded-full bg-gray-100/10 text-gray-400 hover:bg-gray-100/20 hover:text-gray-50"
+            className="h-8 w-8 rounded-full bg-gray-800/90 text-white hover:bg-gray-700 shadow-md border border-gray-600"
             onClick={onClose}
             aria-label="Close modal"
           >
@@ -35,6 +35,11 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
               <path d="M6 6L18 18"></path>
             </svg>
           </Button>
+        </div>
+        
+        {/* Mobile-only close banner */}
+        <div className="block sm:hidden sticky top-0 bg-red-500 text-white py-1 px-3 text-center text-xs font-semibold rounded mb-2">
+          Tap the X button in the corner to close this window
         </div>
         
         <DialogHeader>
@@ -101,11 +106,22 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
           </div>
         </div>
         
+        {/* Additional close button for mobile - very prominent at bottom */}
+        <div className="mt-4 mb-2 block sm:hidden">
+          <Button 
+            className="w-full bg-red-600 hover:bg-red-700 text-white"
+            onClick={onClose}
+            size="lg"
+          >
+            Close This Window
+          </Button>
+        </div>
+        
         <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
-          <Link to="/oracle">
+          <Link to="/oracle" className="w-full sm:w-auto">
             <Button 
               variant="outline" 
-              className="flex-1 sm:flex-none"
+              className="w-full sm:w-auto"
               onClick={onClose}
             >
               <PenTool className="mr-2 h-4 w-4" />
@@ -113,7 +129,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
             </Button>
           </Link>
           <Button 
-            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             onClick={onClose}
           >
             <Sparkles className="mr-2 h-4 w-4" />

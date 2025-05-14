@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
+import WelcomeModal from '@/components/mana/WelcomeModal';
 
 // This is a simplified landing page for successful deployment
 // It's designed to be lightweight and deploy easily
 const DeploymentReadyPage = () => {
   // Simple animation effect for the glow
   const [glowIntensity, setGlowIntensity] = useState(0);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   
   useEffect(() => {
     // Create a pulsing glow effect
@@ -79,6 +81,23 @@ const DeploymentReadyPage = () => {
       </div>
       
       <p className="mt-8 text-amber-500/60 text-sm">Deployment timestamp: {new Date().toLocaleString()}</p>
+      
+      {/* Test button for the welcome modal */}
+      <div className="mt-4">
+        <button 
+          onClick={() => setShowWelcomeModal(true)}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded transition-colors"
+        >
+          Test Mobile Welcome Modal
+        </button>
+      </div>
+      
+      {/* Welcome modal component for testing */}
+      <WelcomeModal 
+        isOpen={showWelcomeModal} 
+        onClose={() => setShowWelcomeModal(false)} 
+        username="Test User" 
+      />
     </div>
   );
 };
