@@ -34,17 +34,23 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay }}
-      className="relative"
+      className="h-full"
     >
       <Link href={linkTo}>
         <motion.div
-          className="cursor-pointer relative"
+          className="cursor-pointer h-full"
           onHoverStart={() => setIsHovered(true)}
           onHoverEnd={() => setIsHovered(false)}
-          whileHover={{ scale: 1.03 }}
+          whileHover={{ 
+            scale: 1.03,
+            transition: { duration: 0.2 }
+          }}
         >
-          {/* Modernized card container with improved styling */}
-          <div className="relative overflow-hidden rounded-xl aspect-square bg-gradient-to-b from-amber-50 to-amber-100/80 shadow-lg border border-amber-200/50">
+          {/* Card styled similarly to BookCard */}
+          <div className="h-full bg-amber-50 border border-amber-200 shadow-md overflow-hidden rounded-lg relative group">
+            {/* Golden glow on hover - similar to book style */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-r from-amber-100/20 via-amber-100/30 to-amber-100/20"></div>
+            
             {/* Background glyph symbol - very faint by default */}
             <motion.div 
               className="absolute inset-0 opacity-5 pointer-events-none z-0 flex items-center justify-center"
@@ -60,78 +66,71 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
               />
             </motion.div>
 
-            {/* Item image - improved positioning and styling */}
-            <div className="absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-500 transform">
-              <motion.div
-                animate={{
-                  y: isHovered ? -8 : 0,
-                  scale: isHovered ? 1.05 : 1
+            {/* Image container - styled like BookCard */}
+            <div className="overflow-hidden aspect-[4/3] relative">
+              <img 
+                src={imagePath} 
+                alt={title}
+                className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                onError={(e) => {
+                  console.log("Setting fallback image for:", title);
+                  e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
                 }}
-                transition={{ duration: 0.5 }}
-                className="w-5/6 h-5/6 flex items-center justify-center"
-              >
-                <img 
-                  src={imagePath} 
-                  alt={title}
-                  className="object-contain max-h-full max-w-full rounded-md drop-shadow-lg"
-                  style={{ 
-                    filter: isHovered ? 'brightness(1.1) contrast(1.05)' : 'brightness(1) contrast(1)',
-                    transition: 'filter 0.5s ease'
-                  }}
-                  onError={(e) => {
-                    console.log("Setting fallback image for:", title);
-                    e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
-                  }}
-                />
-              </motion.div>
+              />
+              
+              {/* Enhanced glowing border effects */}
+              <motion.div 
+                className="absolute inset-0 pointer-events-none"
+                animate={{ 
+                  boxShadow: isHovered ? 
+                    'inset 0 0 30px rgba(193, 145, 30, 0.2), 0 0 20px rgba(193, 145, 30, 0.15)' : 
+                    'inset 0 0 10px rgba(193, 145, 30, 0.1), 0 0 5px rgba(193, 145, 30, 0.1)'
+                }}
+                transition={{ duration: 0.8 }}
+              />
+
+              {/* Pulsing glow effect */}
+              <motion.div 
+                className="absolute inset-0 pointer-events-none"
+                animate={{ 
+                  boxShadow: isHovered ? 
+                    'inset 0 0 15px rgba(193, 145, 30, 0.25), 0 0 10px rgba(193, 145, 30, 0.2)' : 
+                    'inset 0 0 5px rgba(193, 145, 30, 0.1), 0 0 2px rgba(193, 145, 30, 0.1)'
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  repeatType: "reverse",
+                  ease: "easeInOut" 
+                }}
+              />
             </div>
-
-            {/* Enhanced glowing border - subtle but elegant */}
-            <motion.div 
-              className="absolute inset-0 pointer-events-none rounded-xl"
-              initial={{ opacity: 0.1 }}
-              animate={{ 
-                opacity: isHovered ? 0.8 : 0.3,
-                boxShadow: isHovered ? 
-                  'inset 0 0 30px rgba(193, 145, 30, 0.2), 0 0 20px rgba(193, 145, 30, 0.15)' : 
-                  'inset 0 0 10px rgba(193, 145, 30, 0.1), 0 0 5px rgba(193, 145, 30, 0.1)'
-              }}
-              transition={{ duration: 0.8 }}
-            />
-
-            {/* Pulsing glow effect - refined animation */}
-            <motion.div 
-              className="absolute inset-0 rounded-xl pointer-events-none"
-              animate={{ 
-                boxShadow: isHovered ? 
-                  'inset 0 0 15px rgba(193, 145, 30, 0.25), 0 0 10px rgba(193, 145, 30, 0.2)' : 
-                  'inset 0 0 5px rgba(193, 145, 30, 0.1), 0 0 2px rgba(193, 145, 30, 0.1)'
-              }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity, 
-                repeatType: "reverse",
-                ease: "easeInOut" 
-              }}
-            />
-
-            {/* Modern title container with refined gradient */}
-            <motion.div 
-              className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-amber-100/95 via-amber-50/85 to-transparent"
-              initial={{ y: 0 }}
-              animate={{ y: isHovered ? -8 : 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h3 className="text-amber-800 font-serif text-xl md:text-2xl text-center tracking-wide mb-1 drop-shadow-sm">{title}</h3>
-              <motion.p
-                className="text-xs md:text-sm text-amber-700/90 italic text-center font-serif mt-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isHovered ? 1 : 0 }}
+            
+            {/* Content area - styled similarly to BookCard */}
+            <div className="p-4">
+              <h3 className="text-xl font-serif text-amber-800 mb-2 tracking-wide group-hover:text-amber-900 transition-colors">{title}</h3>
+              <motion.p 
+                className="text-amber-700/80 text-sm font-serif line-clamp-2"
+                initial={{ opacity: 0.8 }}
+                animate={{ opacity: isHovered ? 1 : 0.8 }}
                 transition={{ duration: 0.3 }}
               >
                 {poeticDescription}
               </motion.p>
-            </motion.div>
+            </div>
+            
+            {/* Footer area similar to BookCard */}
+            <div className="px-4 pb-4 pt-0 flex justify-between items-center">
+              <div className="text-xs text-amber-600/80 font-serif italic">
+                Explore
+              </div>
+              <motion.div 
+                className="text-amber-700 p-0 w-8 h-8 flex items-center justify-center"
+                whileHover={{ scale: 1.1 }}
+              >
+                <Eye className="w-4 h-4" />
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       </Link>
@@ -298,8 +297,8 @@ export default function ArkContents() {
                 </motion.p>
               </motion.div>
               
-              {/* Modern staggered card grid with improved spacing */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 max-w-6xl mx-auto px-2 md:px-4">
+              {/* Card grid styled similar to ArkBooks layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-10 max-w-7xl mx-auto px-2 md:px-6">
                 {categories.map((category) => (
                   <motion.div
                     initial={{ opacity: 0, y: 15 }}
@@ -310,7 +309,7 @@ export default function ArkContents() {
                       ease: "easeOut"
                     }}
                     key={category.id}
-                    className="transform hover:z-10"
+                    className="transform hover:z-10 h-full"
                   >
                     <CategoryCard
                       id={category.id}
