@@ -21,6 +21,22 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-2xl">
+        {/* Close button - more prominent for mobile */}
+        <div className="absolute top-3 right-3 z-10">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 rounded-full bg-gray-100/10 text-gray-400 hover:bg-gray-100/20 hover:text-gray-50"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6L6 18"></path>
+              <path d="M6 6L18 18"></path>
+            </svg>
+          </Button>
+        </div>
+        
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
             <Sparkles className="h-6 w-6 text-yellow-500" />
