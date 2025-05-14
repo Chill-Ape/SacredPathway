@@ -120,9 +120,9 @@ const Landing1 = () => {
                 transition={{ duration: 1 }}
                 filter="none"
               >
-                {/* Sacred geometry - outlined triangle with perfect dimensions */}
+                {/* Sacred geometry - triangle with refined dimensions */}
                 <motion.path 
-                  d="M50 15 L10 80 L90 80 Z" 
+                  d="M50 20 L15 75 L85 75 Z" 
                   fill="none" 
                   stroke="rgba(25, 95, 145, 0.95)" 
                   strokeWidth="3.5"
@@ -136,11 +136,11 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Circle overlaid on the triangle - perfectly positioned */}
+                {/* Circle overlaid on the triangle - perfectly centered */}
                 <motion.circle 
                   cx="50" 
-                  cy="55" 
-                  r="22" 
+                  cy="54" 
+                  r="17" 
                   fill="none" 
                   stroke="rgba(25, 95, 145, 0.95)" 
                   strokeWidth="3.5"
@@ -156,12 +156,12 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Line underneath - with proper spacing from triangle */}
+                {/* Line underneath - precise position */}
                 <motion.line 
-                  x1="5" 
-                  y1="95" 
-                  x2="95" 
-                  y2="95" 
+                  x1="10" 
+                  y1="90" 
+                  x2="90" 
+                  y2="90" 
                   stroke="rgba(25, 95, 145, 0.95)" 
                   strokeWidth="3.5"
                   strokeLinecap="round"
@@ -176,11 +176,11 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Dot above the triangle */}
+                {/* Dot above the triangle - perfect size */}
                 <motion.circle 
                   cx="50" 
-                  cy="5" 
-                  r="4.5" 
+                  cy="10" 
+                  r="3.5" 
                   fill="rgba(25, 95, 145, 0.95)"
                   animate={{ 
                     fill: ["rgba(25, 95, 145, 0.95)", "rgba(40, 110, 160, 1)", "rgba(25, 95, 145, 0.95)"]
