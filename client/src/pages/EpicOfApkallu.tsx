@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet";
 import BookReader, { Book } from '@/components/books/BookReader';
 
 import apkalluScrollImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png';
-import apkalluBookData from '@/data/epic-of-apkallu.json';
+import { apkalluBookData } from '@/data/apkalluBookData';
 
 export default function EpicOfApkallu() {
   const [, setLocation] = useLocation();
@@ -25,8 +25,8 @@ export default function EpicOfApkallu() {
 
   // Load book data
   useEffect(() => {
-    // Type assertion to satisfy TypeScript
-    setBookData(apkalluBookData as unknown as Book);
+    // Set book data from imported TypeScript file
+    setBookData(apkalluBookData);
   }, []);
 
   const handleUnlock = () => {

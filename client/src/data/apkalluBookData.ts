@@ -1,0 +1,29 @@
+import { Book } from "@/components/books/BookReader";
+
+export const apkalluBookData: Book = {
+  bookId: "epic-of-apkallu",
+  title: "The Epic of the Apkallu",
+  author: "Ancient Sumerian Scribes",
+  coverImage: "/assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png",
+  description: "An ancient Mesopotamian text chronicling the seven sages who brought wisdom and civilization to humanity before the Great Flood.",
+  pages: [
+    {
+      pageNumber: 1,
+      title: "Introduction to the Apkallu",
+      content: "In the time before the great deluge, when the gods walked among men, seven sages known as the Apkallu were sent by Enki, god of wisdom, to bring civilization to humanity. These seven sages, part fish and part human, emerged from the Abzu, the cosmic waters, bearing divine knowledge.\n\nThey taught humans the arts of writing, mathematics, agriculture, architecture, and medicine. Their teachings formed the foundation of Sumerian civilization, and their wisdom echoed through the ages even after the great flood swept across the world.",
+      image: "/assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png"
+    },
+    {
+      pageNumber: 2,
+      title: "The First Sage: Uanna",
+      content: "Uanna, the first of the Apkallu, emerged from the waters in the time of King Alulim of Eridu. He appeared as a being with the upper body of a man and the lower body of a fish. His eyes shone with divine light, and his voice carried the resonance of the cosmos.\n\nUanna brought the gift of writing to humanity, teaching them to inscribe symbols on clay tablets to preserve knowledge. He drew the first star charts, mapping the heavens and teaching humans to read the patterns of the celestial bodies. Under his guidance, the first temple of Eridu was built, establishing the sacred connection between heaven and earth.",
+      image: ""
+    },
+    {
+      pageNumber: 3,
+      title: "The Second Sage: Uannedugga",
+      content: "Uannedugga came during the reign of King Alalgar. Like his predecessor, he bore the form of a fish-man, but with scales that gleamed like polished silver in the sunlight. Uannedugga brought the knowledge of mathematics and geometry to humanity.\n\nHe taught humans to measure land, to calculate volumes, and to understand the principles of construction. Under his guidance, complex irrigation systems were developed, allowing agriculture to flourish in the lands between the Tigris and Euphrates. Uannedugga also instructed humanity in the art of divination, teaching them to interpret dreams and omens as messages from the gods.",
+      image: ""
+    }
+  ]
+};
