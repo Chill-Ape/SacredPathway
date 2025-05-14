@@ -601,11 +601,23 @@ export class MemStorage implements IStorage {
     this.currentManaTransactionId = 1;
     this.currentManaPackageId = 1;
     
-    // Initialize with some default scrolls
-    this.initializeDefaultScrolls();
-    
-    // Initialize with default mana packages
-    this.initializeDefaultManaPackages();
+    // Initialize data in an async way
+    this.initializeData();
+  }
+  
+  // Separate async initialization to avoid issues with constructor
+  private async initializeData() {
+    try {
+      // Initialize with default mana packages first
+      await this.initializeDefaultManaPackages();
+      
+      // Then initialize default scrolls
+      await this.initializeDefaultScrolls();
+      
+      console.log("MemStorage: Finished initializing default data");
+    } catch (error) {
+      console.error("MemStorage: Error initializing data:", error);
+    }
   }
 
   // USER METHODS
@@ -940,47 +952,69 @@ export class MemStorage implements IStorage {
   }
   
   // INITIALIZE DEFAULT DATA
-  private initializeDefaultManaPackages() {
+  private async initializeDefaultManaPackages() {
+    // Get all existing packages
+    const existingPackages = await this.getAllManaPackages();
+    
     // Only initialize if none exist
-    if (this.manaPackages.size > 0) {
+    if (existingPackages.length > 0) {
+      console.log(`MemStorage: Mana packages already exist: ${existingPackages.length}`);
       return;
     }
     
-    // Create default mana packages
-    this.createManaPackage({
-      name: "Novice Pack",
-      description: "A small amount of Mana to unlock basic scrolls and features.",
-      amount: 100,
-      price: 499, // $4.99
-      isActive: true
-    });
+    console.log("MemStorage: Initializing default Mana packages");
     
-    this.createManaPackage({
-      name: "Adept Pack",
-      description: "A moderate amount of Mana for regular Archive users.",
-      amount: 300,
-      price: 999, // $9.99
-      isActive: true
-    });
+    // Define default packages
+    const packages = [
+      {
+        name: "Novice Pack",
+        description: "A small amount of Mana to unlock basic scrolls and features.",
+        amount: 100,
+        price: 499, // $4.99
+        isActive: true
+      },
+      {
+        name: "Adept Pack",
+        description: "A moderate amount of Mana for regular Archive users.",
+        amount: 300,
+        price: 999, // $9.99
+        isActive: true
+      },
+      {
+        name: "Scholar Pack",
+        description: "A substantial amount of Mana for dedicated seekers of knowledge.",
+        amount: 1000,
+        price: 2499, // $24.99
+        isActive: true
+      },
+      {
+        name: "Master Pack",
+        description: "An abundant reserve of Mana for the most devoted students of the Archive.",
+        amount: 2500,
+        price: 4999, // $49.99
+        isActive: true
+      }
+    ];
     
-    this.createManaPackage({
-      name: "Scholar Pack",
-      description: "A substantial amount of Mana for dedicated seekers of knowledge.",
-      amount: 1000,
-      price: 2499, // $24.99
-      isActive: true
-    });
+    // Create all packages one by one
+    for (const pkg of packages) {
+      await this.createManaPackage(pkg);
+    }
     
-    this.createManaPackage({
-      name: "Master Pack",
-      description: "An abundant reserve of Mana for the most devoted students of the Archive.",
-      amount: 2500,
-      price: 4999, // $49.99
-      isActive: true
-    });
+    console.log(`MemStorage: Created ${packages.length} default Mana packages`);
   }
   
-  private initializeDefaultScrolls() {
+  private async initializeDefaultScrolls() {
+    // Check if scrolls already exist
+    const existingScrolls = await this.getAllScrolls();
+    
+    if (existingScrolls.length > 0) {
+      console.log(`MemStorage: Scrolls already initialized (${existingScrolls.length} found), skipping`);
+      return; // Skip initialization if scrolls already exist
+    }
+    
+    console.log("MemStorage: Initializing default scrolls - no existing scrolls found");
+    
     const unlockScrolls = [
       {
         title: "Origins",
@@ -1036,10 +1070,12 @@ export class MemStorage implements IStorage {
       }
     ];
     
-    // Create all scrolls
-    [...unlockScrolls, ...lockedScrolls].forEach(scroll => {
-      this.createScroll(scroll);
-    });
+    // Create all scrolls one by one
+    for (const scroll of [...unlockScrolls, ...lockedScrolls]) {
+      await this.createScroll(scroll);
+    }
+    
+    console.log(`MemStorage: Created ${unlockScrolls.length + lockedScrolls.length} default scrolls`);
   }
 }
 
