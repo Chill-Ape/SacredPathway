@@ -22,37 +22,8 @@ export interface InventoryItem {
 
 export type NewInventoryItem = Omit<InventoryItem, 'id' | 'userId' | 'createdAt'>;
 
-// Define mutation types
-type AddItemMutation = ReturnType<typeof useMutation<InventoryItem, Error, NewInventoryItem>>;
-type RemoveItemMutation = ReturnType<typeof useMutation<any, Error, number>>;
-type UpdateItemMutation = ReturnType<typeof useMutation<InventoryItem, Error, { 
-  itemId: number; 
-  updates: Partial<NewInventoryItem>; 
-}>>;
-type ToggleEquipMutation = ReturnType<typeof useMutation<InventoryItem, Error, { 
-  itemId: number; 
-  isEquipped: boolean; 
-}>>;
-type UpdateQuantityMutation = ReturnType<typeof useMutation<InventoryItem, Error, { 
-  itemId: number; 
-  quantity: number; 
-}>>;
-
-// Define context type
-type InventoryContextType = {
-  items: InventoryItem[] | undefined;
-  equippedItems: InventoryItem[] | undefined;
-  isLoading: boolean;
-  error: Error | null;
-  addItemMutation: AddItemMutation;
-  removeItemMutation: RemoveItemMutation;
-  updateItemMutation: UpdateItemMutation;
-  toggleEquipMutation: ToggleEquipMutation;
-  updateQuantityMutation: UpdateQuantityMutation;
-};
-
 // Create context
-export const InventoryContext = createContext<InventoryContextType | null>(null);
+const InventoryContext = createContext<any>(null);
 
 // Create provider
 export function InventoryProvider({ children }: { children: ReactNode }) {
@@ -64,38 +35,28 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
     data: items,
     error,
     isLoading
-  } = useQuery<InventoryItem[], Error>({
+  } = useQuery({
     queryKey: ['/api/user/inventory'],
     enabled: !!user,
-    staleTime: 10000, // 10 seconds
   });
   
   // Fetch equipped items
-  const { data: equippedItems } = useQuery<InventoryItem[], Error>({
+  const { data: equippedItems } = useQuery({
     queryKey: ['/api/user/inventory/equipped'],
     enabled: !!user,
-    staleTime: 10000, // 10 seconds
   });
   
   // Add new item mutation
   const addItemMutation = useMutation({
-    mutationFn: async (newItem: NewInventoryItem) => {
+    mutationFn: async (newItem: any) => {
       const res = await apiRequest('POST', '/api/user/inventory', newItem);
       return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user/inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory/equipped'] });
       toast({
         title: "Item added",
         description: "The item has been added to your inventory",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Failed to add item",
-        description: error.message,
-        variant: "destructive",
       });
     },
   });
@@ -108,124 +69,40 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user/inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory/equipped'] });
       toast({
         title: "Item removed",
         description: "The item has been removed from your inventory",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Failed to remove item",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-  
-  // Update item mutation
-  const updateItemMutation = useMutation({
-    mutationFn: async ({ 
-      itemId, 
-      updates 
-    }: { 
-      itemId: number; 
-      updates: Partial<NewInventoryItem>; 
-    }) => {
-      const res = await apiRequest('PATCH', `/api/user/inventory/${itemId}`, updates);
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory/equipped'] });
-      toast({
-        title: "Item updated",
-        description: "The item has been updated",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Failed to update item",
-        description: error.message,
-        variant: "destructive",
       });
     },
   });
   
   // Toggle equip mutation
   const toggleEquipMutation = useMutation({
-    mutationFn: async ({ 
-      itemId, 
-      isEquipped 
-    }: { 
-      itemId: number; 
-      isEquipped: boolean; 
-    }) => {
+    mutationFn: async ({ itemId, isEquipped }: any) => {
       const res = await apiRequest('PATCH', `/api/user/inventory/${itemId}/equip`, { isEquipped });
-      return await res.json();
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory/equipped'] });
-      toast({
-        title: variables.isEquipped ? "Item equipped" : "Item unequipped",
-        description: variables.isEquipped 
-          ? "The item has been equipped"
-          : "The item has been unequipped",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Failed to toggle equipment status",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-  
-  // Update quantity mutation
-  const updateQuantityMutation = useMutation({
-    mutationFn: async ({ 
-      itemId, 
-      quantity 
-    }: { 
-      itemId: number; 
-      quantity: number; 
-    }) => {
-      const res = await apiRequest('PATCH', `/api/user/inventory/${itemId}/quantity`, { quantity });
       return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user/inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/inventory/equipped'] });
       toast({
-        title: "Quantity updated",
-        description: "The item quantity has been updated",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Failed to update quantity",
-        description: error.message,
-        variant: "destructive",
+        title: "Equipment status updated",
+        description: "The item's equipment status has been updated",
       });
     },
   });
   
+  const value = {
+    items,
+    equippedItems,
+    isLoading,
+    error,
+    addItemMutation,
+    removeItemMutation,
+    toggleEquipMutation,
+  };
+  
   return (
-    <InventoryContext.Provider
-      value={{
-        items,
-        equippedItems,
-        isLoading,
-        error,
-        addItemMutation,
-        removeItemMutation,
-        updateItemMutation,
-        toggleEquipMutation,
-        updateQuantityMutation,
-      }}
-    >
+    <InventoryContext.Provider value={value}>
       {children}
     </InventoryContext.Provider>
   );

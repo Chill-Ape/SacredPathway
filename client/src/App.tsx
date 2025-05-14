@@ -35,6 +35,7 @@ import Footer from "@/components/layout/Footer";
 import { AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { AuthProvider } from "@/hooks/use-auth";
+import { InventoryProvider } from "@/hooks/use-inventory";
 import { ProtectedRoute } from "@/lib/protected-route";
 
 function App() {
@@ -57,12 +58,13 @@ function App() {
 
   return (
     <AuthProvider>
-      <TooltipProvider>
-        <div className="min-h-screen flex flex-col sacred-pattern">
-          <Navbar />
-          <main className="flex-grow pt-16">
-            <AnimatePresence mode="wait">
-              <Switch key={location}>
+      <InventoryProvider>
+        <TooltipProvider>
+          <div className="min-h-screen flex flex-col sacred-pattern">
+            <Navbar />
+            <main className="flex-grow pt-16">
+              <AnimatePresence mode="wait">
+                <Switch key={location}>
                 <Route path="/" component={Home} />
                 <Route path="/scrolls" component={Scrolls} />
                 <Route path="/scrolls/:id" component={ScrollDetail} />
@@ -111,6 +113,7 @@ function App() {
         </div>
         <Toaster />
       </TooltipProvider>
+      </InventoryProvider>
     </AuthProvider>
   );
 }
