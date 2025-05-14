@@ -47,20 +47,10 @@ const ManaPackages: React.FC = () => {
     enabled: true,
   });
 
-  // Handle purchase button click - using payment method choice
+  // Handle purchase button click - simplified direct purchase
   const handlePurchase = async (pkg: ManaPackage) => {
     // If already processing a package, prevent multiple requests
     if (processingPackageId !== null) {
-      return;
-    }
-    
-    // Check if Stripe is available
-    if (!stripePublicKey || !stripePromise) {
-      toast({
-        title: "Payment System Configuration",
-        description: "The payment system is currently being configured. Please try again later.",
-        variant: "destructive"
-      });
       return;
     }
     
@@ -69,40 +59,25 @@ const ManaPackages: React.FC = () => {
       setProcessingPackageId(pkg.id);
       
       // Log the start of the purchase process
-      console.log(`[${new Date().toISOString()}] Starting purchase process for package:`, pkg.id, pkg.name);
+      console.log(`[${new Date().toISOString()}] Processing direct mana purchase for:`, pkg.id, pkg.name);
       
-      // Create payment intent on the server
-      console.log(`[${new Date().toISOString()}] Making API request to create payment intent...`);
-      const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { 
-        packageId: pkg.id 
+      // Make direct purchase API call 
+      const response = await fetch('/api/mana/purchase/direct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ packageId: pkg.id }),
       });
       
-      // Log the response status
-      console.log(`[${new Date().toISOString()}] API response status:`, response.status);
-      
-      // Handle non-OK responses
-      if (!response.ok) {
-        let errorMessage = 'Failed to create payment session';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch (e) {
-          // If the response isn't JSON, try to get text
-          const errorText = await response.text();
-          errorMessage = errorText || errorMessage;
-        }
-        throw new Error(errorMessage);
-      }
-      
-      // Parse the response data
       const data = await response.json();
-      console.log(`[${new Date().toISOString()}] Received data:`, data);
+      console.log(`[${new Date().toISOString()}] Direct purchase result:`, data);
       
-      // Check if authentication is required (user not logged in)
+      // Check if user needs to authenticate
       if (data.requiresAuthentication) {
         toast({
           title: 'Authentication Required',
-          description: 'You need to be logged in to purchase Mana.',
+          description: 'Please log in to purchase Mana',
           variant: 'default',
         });
         
@@ -111,50 +86,22 @@ const ManaPackages: React.FC = () => {
         return;
       }
       
-      // Verify we have a session ID
-      if (!data.sessionId) {
-        throw new Error('No session ID received from server');
-      }
-      
-      // Load Stripe and redirect to checkout
-      console.log(`[${new Date().toISOString()}] Loading Stripe and redirecting to checkout...`);
-      const stripe = await stripePromise;
-      
-      if (!stripe) {
-        throw new Error('Stripe failed to load. Please check your Stripe public key.');
-      }
-      
-      // Log the redirect URL for debugging
-      console.log(`[${new Date().toISOString()}] Redirecting to Stripe checkout:`, 
-        `https://checkout.stripe.com/c/pay/${data.sessionId}`);
-      
-      // Use a more reliable approach - create a form and submit it
-      try {
-        const checkoutUrl = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
-        console.log(`[${new Date().toISOString()}] Creating checkout form: ${checkoutUrl}`);
-        
-        // Create a temporary form element
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = checkoutUrl;
-        form.target = '_blank'; // Open in new tab
-        document.body.appendChild(form);
-        
-        // Submit the form
-        form.submit();
-        
-        // Clean up
-        document.body.removeChild(form);
-        
+      if (data.success) {
         toast({
-          title: 'Opening Checkout',
-          description: 'Stripe checkout is opening in a new tab. Please complete your payment there.',
+          title: 'Purchase Successful',
+          description: `You have received ${data.amount} Mana!`,
+          variant: 'default',
         });
-      } catch (redirectError) {
-        console.error('Error creating checkout form:', redirectError);
+        
+        // Refresh data to show updated balance
+        queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
+        
+        // Redirect to show success message
+        window.location.href = '/mana?status=success&amount=' + data.amount;
+      } else {
         toast({
-          title: 'Checkout Error',
-          description: 'Unable to open checkout page. Please try again.',
+          title: 'Purchase Error',
+          description: data.message || 'Unable to process purchase. Please try again.',
           variant: 'destructive',
         });
       }
@@ -163,10 +110,10 @@ const ManaPackages: React.FC = () => {
       console.error(`[${new Date().toISOString()}] Purchase error:`, error);
       toast({
         title: 'Payment Error',
-        description: error.message || 'An error occurred during checkout',
+        description: error.message || 'An error occurred during purchase',
         variant: 'destructive',
       });
-      
+    } finally {
       // Reset processing state
       setProcessingPackageId(null);
     }

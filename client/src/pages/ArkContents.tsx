@@ -279,7 +279,7 @@ export default function ArkContents() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  The Sacred Vault
+                  🜃 The Ark Has Been Unearthed
                 </motion.h1>
                 
                 <motion.div
@@ -295,8 +295,14 @@ export default function ArkContents() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.8 }}
                 >
-                  Preserved within these walls lie the sacred remnants of antediluvian wisdom. 
-                  Choose a path to illuminate the hidden knowledge.
+                  In the year 2025, the seal broke.
+                  The Ark — long buried — rose from beneath earth and ocean.
+                  Inside: fragments of knowledge left behind by those who vanished before the flood.
+
+                  Some truths have surfaced.
+                  Others wait for the rhythm to return.
+
+                  What you are able to see depends on what you are ready to remember.
                 </motion.p>
               </motion.div>
               

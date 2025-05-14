@@ -655,6 +655,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Direct Mana purchase endpoint (simpler alternative to Stripe for development)
+  app.post("/api/mana/purchase/direct", async (req: Request, res: Response) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+      return res.status(200).json({ 
+        requiresAuthentication: true,
+        success: false,
+        message: "Please log in to purchase mana" 
+      });
+    }
+    
+    try {
+      const { packageId } = req.body;
+      
+      if (!packageId) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Package ID is required" 
+        });
+      }
+      
+      // Get the mana package
+      const manaPackage = await storage.getManaPackageById(Number(packageId));
+      if (!manaPackage) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Mana package not found" 
+        });
+      }
+      
+      console.log(`Processing direct mana purchase for user ${req.user.id}, package ${packageId}, amount ${manaPackage.amount}`);
+      
+      // Create a transaction record
+      const transaction = await storage.createManaTransaction({
+        userId: req.user.id,
+        amount: manaPackage.amount,
+        description: `Purchased ${manaPackage.amount} Mana`,
+        transactionType: 'mana_purchase',
+        referenceId: packageId.toString(),
+        stripePaymentIntentId: `direct_${Date.now()}`
+      });
+      
+      // Update the user's mana balance
+      const newBalance = await storage.updateUserManaBalance(req.user.id, manaPackage.amount);
+      console.log(`Updated mana balance for user ${req.user.id} to ${newBalance}`);
+      
+      // Return success response
+      res.status(200).json({
+        success: true,
+        message: `Successfully purchased ${manaPackage.amount} Mana`,
+        amount: manaPackage.amount,
+        newBalance,
+        transaction: transaction.id
+      });
+    } catch (error: any) {
+      console.error("Failed to process direct mana purchase:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to process mana transaction" 
+      });
+    }
+  });
+  
   // Spend mana to unlock a scroll
   app.post("/api/user/mana/spend", async (req: Request, res: Response) => {
     if (!req.isAuthenticated()) {
