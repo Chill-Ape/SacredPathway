@@ -89,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
   // Set up session and authentication using persistent storage
-  const sessionSettings = {
+  const sessionSettings: session.SessionOptions = {
     // Use environment variable for session secret with fallback for development
     secret: process.env.SESSION_SECRET || 'dev-session-secret',
     resave: false,
@@ -97,6 +97,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     store: storage.sessionStore, // Use our database session store
     cookie: { 
       secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
     }
   };
@@ -106,6 +107,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('WARNING: SESSION_SECRET environment variable is not set in production mode!');
   }
 
+  // Trust the first proxy in production environments (required for secure cookies over HTTPS)
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+  }
+
+  // Apply session middleware
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
