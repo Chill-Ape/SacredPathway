@@ -35,28 +35,32 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           whileHover={{ scale: 1.03 }}
         >
           {/* Base relic container */}
-          <div className="relative overflow-hidden rounded-lg aspect-square bg-black/60 backdrop-blur-sm border border-amber-900/30">
+          <div className="relative overflow-hidden rounded-lg aspect-square bg-amber-50 shadow-md border border-amber-200">
             {/* Background glyph symbol - very faint by default */}
             <motion.div 
-              className="absolute inset-0 opacity-10 pointer-events-none z-0 flex items-center justify-center"
+              className="absolute inset-0 opacity-5 pointer-events-none z-0 flex items-center justify-center"
               animate={{
-                opacity: isHovered ? 0.3 : 0.1
+                opacity: isHovered ? 0.12 : 0.05
               }}
               transition={{ duration: 1.2 }}
             >
               <img 
                 src={glyphPath} 
                 alt="Sacred glyph" 
-                className="w-3/4 h-3/4 object-contain filter brightness-150 contrast-125"
+                className="w-3/4 h-3/4 object-contain"
               />
             </motion.div>
 
             {/* Item image */}
-            <div className="absolute inset-0 flex items-center justify-center p-4 opacity-80 group-hover:opacity-100 transition-opacity">
+            <div className="absolute inset-0 flex items-center justify-center p-6 transition-opacity">
               <img 
                 src={imagePath} 
                 alt={title}
-                className="w-full h-full object-contain rounded-md transition-all duration-700 filter drop-shadow-lg"
+                className="w-full h-full object-contain rounded-md transition-all duration-700 drop-shadow-lg"
+                onError={(e) => {
+                  console.error("Image failed to load:", imagePath);
+                  e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
+                }}
               />
             </div>
 
@@ -65,21 +69,21 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
               className="absolute inset-0 pointer-events-none"
               initial={{ opacity: 0.1 }}
               animate={{ 
-                opacity: isHovered ? 0.8 : 0.2,
+                opacity: isHovered ? 0.8 : 0.3,
                 boxShadow: isHovered ? 
-                  'inset 0 0 30px rgba(217, 175, 55, 0.6), 0 0 20px rgba(217, 175, 55, 0.4)' : 
-                  'inset 0 0 10px rgba(217, 175, 55, 0.3), 0 0 5px rgba(217, 175, 55, 0.2)'
+                  'inset 0 0 30px rgba(193, 145, 30, 0.2), 0 0 20px rgba(193, 145, 30, 0.15)' : 
+                  'inset 0 0 10px rgba(193, 145, 30, 0.1), 0 0 5px rgba(193, 145, 30, 0.1)'
               }}
               transition={{ duration: 0.8 }}
             />
 
             {/* Pulsing glow effect */}
             <motion.div 
-              className="absolute inset-0 border-2 border-amber-500/0 rounded-lg pointer-events-none"
+              className="absolute inset-0 border border-amber-400/10 rounded-lg pointer-events-none"
               animate={{ 
                 boxShadow: isHovered ? 
-                  ['0 0 10px rgba(217, 175, 55, 0.5)', '0 0 25px rgba(217, 175, 55, 0.7)', '0 0 10px rgba(217, 175, 55, 0.5)'] : 
-                  ['0 0 5px rgba(217, 175, 55, 0.1)', '0 0 10px rgba(217, 175, 55, 0.3)', '0 0 5px rgba(217, 175, 55, 0.1)']
+                  ['0 0 10px rgba(193, 145, 30, 0.2)', '0 0 15px rgba(193, 145, 30, 0.3)', '0 0 10px rgba(193, 145, 30, 0.2)'] : 
+                  ['0 0 5px rgba(193, 145, 30, 0.05)', '0 0 10px rgba(193, 145, 30, 0.1)', '0 0 5px rgba(193, 145, 30, 0.05)']
               }}
               transition={{ 
                 duration: 3, 
@@ -90,14 +94,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 
             {/* Title and poetic description - slide up on hover */}
             <motion.div 
-              className="absolute bottom-0 left-0 right-0 px-4 py-4 bg-gradient-to-t from-black/90 via-black/70 to-transparent"
+              className="absolute bottom-0 left-0 right-0 px-4 py-4 bg-gradient-to-t from-amber-50/95 via-amber-50/80 to-transparent"
               initial={{ y: 0 }}
               animate={{ y: isHovered ? -15 : 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="text-amber-100 font-serif text-2xl text-center tracking-wider mb-1">{title}</h3>
+              <h3 className="text-amber-800 font-serif text-2xl text-center tracking-wider mb-1">{title}</h3>
               <motion.p
-                className="text-xs md:text-sm text-amber-200/70 italic text-center font-serif mt-1"
+                className="text-xs md:text-sm text-amber-700/90 italic text-center font-serif mt-1"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isHovered ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
@@ -170,7 +174,7 @@ export default function ArkContents() {
 
   return (
     <div 
-      className="min-h-screen w-full bg-[url('/assets/ark-background.jpg')] bg-cover bg-center bg-fixed relative overflow-hidden"
+      className="min-h-screen w-full bg-white relative overflow-hidden"
     >
       <Helmet>
         <title>Ark Contents | Akashic Archive</title>
@@ -178,13 +182,10 @@ export default function ArkContents() {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" />
       </Helmet>
       
-      {/* Overlay with dark gradient and subtle pattern */}
-      <div className="absolute inset-0 bg-black/60 z-0"></div>
-      
-      {/* Subtle animated glyph background */}
+      {/* Subtle sacred glyph background pattern */}
       <div className="absolute inset-0 z-0 opacity-5">
-        <div className="absolute top-0 left-0 w-full h-full bg-repeat opacity-30" 
-             style={{backgroundImage: "url('/assets/tablets/crystal_tablet.png')", backgroundSize: "300px"}}>
+        <div className="absolute top-0 left-0 w-full h-full bg-repeat opacity-20" 
+             style={{backgroundImage: "url('/assets/sacred_symbol.svg')", backgroundSize: "300px"}}>
         </div>
       </div>
       
@@ -205,7 +206,7 @@ export default function ArkContents() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
-                  className="mb-8 text-amber-100 hover:text-amber-200 hover:bg-black/20 px-4 py-2 rounded-full border border-amber-900/30 bg-black/30 backdrop-blur-sm flex items-center justify-center mx-auto group"
+                  className="mb-8 text-amber-800 hover:text-amber-900 hover:bg-amber-100 px-4 py-2 rounded-full border border-amber-300 bg-amber-50 shadow-sm flex items-center justify-center mx-auto group"
                   onClick={() => setLocation("/")}
                 >
                   <ArrowLeft className="mr-2 h-4 w-4 group-hover:translate-x-[-3px] transition-transform" /> 
@@ -213,7 +214,7 @@ export default function ArkContents() {
                 </motion.button>
                 
                 <motion.h1 
-                  className="text-5xl md:text-6xl text-amber-100 font-serif mb-6 tracking-wider font-cormorant" 
+                  className="text-5xl md:text-6xl text-amber-800 font-serif mb-6 tracking-wider font-cormorant" 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
@@ -225,11 +226,11 @@ export default function ArkContents() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.8 }}
-                  className="h-[1px] w-20 bg-gradient-to-r from-transparent via-amber-500/70 to-transparent mx-auto mb-6"
+                  className="h-[1px] w-20 bg-gradient-to-r from-transparent via-amber-700 to-transparent mx-auto mb-6"
                 />
                 
                 <motion.p 
-                  className="text-amber-200/80 text-lg md:text-xl max-w-2xl mx-auto font-cormorant"
+                  className="text-amber-700/90 text-lg md:text-xl max-w-2xl mx-auto font-cormorant"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.8 }}

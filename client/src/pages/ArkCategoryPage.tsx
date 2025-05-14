@@ -198,12 +198,12 @@ const ContentDialog = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-2xl bg-black/95 border-amber-900/30 text-amber-100">
+      <DialogContent className="sm:max-w-2xl bg-white border-amber-300 text-amber-800 shadow-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-amber-100 text-center">
+          <DialogTitle className="text-2xl font-serif text-amber-800 text-center">
             {item.title}
           </DialogTitle>
-          <DialogDescription className="text-amber-200/80 text-center">
+          <DialogDescription className="text-amber-600/90 text-center">
             {isDbItem ? 'Ancient wisdom awaits...' : item.description}
           </DialogDescription>
         </DialogHeader>
@@ -325,11 +325,11 @@ const CategoryItemCard = ({
       className="h-full"
     >
       <Card 
-        className="cursor-pointer h-full bg-black/40 backdrop-blur-sm border border-amber-900/30 overflow-hidden relative group"
+        className="cursor-pointer h-full bg-amber-50 border border-amber-200 shadow-md overflow-hidden relative group"
         onClick={onClick}
       >
         {/* Golden glow on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-r from-amber-500/5 via-amber-500/10 to-amber-500/5"></div>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-r from-amber-100/20 via-amber-100/30 to-amber-100/20"></div>
         
         {/* Image container */}
         <div className="overflow-hidden aspect-[4/3] relative">
@@ -337,13 +337,17 @@ const CategoryItemCard = ({
             src={item.image} 
             alt={item.title}
             className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            onError={(e) => {
+              console.error("Image failed to load:", item.image);
+              e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
+            }}
           />
           
           {/* Locked overlay */}
           {item.isLocked && (
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center">
-                <Lock className="w-5 h-5 text-amber-300/80" />
+            <div className="absolute inset-0 bg-amber-950/50 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-amber-900/60 flex items-center justify-center">
+                <Lock className="w-5 h-5 text-amber-100" />
               </div>
             </div>
           )}
@@ -351,17 +355,17 @@ const CategoryItemCard = ({
         
         {/* Content */}
         <CardContent className="p-4">
-          <h3 className="text-xl font-serif text-amber-100 mb-2 tracking-wide group-hover:text-amber-200 transition-colors">{item.title}</h3>
-          <p className="text-amber-200/70 text-sm font-serif line-clamp-2">
+          <h3 className="text-xl font-serif text-amber-800 mb-2 tracking-wide group-hover:text-amber-900 transition-colors">{item.title}</h3>
+          <p className="text-amber-700/80 text-sm font-serif line-clamp-2">
             {'description' in item ? item.description : 'Ancient wisdom awaits...'}
           </p>
         </CardContent>
         
         <CardFooter className="px-4 pb-4 pt-0 flex justify-between items-center">
-          <div className="text-xs text-amber-500/70 font-serif italic">
+          <div className="text-xs text-amber-600/80 font-serif italic">
             {item.isLocked ? 'Locked' : 'Accessible'}
           </div>
-          <Button variant="ghost" size="sm" className="text-amber-200 hover:text-amber-100 hover:bg-amber-950/40 p-0 w-8 h-8">
+          <Button variant="ghost" size="sm" className="text-amber-700 hover:text-amber-800 hover:bg-amber-100 p-0 w-8 h-8">
             {item.isLocked ? 
               <KeyRound className="w-4 h-4" /> : 
               <Eye className="w-4 h-4" />
@@ -535,21 +539,25 @@ export default function ArkCategoryPage({ category }: { category: "artifacts" | 
   const seoDescription = `Explore ancient ${categories[category].title.toLowerCase()} containing forgotten wisdom and cosmic secrets.`;
 
   return (
-    <div className="min-h-screen bg-[url('/assets/ark-background.jpg')] bg-cover bg-fixed">
+    <div className="min-h-screen bg-white">
       <Helmet>
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
       </Helmet>
       
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-black/60 z-0"></div>
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 z-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-full bg-repeat opacity-20" 
+             style={{backgroundImage: "url('/assets/sacred_geometry.svg')", backgroundSize: "300px"}}>
+        </div>
+      </div>
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-10">
         <div className="mb-12 text-center">
           <Button
             variant="ghost"
-            className="mb-6 text-amber-100 hover:text-amber-200 hover:bg-black/20 mx-auto flex items-center px-4 py-2 rounded-full border border-amber-900/30 bg-black/30 backdrop-blur-sm"
+            className="mb-6 text-amber-800 hover:text-amber-900 hover:bg-amber-100 mx-auto flex items-center px-4 py-2 rounded-full border border-amber-300 bg-amber-50 shadow-sm"
             onClick={() => setLocation("/ark")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> Return to Ark Contents
@@ -559,7 +567,7 @@ export default function ArkCategoryPage({ category }: { category: "artifacts" | 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl font-cormorant text-amber-100 mb-4 tracking-wider"
+            className="text-5xl font-cormorant text-amber-800 mb-4 tracking-wider"
           >
             {categories[category].title}
           </motion.h1>
@@ -568,14 +576,14 @@ export default function ArkCategoryPage({ category }: { category: "artifacts" | 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}  
-            className="h-[1px] w-20 bg-gradient-to-r from-transparent via-amber-500/70 to-transparent mx-auto mb-6"
+            className="h-[1px] w-20 bg-gradient-to-r from-transparent via-amber-700 to-transparent mx-auto mb-6"
           />
           
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-amber-200/80 text-lg max-w-3xl mx-auto font-cormorant"
+            className="text-amber-700/90 text-lg max-w-3xl mx-auto font-cormorant"
           >
             {categories[category].description}
           </motion.p>
