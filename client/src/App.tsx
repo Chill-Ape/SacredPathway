@@ -17,6 +17,7 @@ import Admin from "@/pages/Admin";
 import ManageMana from "@/pages/ManageMana";
 import ManaDebug from "@/pages/ManaDebug";
 import Simulation from "@/pages/Simulation";
+import Landing1 from "@/pages/Landing1";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { AnimatePresence } from "framer-motion";
@@ -35,6 +36,12 @@ function App() {
           <main className="flex-grow pt-16">
             <AnimatePresence mode="wait">
               <Switch key={location}>
+                <Route path="/landing1">
+                  {() => {
+                    // Landing page should appear without the navbar
+                    return <Landing1 />;
+                  }}
+                </Route>
                 <Route path="/" component={Home} />
                 <Route path="/scrolls" component={Scrolls} />
                 <Route path="/scrolls/:id" component={ScrollDetail} />
