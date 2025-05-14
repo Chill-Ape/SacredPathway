@@ -47,7 +47,7 @@ const ManaPackages: React.FC = () => {
     enabled: true,
   });
 
-  // Handle purchase button click - simplified direct purchase
+  // Handle purchase button click with Stripe Checkout
   const handlePurchase = async (pkg: ManaPackage) => {
     // If already processing a package, prevent multiple requests
     if (processingPackageId !== null) {
@@ -59,10 +59,10 @@ const ManaPackages: React.FC = () => {
       setProcessingPackageId(pkg.id);
       
       // Log the start of the purchase process
-      console.log(`[${new Date().toISOString()}] Processing direct mana purchase for:`, pkg.id, pkg.name);
+      console.log(`[${new Date().toISOString()}] Processing Stripe checkout for:`, pkg.id, pkg.name);
       
-      // Make direct purchase API call 
-      const response = await fetch('/api/mana/purchase/direct', {
+      // Make API call to create a Stripe checkout session
+      const response = await fetch('/api/mana/purchase/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const ManaPackages: React.FC = () => {
       });
       
       const data = await response.json();
-      console.log(`[${new Date().toISOString()}] Direct purchase result:`, data);
+      console.log(`[${new Date().toISOString()}] Stripe session creation result:`, data);
       
       // Check if user needs to authenticate
       if (data.requiresAuthentication) {
@@ -86,28 +86,54 @@ const ManaPackages: React.FC = () => {
         return;
       }
       
-      if (data.success) {
+      // Check for errors in the response
+      if (data.message && !data.sessionId) {
         toast({
-          title: 'Purchase Successful',
-          description: `You have received ${data.amount} Mana!`,
-          variant: 'default',
+          title: 'Checkout Error',
+          description: data.message || 'Unable to create checkout session. Please try again.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      // If we have a sessionId, redirect to Stripe Checkout
+      if (data.sessionId) {
+        // Initialize Stripe
+        const stripe = await stripePromise;
+        
+        if (!stripe) {
+          toast({
+            title: 'Stripe Error',
+            description: 'Payment processing is unavailable. Please try again later.',
+            variant: 'destructive',
+          });
+          return;
+        }
+        
+        // Redirect to Stripe Checkout
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: data.sessionId,
         });
         
-        // Refresh data to show updated balance
-        queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
-        
-        // Redirect to show success message
-        window.location.href = '/mana?status=success&amount=' + data.amount;
+        // Handle any errors from redirectToCheckout
+        if (error) {
+          console.error(`[${new Date().toISOString()}] Stripe redirect error:`, error);
+          toast({
+            title: 'Checkout Error',
+            description: error.message || 'Unable to proceed to checkout. Please try again.',
+            variant: 'destructive',
+          });
+        }
       } else {
         toast({
-          title: 'Purchase Error',
-          description: data.message || 'Unable to process purchase. Please try again.',
+          title: 'Checkout Error',
+          description: 'Unable to create checkout session. Please try again.',
           variant: 'destructive',
         });
       }
     } catch (error: any) {
       // Log and display errors
-      console.error(`[${new Date().toISOString()}] Purchase error:`, error);
+      console.error(`[${new Date().toISOString()}] Payment error:`, error);
       toast({
         title: 'Payment Error',
         description: error.message || 'An error occurred during purchase',
@@ -180,54 +206,72 @@ const ManaPackages: React.FC = () => {
 
   // Main component rendering
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {packages && packages.length > 0 ? (
-        packages.map((pkg) => (
-          <Card key={pkg.id} className="w-full overflow-hidden">
-            <CardHeader className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
-              <CardTitle className="flex items-center">
-                <Sparkles className="h-5 w-5 mr-2 text-yellow-300" />
-                {pkg.name}
-              </CardTitle>
-              <CardDescription className="text-blue-100">
-                {pkg.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <span className="text-3xl font-bold text-yellow-500">
-                  {pkg.amount}
-                </span>
-                <span className="text-lg ml-2">Mana</span>
-              </div>
-              <div className="text-center mt-2 text-sm text-gray-500">
-                ${(pkg.price / 100).toFixed(2)} USD
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                onClick={() => handlePurchase(pkg)}
-                disabled={processingPackageId === pkg.id}
-              >
-                {processingPackageId === pkg.id ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  "Purchase"
-                )}
-              </Button>
-            </CardFooter>
-          </Card>
-        ))
-      ) : (
-        <div className="col-span-full text-center p-8 border rounded-lg bg-gray-50">
-          <p className="text-gray-500">No Mana packages available. Please check back later.</p>
-        </div>
-      )}
-    </div>
+    <>
+      {/* Information alert about real payment processing */}
+      <Alert className="mb-6 bg-blue-50 border-blue-200">
+        <AlertTitle className="text-blue-800">Secure Payment</AlertTitle>
+        <AlertDescription className="text-blue-700">
+          All transactions are processed securely via Stripe. You will be redirected to Stripe's checkout page to complete your purchase with a credit card.
+        </AlertDescription>
+      </Alert>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {packages && packages.length > 0 ? (
+          packages.map((pkg) => (
+            <Card key={pkg.id} className="w-full overflow-hidden">
+              <CardHeader className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
+                <CardTitle className="flex items-center">
+                  <Sparkles className="h-5 w-5 mr-2 text-yellow-300" />
+                  {pkg.name}
+                </CardTitle>
+                <CardDescription className="text-blue-100">
+                  {pkg.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="text-center">
+                  <span className="text-3xl font-bold text-yellow-500">
+                    {pkg.amount}
+                  </span>
+                  <span className="text-lg ml-2">Mana</span>
+                </div>
+                <div className="text-center mt-2 text-sm text-gray-500">
+                  ${(pkg.price / 100).toFixed(2)} USD
+                </div>
+              </CardContent>
+              <CardFooter className="flex flex-col gap-2">
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center gap-2"
+                  onClick={() => handlePurchase(pkg)}
+                  disabled={processingPackageId === pkg.id}
+                >
+                  {processingPackageId === pkg.id ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <span>Purchase with Card</span>
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                        <path d="M1 4v16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2zm19 16H4c-.55 0-1-.45-1-1V9h18v10c0 .55-.45 1-1 1zM3 5c0-.55.45-1 1-1h16c.55 0 1 .45 1 1v2H3V5z"/>
+                      </svg>
+                    </>
+                  )}
+                </Button>
+                <div className="text-xs text-gray-500 text-center mt-1">
+                  Secured by <span className="font-medium">Stripe</span>
+                </div>
+              </CardFooter>
+            </Card>
+          ))
+        ) : (
+          <div className="col-span-full text-center p-8 border rounded-lg bg-gray-50">
+            <p className="text-gray-500">No Mana packages available. Please check back later.</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
