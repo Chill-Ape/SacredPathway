@@ -54,44 +54,143 @@ export default function Scrolls() {
       className="min-h-screen px-4 py-16"
     >
       <Helmet>
-        <title>Akashic Scrolls | The Akashic Archive</title>
-        <meta name="description" content="Explore the ancient scrolls containing the wisdom of ages past. Discover accessible texts and unlock sealed secrets in The Akashic Archive." />
+        <title>Ark Contents | The Akashic Archive</title>
+        <meta name="description" content="Explore ancient tablets, artifacts, scrolls, and books containing wisdom from ages past. Discover accessible knowledge and unlock sealed mysteries in The Akashic Archive." />
       </Helmet>
       
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-cinzel font-bold text-sacred-blue text-center mb-12">The Akashic Scrolls</h2>
+        <h2 className="text-3xl md:text-4xl font-cinzel font-bold text-sacred-blue text-center mb-12">Ark Contents</h2>
         
         <div className="mb-8 font-raleway text-sacred-gray text-center max-w-2xl mx-auto">
-          <p>Explore the ancient scrolls that contain the wisdom of ages past. Some scrolls are available to all seekers, while others will be revealed only to those who have proven their dedication to the path.</p>
+          <p>Explore the ancient artifacts, tablets, scrolls, and books containing wisdom from ages past. Some items are available to all seekers, while others will be revealed only to those who have proven their dedication to the path.</p>
         </div>
         
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-pulse font-cinzel text-sacred-blue">
-              <p>Retrieving ancient scrolls...</p>
+              <p>Retrieving ark contents...</p>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {scrolls && [...scrolls]
-              .sort((a, b) => {
-                // Welcome to the Archive always first
-                if (a.title === "Welcome to the Archive") return -1;
-                if (b.title === "Welcome to the Archive") return 1;
-                // Then sort by locked status (unlocked first)
-                if (a.isLocked && !b.isLocked) return 1;
-                if (!a.isLocked && b.isLocked) return -1;
-                // Then sort by title alphabetically
-                return a.title.localeCompare(b.title);
-              })
-              .map((scroll) => (
-                <ScrollCard 
-                  key={scroll.id} 
-                  scroll={scroll} 
-                  onUnlock={handleUnlockScroll} 
-                />
-              ))
-            }
+          <div className="space-y-16">
+            {/* Tablets Section */}
+            <div>
+              <h3 className="text-2xl font-cinzel text-sacred-blue mb-6 border-b border-sacred-blue/20 pb-2">Ancient Tablets</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {scrolls && [...scrolls]
+                  .filter(item => item.type === 'tablet')
+                  .sort((a, b) => {
+                    // Sort by locked status (unlocked first)
+                    if (a.isLocked && !b.isLocked) return 1;
+                    if (!a.isLocked && b.isLocked) return -1;
+                    // Then by title
+                    return a.title.localeCompare(b.title);
+                  })
+                  .map((scroll) => (
+                    <ScrollCard 
+                      key={scroll.id} 
+                      scroll={scroll} 
+                      onUnlock={handleUnlockScroll} 
+                    />
+                  ))
+                }
+                {scrolls.filter(item => item.type === 'tablet').length === 0 && (
+                  <div className="col-span-full text-center text-sacred-gray py-8">
+                    <p>No tablets discovered yet. Continue your journey to uncover more.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Artifacts Section */}
+            <div>
+              <h3 className="text-2xl font-cinzel text-sacred-blue mb-6 border-b border-sacred-blue/20 pb-2">Sacred Artifacts</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {scrolls && [...scrolls]
+                  .filter(item => item.type === 'artifact')
+                  .sort((a, b) => {
+                    // Sort by locked status (unlocked first)
+                    if (a.isLocked && !b.isLocked) return 1;
+                    if (!a.isLocked && b.isLocked) return -1;
+                    // Then by title
+                    return a.title.localeCompare(b.title);
+                  })
+                  .map((scroll) => (
+                    <ScrollCard 
+                      key={scroll.id} 
+                      scroll={scroll} 
+                      onUnlock={handleUnlockScroll} 
+                    />
+                  ))
+                }
+                {scrolls.filter(item => item.type === 'artifact').length === 0 && (
+                  <div className="col-span-full text-center text-sacred-gray py-8">
+                    <p>No artifacts discovered yet. Continue your journey to uncover more.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Scrolls Section */}
+            <div>
+              <h3 className="text-2xl font-cinzel text-sacred-blue mb-6 border-b border-sacred-blue/20 pb-2">Ancient Scrolls</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {scrolls && [...scrolls]
+                  .filter(item => item.type === 'scroll')
+                  .sort((a, b) => {
+                    // Welcome to the Archive always first
+                    if (a.title === "Welcome to the Archive") return -1;
+                    if (b.title === "Welcome to the Archive") return 1;
+                    // Then sort by locked status (unlocked first)
+                    if (a.isLocked && !b.isLocked) return 1;
+                    if (!a.isLocked && b.isLocked) return -1;
+                    // Then by title
+                    return a.title.localeCompare(b.title);
+                  })
+                  .map((scroll) => (
+                    <ScrollCard 
+                      key={scroll.id} 
+                      scroll={scroll} 
+                      onUnlock={handleUnlockScroll} 
+                    />
+                  ))
+                }
+                {scrolls.filter(item => item.type === 'scroll').length === 0 && (
+                  <div className="col-span-full text-center text-sacred-gray py-8">
+                    <p>No scrolls discovered yet. Continue your journey to uncover more.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Books Section */}
+            <div>
+              <h3 className="text-2xl font-cinzel text-sacred-blue mb-6 border-b border-sacred-blue/20 pb-2">Mystical Books</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {scrolls && [...scrolls]
+                  .filter(item => item.type === 'book')
+                  .sort((a, b) => {
+                    // Sort by locked status (unlocked first)
+                    if (a.isLocked && !b.isLocked) return 1;
+                    if (!a.isLocked && b.isLocked) return -1;
+                    // Then by title
+                    return a.title.localeCompare(b.title);
+                  })
+                  .map((scroll) => (
+                    <ScrollCard 
+                      key={scroll.id} 
+                      scroll={scroll} 
+                      onUnlock={handleUnlockScroll} 
+                    />
+                  ))
+                }
+                {scrolls.filter(item => item.type === 'book').length === 0 && (
+                  <div className="col-span-full text-center text-sacred-gray py-8">
+                    <p>No books discovered yet. Continue your journey to uncover more.</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

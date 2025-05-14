@@ -697,7 +697,7 @@ export class MemStorage implements IStorage {
   
   async checkScrollKey(id: number, key: string): Promise<boolean> {
     const scroll = this.scrolls.get(id);
-    if (scroll) {
+    if (scroll && scroll.key && typeof scroll.key === 'string') {
       return scroll.key.toLowerCase() === key.toLowerCase();
     }
     return false;

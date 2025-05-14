@@ -55,11 +55,11 @@ export default function MyScrolls() {
       </Helmet>
       
       <h1 className="text-4xl md:text-5xl font-cinzel text-sacred-blue text-center mb-3">
-        My Unlocked Scrolls
+        My Unlocked Collection
       </h1>
       
       <p className="text-center text-sacred-gray mb-8 max-w-3xl mx-auto">
-        These scrolls have been unlocked for your study and contemplation. 
+        These tablets, artifacts, scrolls, and books have been unlocked for your study and contemplation. 
         The wisdom they contain is now part of your personal journey through the Archive.
       </p>
       
