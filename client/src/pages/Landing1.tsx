@@ -31,14 +31,14 @@ const Landing1 = () => {
     }, 2500); // Increased to match the combined CSS animation sequence duration
   };
   
-  // Enable sound after a brief delay when component mounts
+  // Enable sound by default when component mounts
   useEffect(() => {
-    const enableSound = setTimeout(() => {
-      setSoundEnabled(true);
-    }, 1000);
+    // Set sound enabled by default
+    setSoundEnabled(true);
     
     return () => {
-      clearTimeout(enableSound);
+      // Make sure sound is turned off when component unmounts
+      setSoundEnabled(false);
     };
   }, []);
   

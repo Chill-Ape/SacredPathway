@@ -730,8 +730,10 @@
 /* Media Queries */
 @media (max-width: 768px) {
   .sacred-symbol {
-    width: 150px;
-    height: 150px;
+    width: 50vw; /* 50% of viewport width */
+    height: 50vw;
+    max-width: 300px;
+    max-height: 300px;
   }
   
   .primary-message {
@@ -750,8 +752,10 @@
 
 @media (max-width: 480px) {
   .sacred-symbol {
-    width: 120px;
-    height: 120px;
+    width: 70vw; /* 70% of viewport width */
+    height: 70vw;
+    max-width: 250px;
+    max-height: 250px;
   }
   
   .primary-message {
