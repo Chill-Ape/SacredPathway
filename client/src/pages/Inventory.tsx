@@ -453,7 +453,7 @@ export default function InventoryPage() {
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="text-3xl font-bold mb-4">Inventory Access</h1>
         <p className="mb-6">Please log in to view your inventory.</p>
-        <Button as="a" href="/auth">Log In</Button>
+        <Button onClick={() => window.location.href = "/auth"}>Log In</Button>
       </div>
     );
   }

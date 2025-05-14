@@ -22,17 +22,33 @@ export interface InventoryItem {
 
 export type NewInventoryItem = Omit<InventoryItem, 'id' | 'userId' | 'createdAt'>;
 
+// Define mutation types
+type AddItemMutation = ReturnType<typeof useMutation<InventoryItem, Error, NewInventoryItem>>;
+type RemoveItemMutation = ReturnType<typeof useMutation<any, Error, number>>;
+type UpdateItemMutation = ReturnType<typeof useMutation<InventoryItem, Error, { 
+  itemId: number; 
+  updates: Partial<NewInventoryItem>; 
+}>>;
+type ToggleEquipMutation = ReturnType<typeof useMutation<InventoryItem, Error, { 
+  itemId: number; 
+  isEquipped: boolean; 
+}>>;
+type UpdateQuantityMutation = ReturnType<typeof useMutation<InventoryItem, Error, { 
+  itemId: number; 
+  quantity: number; 
+}>>;
+
 // Define context type
 type InventoryContextType = {
   items: InventoryItem[] | undefined;
   equippedItems: InventoryItem[] | undefined;
   isLoading: boolean;
   error: Error | null;
-  addItemMutation: ReturnType<typeof useMutation>;
-  removeItemMutation: ReturnType<typeof useMutation>;
-  updateItemMutation: ReturnType<typeof useMutation>;
-  toggleEquipMutation: ReturnType<typeof useMutation>;
-  updateQuantityMutation: ReturnType<typeof useMutation>;
+  addItemMutation: AddItemMutation;
+  removeItemMutation: RemoveItemMutation;
+  updateItemMutation: UpdateItemMutation;
+  toggleEquipMutation: ToggleEquipMutation;
+  updateQuantityMutation: UpdateQuantityMutation;
 };
 
 // Create context

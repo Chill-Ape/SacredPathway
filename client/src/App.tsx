@@ -15,6 +15,7 @@ import Profile from "@/pages/Profile";
 import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
 import ManageMana from "@/pages/ManageMana";
+import Inventory from "@/pages/Inventory";
 
 import Simulation from "@/pages/Simulation";
 import Landing1 from "@/pages/Landing1";
@@ -96,6 +97,10 @@ function App() {
                 <ProtectedRoute 
                   path="/mana" 
                   component={ManageMana} 
+                />
+                <ProtectedRoute 
+                  path="/inventory" 
+                  component={Inventory} 
                 />
 
                 <Route component={NotFound} />
