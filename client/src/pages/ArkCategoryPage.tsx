@@ -49,7 +49,7 @@ const categories = {
         description: "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
         isLocked: true,
         key: "ENKI",
-        image: "/assets/tablets/crystal_tablet.png" // This image exists
+        image: "/assets/crystal_tablet.png" // Fixed path
       },
       {
         id: "emerald-tablet-1",
@@ -90,7 +90,7 @@ const categories = {
         description: "Chronicles from the forgotten era when Leo ruled the celestial sphere.",
         isLocked: true,
         key: "LEO",
-        image: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png" // Updated path
+        image: "/assets/sacred_geometry_3.svg" // Using available SVG as fallback
       },
       {
         id: "age-of-taurus",
@@ -98,7 +98,7 @@ const categories = {
         description: "Wisdom from the time when the Bull governed the cosmic order.",
         isLocked: true,
         key: "TAURUS",
-        image: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png" // Updated path
+        image: "/assets/sacred_geometry_2.svg" // Using available SVG as fallback
       },
       {
         id: "age-of-pisces",
@@ -106,7 +106,7 @@ const categories = {
         description: "The story of the Fish and the transition to our current age.",
         isLocked: true,
         key: "PISCES",
-        image: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png" // Updated path
+        image: "/assets/sacred_geometry.svg" // Using available SVG as fallback
       },
       {
         id: "epic-of-flood",
@@ -114,7 +114,7 @@ const categories = {
         description: "The definitive account of the great cataclysm that reshaped our world.",
         isLocked: true,
         key: "DELUGE",
-        image: "/assets/ChatGPT Image May 10, 2025, 04_36_48 PM.png" // Updated path
+        image: "/assets/great_flood.png" // Using a valid image path
       },
       {
         id: "seven-sages",
@@ -122,7 +122,7 @@ const categories = {
         description: "Biographies of the seven masters who preserved knowledge through the darkness.",
         isLocked: true,
         key: "SEVEN",
-        image: "/assets/ChatGPT Image May 10, 2025, 05_25_40 PM.png" // Updated path
+        image: "/assets/sacred_symbol.svg" // Using a valid SVG path
       }
     ]
   }
@@ -339,7 +339,11 @@ const CategoryItemCard = ({
             className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             onError={(e) => {
               console.error("Image failed to load:", item.image);
-              e.currentTarget.src = "/assets/sacred_geometry.svg"; // Updated fallback image
+              // Ensure we use a fallback image that definitely exists
+              e.currentTarget.src = "/assets/sacred_geometry.svg"; 
+              
+              // Log additional error details to aid debugging
+              console.log("Setting fallback image for:", item.title);
             }}
           />
           
@@ -488,7 +492,8 @@ export default function ArkCategoryPage({ category }: { category: "artifacts" | 
           id: scroll.id,
           title: scroll.title,
           content: scroll.content,
-          image: scroll.image,
+          // Use a fallback image path if the image is missing or invalid
+          image: scroll.image || "/assets/sacred_geometry.svg",
           isLocked: user ? !isScrollUnlocked(scroll.id) : scroll.isLocked,
           type: scroll.type || 'scroll', // Provide default if null
           key: scroll.key
