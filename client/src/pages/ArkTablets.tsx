@@ -10,10 +10,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
-// Import tablet images directly using Vite's asset handling via @assets alias
-import clayTabletImage from '@assets/IMG_8635.jpg';  
-import emeraldTabletImage from '@assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png';
-import crystalTabletImage from '@assets/bb62b636-4bad-4fb7-9e5a-d44b96a91dab.png';
+// Import tablet images using relative paths
+import clayTabletImage from '../assets/clay_tablet_1.png';  
+import emeraldTabletImage from '../assets/ancient_tablet_dark.png';
+import crystalTabletImage from '../assets/crystal_tablet.png';
 
 // Simple component for a tablet item card
 const TabletCard = ({ 
