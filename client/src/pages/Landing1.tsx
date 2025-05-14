@@ -168,10 +168,10 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Circle overlaid on the triangle - perfectly centered */}
+                {/* Circle touching the bottom of the triangle */}
                 <motion.circle 
                   cx="50" 
-                  cy="54" 
+                  cy="59" 
                   r="17" 
                   fill="none" 
                   stroke="rgba(25, 95, 145, 0.95)" 
