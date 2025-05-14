@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from "wouter";
-import { ArrowLeft, Sparkles, Key, Unlock } from "lucide-react";
+import { ArrowLeft, Sparkles, Key, Unlock, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
+import BookReader, { Book } from '@/components/books/BookReader';
 
 import apkalluScrollImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png';
+import apkalluBookData from '@/data/epic-of-apkallu.json';
 
 export default function EpicOfApkallu() {
   const [, setLocation] = useLocation();
@@ -16,8 +18,16 @@ export default function EpicOfApkallu() {
   const [keyInput, setKeyInput] = useState("");
   const [isLocked, setIsLocked] = useState(false);
   const [isKeyDialogOpen, setIsKeyDialogOpen] = useState(false);
+  const [isBookReaderOpen, setIsBookReaderOpen] = useState(false);
+  const [bookData, setBookData] = useState<Book | null>(null);
   
   const correctKey = "APKALLU";
+
+  // Load book data
+  useEffect(() => {
+    // Type assertion to satisfy TypeScript
+    setBookData(apkalluBookData as unknown as Book);
+  }, []);
 
   const handleUnlock = () => {
     if (keyInput.trim().toUpperCase() === correctKey) {
@@ -32,6 +42,18 @@ export default function EpicOfApkallu() {
       toast({
         title: "Incorrect Key",
         description: "The key you provided is not correct.",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleOpenBook = () => {
+    if (bookData) {
+      setIsBookReaderOpen(true);
+    } else {
+      toast({
+        title: "Book Unavailable",
+        description: "The book data could not be loaded.",
         variant: "destructive",
       });
     }
@@ -147,8 +169,28 @@ export default function EpicOfApkallu() {
                   "The seven sages laid the foundation stones of the temple of knowledge. Though the waters may rise and fall, and civilizations may crumble into dust, the cosmic wisdom they imparted remains eternal, preserved in the Akashic records for those with eyes to see and ears to hear."
                 </p>
               </div>
+              
+              {/* Open Book Button */}
+              <div className="mt-8 flex justify-center">
+                <Button 
+                  size="lg" 
+                  onClick={handleOpenBook}
+                  className="bg-amber-700 hover:bg-amber-800 text-amber-50 shadow-md"
+                >
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Open Complete Book
+                </Button>
+              </div>
             </div>
           </motion.div>
+        )}
+        
+        {/* Book Reader Modal */}
+        {isBookReaderOpen && bookData && (
+          <BookReader 
+            book={bookData} 
+            onClose={() => setIsBookReaderOpen(false)} 
+          />
         )}
       </div>
       
