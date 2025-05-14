@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import { User, LogOut, Library, Sparkles } from "lucide-react";
+import ManaBalance from "@/components/mana/ManaBalance";
 
 type ProfileMenuProps = {
   isMobile?: boolean;
@@ -128,6 +129,9 @@ export default function ProfileMenu({
               <div className="ml-3 text-left">
                 <p className="font-cinzel text-sacred-blue font-medium">{user.username}</p>
                 <p className="text-xs text-sacred-gray">Archive Member</p>
+                <div className="mt-1">
+                  <ManaBalance />
+                </div>
               </div>
             </div>
             
@@ -194,78 +198,83 @@ export default function ProfileMenu({
 
   // Desktop view with dropdown
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="relative rounded-full h-8 w-8 flex items-center justify-center"
-        >
-          <Avatar className="h-8 w-8 border border-sacred-blue/20">
-            {user.profilePicture ? (
-              <img 
-                src={user.profilePicture} 
-                alt={`${user.username}'s profile`} 
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <img 
-                src="/assets/sacred_symbol.png" 
-                alt={`${user.username}'s profile`} 
-                className="h-full w-full object-cover"
-              />
-            )}
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
+    <div className="flex items-center gap-2">
+      {/* Show Mana balance */}
+      <ManaBalance />
       
-      <DropdownMenuContent align="end" className="w-56 font-raleway">
-        <DropdownMenuLabel className="font-cinzel text-sacred-blue">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium">{user.username}</p>
-            <p className="text-xs text-muted-foreground">Archive Member</p>
-          </div>
-        </DropdownMenuLabel>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="relative rounded-full h-8 w-8 flex items-center justify-center"
+          >
+            <Avatar className="h-8 w-8 border border-sacred-blue/20">
+              {user.profilePicture ? (
+                <img 
+                  src={user.profilePicture} 
+                  alt={`${user.username}'s profile`} 
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <img 
+                  src="/assets/sacred_symbol.png" 
+                  alt={`${user.username}'s profile`} 
+                  className="h-full w-full object-cover"
+                />
+              )}
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
         
-        <DropdownMenuSeparator />
-        
-        <Link to="/profile">
-          <DropdownMenuItem className="cursor-pointer">
-            My Profile
+        <DropdownMenuContent align="end" className="w-56 font-raleway">
+          <DropdownMenuLabel className="font-cinzel text-sacred-blue">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium">{user.username}</p>
+              <p className="text-xs text-muted-foreground">Archive Member</p>
+            </div>
+          </DropdownMenuLabel>
+          
+          <DropdownMenuSeparator />
+          
+          <Link to="/profile">
+            <DropdownMenuItem className="cursor-pointer">
+              My Profile
+            </DropdownMenuItem>
+          </Link>
+          
+          <Link to="/my-scrolls">
+            <DropdownMenuItem className="cursor-pointer">
+              My Collection
+            </DropdownMenuItem>
+          </Link>
+          
+          <Link to="/mana">
+            <DropdownMenuItem className="cursor-pointer">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Manage Mana
+            </DropdownMenuItem>
+          </Link>
+          
+          <DropdownMenuSeparator />
+          
+          <Link to="/admin">
+            <DropdownMenuItem className="cursor-pointer">
+              Admin Dashboard
+            </DropdownMenuItem>
+          </Link>
+          
+          <DropdownMenuItem
+            className="cursor-pointer text-red-500 focus:text-red-500"
+            onClick={handleLogout}
+            disabled={logoutMutation.isPending}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            <span>
+              {logoutMutation.isPending ? "Logging out..." : "Log out"}
+            </span>
           </DropdownMenuItem>
-        </Link>
-        
-        <Link to="/my-scrolls">
-          <DropdownMenuItem className="cursor-pointer">
-            My Collection
-          </DropdownMenuItem>
-        </Link>
-        
-        <Link to="/mana">
-          <DropdownMenuItem className="cursor-pointer">
-            <Sparkles className="h-4 w-4 mr-2" />
-            Manage Mana
-          </DropdownMenuItem>
-        </Link>
-        
-        <DropdownMenuSeparator />
-        
-        <Link to="/admin">
-          <DropdownMenuItem className="cursor-pointer">
-            Admin Dashboard
-          </DropdownMenuItem>
-        </Link>
-        
-        <DropdownMenuItem
-          className="cursor-pointer text-red-500 focus:text-red-500"
-          onClick={handleLogout}
-          disabled={logoutMutation.isPending}
-        >
-          <LogOut className="h-4 w-4 mr-2" />
-          <span>
-            {logoutMutation.isPending ? "Logging out..." : "Log out"}
-          </span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
