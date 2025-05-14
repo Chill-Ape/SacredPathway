@@ -130,7 +130,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Store user in localStorage immediately to prevent UI flicker
       localStorage.setItem('akashic_user', JSON.stringify(data.user));
       
-      // No need to redirect here - let user explore the welcome modal first
+      // Log welcome bonus for debugging
+      console.log("Welcome bonus amount:", data.welcomeBonus);
     },
     onError: (error: Error) => {
       toast({
