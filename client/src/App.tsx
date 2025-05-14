@@ -57,15 +57,10 @@ function App() {
                   path="/admin" 
                   component={Admin} 
                 />
-                <Route path="/mana">
-                  {() => {
-                    console.log("Mana route matched at", new Date().toISOString());
-                    setTimeout(() => {
-                      console.log("Checking if Mana route is still matched after timeout");
-                    }, 500);
-                    return <ManageMana />;
-                  }}
-                </Route>
+                <ProtectedRoute 
+                  path="/mana" 
+                  component={ManageMana} 
+                />
                 
                 {/* Debug route */}
                 <Route path="/mana-debug" component={ManaDebug} />
