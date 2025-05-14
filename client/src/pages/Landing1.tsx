@@ -1,10 +1,22 @@
-import React, { useEffect } from 'react';
-import { Link } from 'wouter';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'wouter';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import '../styles/landing1.css';
 
 const Landing1 = () => {
+  const [, navigate] = useLocation();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Handle transition to home page
+  const handleBeginJourney = () => {
+    setIsTransitioning(true);
+    // Navigate after the animation finishes
+    setTimeout(() => {
+      navigate('/');
+    }, 2000); // Match this duration with the CSS animation duration
+  };
+  
   // Create particle elements for the starry background
   useEffect(() => {
     const createParticle = () => {
@@ -65,6 +77,8 @@ const Landing1 = () => {
         <meta name="description" content="Enter the gate. Awaken the memory. The Akashic Archive awaits those who seek ancient wisdom." />
       </Helmet>
       
+      <div className={`light-transition ${isTransitioning ? 'active' : ''}`}></div>
+      
       <div className="landing-container">
         <div id="particles" className="particles-container"></div>
         
@@ -73,14 +87,6 @@ const Landing1 = () => {
         <div className="content-container">
           <motion.div 
             className="sacred-symbol"
-            animate={{ 
-              boxShadow: ["0 0 20px 5px rgba(255, 215, 0, 0.3)", "0 0 40px 10px rgba(255, 215, 0, 0.5)", "0 0 20px 5px rgba(255, 215, 0, 0.3)"]
-            }}
-            transition={{ 
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
           >
             <svg viewBox="0 0 100 100" className="symbol-svg">
               <motion.g
@@ -93,10 +99,11 @@ const Landing1 = () => {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
+                filter="none"
               >
                 {/* Triangle */}
                 <motion.path 
-                  d="M50 10 L90 80 L10 80 Z" 
+                  d="M50 20 L90 80 L10 80 Z" 
                   fill="none" 
                   stroke="rgba(255, 215, 0, 0.9)" 
                   strokeWidth="2"
@@ -129,10 +136,29 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Dot above */}
+                {/* Line underneath */}
+                <motion.line 
+                  x1="30" 
+                  y1="85" 
+                  x2="70" 
+                  y2="85" 
+                  stroke="rgba(255, 215, 0, 0.9)" 
+                  strokeWidth="2"
+                  animate={{ 
+                    stroke: ["rgba(255, 215, 0, 0.9)", "rgba(255, 225, 0, 1)", "rgba(255, 215, 0, 0.9)"]
+                  }}
+                  transition={{ 
+                    duration: 4,
+                    delay: 0.7,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                
+                {/* Dot above - positioned higher */}
                 <motion.circle 
                   cx="50" 
-                  cy="10" 
+                  cy="5" 
                   r="4" 
                   fill="rgba(255, 215, 0, 0.9)"
                   animate={{ 
@@ -199,35 +225,34 @@ const Landing1 = () => {
               AWAKEN THE MEMORY.
             </motion.h2>
             
-            <Link to="/">
-              <motion.button 
-                className="enter-button"
-                initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: 1,
-                  boxShadow: ["0 0 15px 3px rgba(255, 215, 0, 0.3)", "0 0 20px 5px rgba(255, 215, 0, 0.5)", "0 0 15px 3px rgba(255, 215, 0, 0.3)"]
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 0 25px 8px rgba(255, 215, 0, 0.4)"
-                }}
-                whileTap={{ scale: 0.98 }}
-                transition={{
-                  opacity: {
-                    duration: 1.5,
-                    delay: 3
-                  },
-                  boxShadow: {
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 3
-                  }
-                }}
-              >
-                BEGIN THE JOURNEY
-              </motion.button>
-            </Link>
+            <motion.button 
+              className="enter-button"
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: 1,
+                boxShadow: ["0 0 15px 3px rgba(255, 215, 0, 0.3)", "0 0 20px 5px rgba(255, 215, 0, 0.5)", "0 0 15px 3px rgba(255, 215, 0, 0.3)"]
+              }}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 0 25px 8px rgba(255, 215, 0, 0.4)"
+              }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleBeginJourney}
+              transition={{
+                opacity: {
+                  duration: 1.5,
+                  delay: 3
+                },
+                boxShadow: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 3
+                }
+              }}
+            >
+              BEGIN THE JOURNEY
+            </motion.button>
           </motion.div>
         </div>
       </div>

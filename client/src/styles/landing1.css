@@ -1,4 +1,24 @@
 /* Landing Page Styles */
+/* Transition effect */
+.light-transition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.8) 100%);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0s;
+}
+
+.light-transition.active {
+  opacity: 1;
+  transform: scale(3);
+  transition: all 2s cubic-bezier(0.19, 1, 0.22, 1);
+}
 .landing-container {
   position: fixed;
   top: 0;
@@ -20,16 +40,17 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(0, 40, 80, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(30, 100, 180, 0.15) 0%, transparent 70%);
   opacity: 0;
-  animation: breatheBackground 10s ease-in-out infinite;
+  animation: breatheBackground 8s ease-in-out infinite;
   pointer-events: none;
+  z-index: 5;
 }
 
 @keyframes breatheBackground {
-  0% { opacity: 0; }
-  50% { opacity: 0.7; }
-  100% { opacity: 0; }
+  0% { opacity: 0.1; transform: scale(0.95); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+  100% { opacity: 0.1; transform: scale(0.95); }
 }
 
 /* Particles */
@@ -91,6 +112,8 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 0.5rem;
+  border: none;
+  box-shadow: none;
 }
 
 .symbol-svg {
@@ -99,6 +122,7 @@
   position: relative;
   z-index: 10;
   filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+  border: none;
 }
 
 .glow {
@@ -108,10 +132,32 @@
   transform: translate(-50%, -50%);
   width: 160px;
   height: 160px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
   border-radius: 50%;
   filter: blur(20px);
   z-index: 5;
+}
+
+/* Blue light aura behind symbol */
+.sacred-symbol:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(30, 100, 180, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(25px);
+  z-index: 3;
+  animation: breatheBlueLight 8s ease-in-out infinite;
+}
+
+@keyframes breatheBlueLight {
+  0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9); }
 }
 
 /* Message Container */
