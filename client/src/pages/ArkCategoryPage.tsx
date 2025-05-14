@@ -52,7 +52,19 @@ export default function ArkCategoryPage({ category }: { category: "artifacts" | 
   useEffect(() => {
     if (scrollsData) {
       // Filter scrolls by the specified category type
-      const filteredItems = scrollsData.filter(scroll => scroll.type === category.slice(0, -1));
+      const filteredItems = scrollsData
+        .filter(scroll => {
+          // Handle null type by using a default
+          const scrollType = scroll.type || 'scroll';
+          return scrollType === category.slice(0, -1);
+        })
+        .map(scroll => ({
+          id: scroll.id,
+          title: scroll.title,
+          image: scroll.image,
+          isLocked: scroll.isLocked,
+          type: scroll.type || 'scroll' // Provide default if null
+        }));
       setItems(filteredItems);
     }
   }, [scrollsData, category]);

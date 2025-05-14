@@ -11,10 +11,10 @@ import loreImage from "@assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png";
 export default function Home() {
   const features = [
     {
-      title: "Ancient Scrolls",
-      description: "Explore the collection of sacred texts that reveal forgotten wisdom from beyond time.",
+      title: "Ark Contents",
+      description: "Explore the collection of sacred artifacts, tablets, scrolls, and books containing forgotten wisdom.",
       image: ancientTabletDark, // Ancient tablet with engraved text
-      href: "/scrolls",
+      href: "/ark",
       delay: 0.7
     },
     {

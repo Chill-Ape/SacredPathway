@@ -36,7 +36,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Ark Contents", path: "/scrolls" },
+    { name: "Ark Contents", path: "/ark" },
     { name: "Akashic Lore", path: "/lore" },
     { name: "The Oracle", path: "/oracle" },
     { name: "The Simulation", path: "/simulation" },
