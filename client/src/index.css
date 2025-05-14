@@ -80,6 +80,7 @@
     radial-gradient(circle at bottom left, rgba(76, 39, 5, 0.25), transparent 70%);
   position: relative;
   overflow: hidden;
+  font-family: 'Cormorant Garamond', serif;
 }
 
 .sacred-simulation-bg::before {
@@ -93,6 +94,242 @@
   opacity: 0.4;
   z-index: 0;
   pointer-events: none;
+}
+
+/* Floating particles animation */
+.mystical-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  display: block;
+  background-color: rgba(217, 119, 6, 0.3);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+  opacity: 0;
+}
+
+.particle:nth-child(1) {
+  top: 25%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  top: 40%;
+  left: 20%;
+  animation-delay: 2s;
+  width: 8px;
+  height: 8px;
+}
+
+.particle:nth-child(3) {
+  top: 60%;
+  left: 30%;
+  animation-delay: 4s;
+  width: 5px;
+  height: 5px;
+}
+
+.particle:nth-child(4) {
+  top: 20%;
+  left: 70%;
+  animation-delay: 6s;
+  width: 7px;
+  height: 7px;
+}
+
+.particle:nth-child(5) {
+  top: 50%;
+  left: 80%;
+  animation-delay: 8s;
+}
+
+.particle:nth-child(6) {
+  top: 70%;
+  left: 60%;
+  animation-delay: 10s;
+  width: 4px;
+  height: 4px;
+}
+
+.particle:nth-child(7) {
+  top: 80%;
+  left: 50%;
+  animation-delay: 12s;
+  width: 9px;
+  height: 9px;
+}
+
+.particle:nth-child(8) {
+  top: 30%;
+  left: 40%;
+  animation-delay: 14s;
+  width: 6px;
+  height: 6px;
+}
+
+.particle:nth-child(9) {
+  top: 45%;
+  left: 75%;
+  animation-delay: 16s;
+  width: 5px;
+  height: 5px;
+}
+
+.particle:nth-child(10) {
+  top: 85%;
+  left: 15%;
+  animation-delay: 18s;
+  width: 7px;
+  height: 7px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-60px) translateX(30px) rotate(180deg);
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.3;
+  }
+}
+
+/* Sacred symbol animation */
+.sacred-symbol {
+  position: relative;
+  display: inline-block;
+}
+
+.sacred-symbol::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  right: -20%;
+  bottom: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 119, 6, 0.3) 0%, transparent 70%);
+  animation: pulse 4s infinite;
+  z-index: -1;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* Rune symbol animations */
+.ancient-rune {
+  display: inline-block;
+  font-size: 1.5rem;
+  margin: 0 0.5rem;
+  color: rgba(217, 119, 6, 0.6);
+  opacity: 0;
+  animation: fadeInOut 10s infinite;
+}
+
+.ancient-rune:nth-child(1) { animation-delay: 0s; }
+.ancient-rune:nth-child(2) { animation-delay: 2s; }
+.ancient-rune:nth-child(3) { animation-delay: 4s; }
+.ancient-rune:nth-child(4) { animation-delay: 6s; }
+.ancient-rune:nth-child(5) { animation-delay: 8s; }
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.7; }
+}
+
+/* Locked item styling */
+.item-locked {
+  position: relative;
+  filter: grayscale(0.8) brightness(0.7);
+  transition: all 0.3s ease;
+}
+
+.item-locked::before {
+  content: '🔒';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  z-index: 2;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.item-locked:hover {
+  filter: grayscale(0.6) brightness(0.8);
+}
+
+/* Achievement styles */
+.achievement {
+  position: relative;
+  padding: 0.5rem 1rem;
+  background: rgba(40, 40, 50, 0.7);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.achievement-locked {
+  filter: grayscale(1) brightness(0.6);
+}
+
+.achievement-locked::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 10px,
+    rgba(0, 0, 0, 0.2) 10px,
+    rgba(0, 0, 0, 0.2) 20px
+  );
+}
+
+.achievement-progress {
+  height: 4px;
+  background: rgba(217, 119, 6, 0.2);
+  margin-top: 0.5rem;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.achievement-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, rgba(217, 119, 6, 0.5), rgba(217, 160, 30, 0.8));
+  transition: width 1s ease;
 }
 
 @layer base {

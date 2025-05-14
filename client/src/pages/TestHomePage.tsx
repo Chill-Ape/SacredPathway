@@ -19,13 +19,17 @@ const ArchiveCard = ({
   icon, 
   path, 
   image,
-  delay 
+  delay,
+  isLocked = false,
+  completionPercentage = 0
 }: { 
   title: string; 
   icon: React.ReactNode; 
   path: string; 
   image: string;
   delay: number;
+  isLocked?: boolean;
+  completionPercentage?: number;
 }) => {
   const [, setLocation] = useLocation();
   
@@ -37,8 +41,8 @@ const ArchiveCard = ({
       transition={{ duration: 0.7, delay }}
     >
       <div 
-        className="group h-64 w-full md:h-80 md:w-56 lg:h-96 lg:w-64 perspective-1000 cursor-pointer"
-        onClick={() => setLocation(path)}
+        className={`group h-64 w-full md:h-80 md:w-56 lg:h-96 lg:w-64 perspective-1000 cursor-pointer ${isLocked ? 'item-locked' : ''}`}
+        onClick={() => !isLocked && setLocation(path)}
       >
         <div className="relative h-full w-full transform-style-3d transition-transform duration-700 group-hover:rotate-y-10">
           <div className="relic-card absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-amber-900/30 bg-slate-900/40 p-4 text-center backdrop-blur-sm">
@@ -56,18 +60,46 @@ const ArchiveCard = ({
             
             <div className="mt-2 text-amber-500/70">{icon}</div>
             
+            {/* Completion percentage */}
+            {!isLocked && completionPercentage > 0 && (
+              <div className="mt-3 w-full max-w-[80%]">
+                <div className="text-xs text-amber-100/60 text-left mb-1">
+                  {completionPercentage}% Recovered
+                </div>
+                <div className="w-full h-1 bg-slate-800/60 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-amber-500/60 rounded-full" 
+                    style={{ width: `${completionPercentage}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            
             <motion.div 
               className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Button 
-                variant="outline" 
-                className="border-amber-600/40 text-amber-100/80 hover:bg-amber-900/20"
-              >
-                Access
-              </Button>
+              {isLocked ? (
+                <Button 
+                  variant="outline" 
+                  className="border-amber-600/40 text-amber-100/80 hover:bg-amber-900/20"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLocation('/initiate');
+                  }}
+                >
+                  Unlock Tier
+                </Button>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  className="border-amber-600/40 text-amber-100/80 hover:bg-amber-900/20"
+                >
+                  Access
+                </Button>
+              )}
             </motion.div>
           </div>
         </div>
@@ -132,6 +164,9 @@ const TestHomePage = () => {
       <Helmet>
         <title>Akashic Archive | Sacred Gateway to Ancient Knowledge</title>
         <meta name="description" content="Enter the Akashic Archive - an interactive digital simulation of antediluvian wisdom stored in the Ark. Explore tablets, scrolls, artifacts and unlock forgotten knowledge." />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
       </Helmet>
 
       {/* Full page loading animation */}
@@ -191,7 +226,42 @@ const TestHomePage = () => {
 
       {/* Main content */}
       <div className="min-h-screen sacred-simulation-bg py-12 md:py-16">
-        <div className="container mx-auto px-4">
+        {/* Floating particles */}
+        <div className="mystical-particles">
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Sacred symbol at the top */}
+          <div className="text-center mb-8">
+            <motion.div
+              className="sacred-symbol mx-auto"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2 }}
+            >
+              <img src={sacredSymbol} alt="Sacred Symbol" className="w-16 h-16 mx-auto" />
+            </motion.div>
+          </div>
+          
+          {/* Animated runes */}
+          <div className="text-center mb-6">
+            <span className="ancient-rune">ᚨ</span>
+            <span className="ancient-rune">ᚱ</span>
+            <span className="ancient-rune">ᚲ</span>
+            <span className="ancient-rune">ᛇ</span>
+            <span className="ancient-rune">ᚹ</span>
+          </div>
+          
           {/* Intro text with animation */}
           <motion.div 
             className="text-center max-w-3xl mx-auto mb-16 md:mb-24"
@@ -241,6 +311,29 @@ const TestHomePage = () => {
             </div>
           </motion.div>
           
+          {/* Main Action Buttons */}
+          <motion.div 
+            className="flex flex-col md:flex-row gap-4 justify-center mb-16 max-w-xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 3.5 }}
+          >
+            <Button 
+              className="bg-amber-700/80 hover:bg-amber-600/80 text-amber-50 text-lg py-6 shadow-lg shadow-amber-900/20"
+              onClick={() => setLocation('/ark')}
+            >
+              Begin the Remembering
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              className="border-amber-600/40 text-amber-100/80 hover:bg-amber-900/20 text-lg py-6"
+              onClick={() => setLocation('/oracle')}
+            >
+              Ask the Oracle
+            </Button>
+          </motion.div>
+
           {/* Archive category navigation */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center max-w-6xl mx-auto">
             <ArchiveCard 
@@ -249,6 +342,7 @@ const TestHomePage = () => {
               path="/ark/tablets" 
               image={tabletImage}
               delay={1.5}
+              completionPercentage={25}
             />
             <ArchiveCard 
               title="Scrolls" 
@@ -256,6 +350,7 @@ const TestHomePage = () => {
               path="/ark/scrolls" 
               image={scrollImage}
               delay={1.7}
+              completionPercentage={10}
             />
             <ArchiveCard 
               title="Books" 
@@ -263,6 +358,7 @@ const TestHomePage = () => {
               path="/ark/books" 
               image={bookImage}
               delay={1.9}
+              isLocked={true}
             />
             <ArchiveCard 
               title="Artifacts" 
@@ -270,11 +366,57 @@ const TestHomePage = () => {
               path="/ark/artifacts" 
               image={artifactImage}
               delay={2.1}
+              isLocked={true}
             />
           </div>
           
           {/* Memory progress indicator */}
           <MemoryProgress />
+          
+          {/* Achievements section */}
+          <motion.div
+            className="mt-16 md:mt-24 max-w-md mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 3.7, duration: 1 }}
+          >
+            <h3 className="text-center text-amber-100/70 text-sm tracking-widest mb-4">RECENT ACHIEVEMENTS</h3>
+            
+            <div className="space-y-3">
+              <div className="achievement">
+                <div className="flex justify-between">
+                  <div className="text-amber-100/90">Crystal Seer</div>
+                  <div className="text-amber-500/80 text-sm">5 XP</div>
+                </div>
+                <div className="text-amber-200/50 text-xs mt-1">Viewed the Crystal Tablet of Enki</div>
+                <div className="achievement-progress">
+                  <div className="achievement-progress-bar" style={{ width: '100%' }}></div>
+                </div>
+              </div>
+              
+              <div className="achievement achievement-locked">
+                <div className="flex justify-between">
+                  <div className="text-amber-100/90">Scroll Keeper</div>
+                  <div className="text-amber-500/80 text-sm">15 XP</div>
+                </div>
+                <div className="text-amber-200/50 text-xs mt-1">Unlock 5 Ancient Scrolls</div>
+                <div className="achievement-progress">
+                  <div className="achievement-progress-bar" style={{ width: '40%' }}></div>
+                </div>
+              </div>
+              
+              <div className="achievement achievement-locked">
+                <div className="flex justify-between">
+                  <div className="text-amber-100/90">Arcane Decipherer</div>
+                  <div className="text-amber-500/80 text-sm">25 XP</div>
+                </div>
+                <div className="text-amber-200/50 text-xs mt-1">Decode the Emerald Cypher</div>
+                <div className="achievement-progress">
+                  <div className="achievement-progress-bar" style={{ width: '0%' }}></div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
           
           {/* Tier 1 Access CTA */}
           <motion.div 
@@ -283,12 +425,18 @@ const TestHomePage = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 4, duration: 1 }}
           >
+            <h3 className="text-amber-100/80 text-xl mb-3">What Will You Unlock?</h3>
             <Button 
               variant="link" 
-              className="text-amber-500/60 hover:text-amber-400/80 text-sm"
+              className="text-amber-500/80 hover:text-amber-400/90 text-base group flex items-center gap-2"
               onClick={() => setLocation('/initiate')}
             >
-              Tier 1 Access Required for Sealed Content
+              <span className="transition-transform duration-500 group-hover:translate-x-1">Tier 1 Access Required for Sealed Content</span>
+              <motion.span
+                initial={{ x: 0 }}
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 2, repeatDelay: 1 }}
+              >→</motion.span>
             </Button>
           </motion.div>
         </div>
