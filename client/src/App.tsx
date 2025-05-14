@@ -44,10 +44,24 @@ function App() {
                 <Route path="/contact" component={Contact} />
                 <Route path="/simulation" component={Simulation} />
                 <Route path="/auth" component={AuthPage} />
-                <ProtectedRoute path="/profile" component={Profile} />
-                <ProtectedRoute path="/my-scrolls" component={MyScrolls} />
-                <ProtectedRoute path="/admin" component={Admin} />
-                <ProtectedRoute path="/mana" component={ManageMana} />
+                <ProtectedRoute 
+                  path="/profile" 
+                  component={Profile} 
+                />
+                <ProtectedRoute 
+                  path="/my-scrolls" 
+                  component={MyScrolls} 
+                />
+                <ProtectedRoute 
+                  path="/admin" 
+                  component={Admin} 
+                />
+                <Route path="/mana">
+                  {() => {
+                    console.log("Mana route matched");
+                    return <ManageMana />;
+                  }}
+                </Route>
                 <Route component={NotFound} />
               </Switch>
             </AnimatePresence>

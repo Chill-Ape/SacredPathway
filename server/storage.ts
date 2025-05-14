@@ -113,21 +113,11 @@ export class DatabaseStorage implements IStorage {
     try {
       console.log("Creating database tables if they don't exist");
       
-      // Initialize scrolls
+      // Initialize scrolls - use the main initialization method
       try {
-        // Check if we have any scrolls in the database 
-        const existingScrolls = await db.select().from(scrolls);
-        
-        if (existingScrolls.length === 0) {
-          console.log("Scrolls table is empty, creating default scrolls");
-          await this._initializeDefaultScrolls();
-        } else {
-          console.log("Scrolls already exist:", existingScrolls.length);
-        }
+        await this.initializeDefaultScrolls();
       } catch (err) {
-        // If the table doesn't exist yet, we'll get an error
-        console.log("Scrolls table not initialized yet, creating default scrolls");
-        await this._initializeDefaultScrolls();
+        console.error("Error initializing scrolls:", err);
       }
       
       // Initialize Mana packages
@@ -194,50 +184,8 @@ export class DatabaseStorage implements IStorage {
     console.log("Created default Mana packages:", packages.length);
   }
   
-  async _initializeDefaultScrolls() {
-    console.log("Initializing default scrolls");
-    
-    // Define unlocked scrolls
-    const unlockScrolls: InsertScroll[] = [
-      {
-        title: "Welcome to the Archive",
-        content: "The Sacred Archive is a repository of ancient wisdom, preserved by The Keepers throughout the ages. Within these halls, you'll find knowledge that has been hidden from the world for millennia. As a Seeker, you have been granted access to the outer chambers. More profound wisdom awaits in the deeper sanctums as you prove yourself worthy.",
-        image: "/assets/welcome_scroll.png",
-        isLocked: false,
-        key: ""
-      }
-    ];
-    
-    // Define locked scrolls
-    const lockedScrolls: InsertScroll[] = [
-      {
-        title: "The Great Flood",
-        content: "An ancient cataclysm wiped out civilizations across the globe, preserved in myths worldwide. Survivors carried fragments of antediluvian knowledge into our age. The waters came suddenly, but not without warning - the Watchers knew and preserved what wisdom they could. The Archive contains much that was saved from this deluge.",
-        image: "/assets/flood_scroll.png",
-        isLocked: true,
-        key: "deluge"
-      },
-      {
-        title: "The Five Pillars",
-        content: "The knowledge of the Archive is organized around five fundamental principles: The Flood that nearly erased humanity; The Ark that preserved what remained; The Cycle that governs time; Mana, the force that flows through all; and The Tablets, which record the ancient codes. Understanding their interconnection is key to ascending through the Archive.",
-        image: "/assets/pillars_scroll.png",
-        isLocked: true,
-        key: "pillars"
-      },
-      {
-        title: "Inner Alchemy",
-        content: "Transformative practices to transmute consciousness and achieve inner illumination. The Great Work begins within. By purifying the elements of one's own being - earth, water, air, and fire - the seeker creates the conditions for the quintessence to emerge: the awakened consciousness that recognizes its own divine nature.",
-        image: "/assets/crystal_tablet.png",
-        isLocked: true,
-        key: "alchemy"
-      }
-    ];
-    
-    // Create all scrolls
-    for (const scroll of [...unlockScrolls, ...lockedScrolls]) {
-      await this.createScroll(scroll);
-    }
-  }
+  // The _initializeDefaultScrolls method has been removed to avoid duplicates
+  // All scroll initialization should use the primary initializeDefaultScrolls method
   
   // USER METHODS
   async getUser(id: number): Promise<User | undefined> {
@@ -532,12 +480,20 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  // Initialize default scrolls 
+  // Primary method for initializing default scrolls - other methods will be removed
   async initializeDefaultScrolls() {
-    // Check if we already have scrolls to avoid duplication
-    const existingScrolls = await db.select().from(scrolls);
-    if (existingScrolls.length > 0) {
-      return; // Already initialized
+    try {
+      console.log("Checking if scrolls need initialization");
+      // Check if we already have scrolls to avoid duplication
+      const existingScrolls = await db.select().from(scrolls);
+      if (existingScrolls.length > 0) {
+        console.log(`Scrolls already initialized (${existingScrolls.length} found), skipping`);
+        return; // Already initialized
+      }
+      
+      console.log("Initializing default scrolls - no existing scrolls found");
+    } catch (error) {
+      console.error("Error checking for existing scrolls:", error);
     }
 
     // Unlocked scrolls

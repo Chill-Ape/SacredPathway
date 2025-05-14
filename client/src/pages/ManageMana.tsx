@@ -7,49 +7,60 @@ import ManaBalance from '@/components/mana/ManaBalance';
 import { Sparkles } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'wouter';
+import { useLocation, Redirect } from 'wouter';
 
 function ManageMana(): React.JSX.Element {
   const { user, isLoading } = useAuth();
   const { toast } = useToast();
   const [location, setLocation] = useLocation();
   
+  // Debug log to trace the issue
+  console.log("ManageMana render - Auth state:", { user, isLoading, location });
+  
   useEffect(() => {
     // Handle redirect params from Stripe checkout
-    const searchParams = new URLSearchParams(window.location.search);
-    const status = searchParams.get('status');
-    const amount = searchParams.get('amount');
-    const errorMessage = searchParams.get('message');
-    
-    if (status === 'success' && amount) {
-      toast({
-        title: 'Purchase Successful!',
-        description: `You've successfully added ${amount} Mana to your account.`,
-        variant: 'default',
-      });
+    // Only process parameters if we're on the actual mana page
+    if (location === '/mana') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const status = searchParams.get('status');
+      const amount = searchParams.get('amount');
+      const errorMessage = searchParams.get('message');
       
-      // Clear the URL params
-      setLocation('/mana', { replace: true });
-    } else if (status === 'error' && errorMessage) {
-      toast({
-        title: 'Purchase Failed',
-        description: decodeURIComponent(errorMessage.replace(/\+/g, ' ')),
-        variant: 'destructive',
-      });
-      
-      // Clear the URL params
-      setLocation('/mana', { replace: true });
-    } else if (status === 'canceled') {
-      toast({
-        title: 'Purchase Canceled',
-        description: 'Your Mana purchase was canceled. No payment was processed.',
-        variant: 'default',
-      });
-      
-      // Clear the URL params
-      setLocation('/mana', { replace: true });
+      // Only process if there are actual search params to handle
+      if (status) {
+        console.log("Processing Stripe redirect with status:", status);
+        
+        if (status === 'success' && amount) {
+          toast({
+            title: 'Purchase Successful!',
+            description: `You've successfully added ${amount} Mana to your account.`,
+            variant: 'default',
+          });
+          
+          // Clear the URL params - use history API directly to avoid routing issues
+          window.history.replaceState({}, document.title, '/mana');
+        } else if (status === 'error' && errorMessage) {
+          toast({
+            title: 'Purchase Failed',
+            description: decodeURIComponent(errorMessage.replace(/\+/g, ' ')),
+            variant: 'destructive',
+          });
+          
+          // Clear the URL params
+          window.history.replaceState({}, document.title, '/mana');
+        } else if (status === 'canceled') {
+          toast({
+            title: 'Purchase Canceled',
+            description: 'Your Mana purchase was canceled. No payment was processed.',
+            variant: 'default',
+          });
+          
+          // Clear the URL params
+          window.history.replaceState({}, document.title, '/mana');
+        }
+      }
     }
-  }, [location, toast, setLocation]);
+  }, [location, toast]);
 
   if (isLoading) {
     return (

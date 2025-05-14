@@ -159,6 +159,7 @@ export default function ProfileMenu({
                 className={`w-full justify-start font-cinzel text-left ${
                   location === "/mana" ? "bg-sacred-blue/5 text-sacred-blue" : "text-sacred-gray"
                 }`}
+                onClick={() => console.log("Manage Mana clicked in mobile menu")}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
                 Manage Mana
@@ -237,7 +238,7 @@ export default function ProfileMenu({
         </Link>
         
         <Link to="/mana">
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer" onClick={() => console.log("Manage Mana clicked in dropdown menu")}>
             <Sparkles className="h-4 w-4 mr-2" />
             Manage Mana
           </DropdownMenuItem>
