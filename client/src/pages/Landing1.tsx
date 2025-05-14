@@ -8,13 +8,13 @@ const Landing1 = () => {
   const [, navigate] = useLocation();
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Handle transition to home page
+  // Handle transition to home page with enhanced animation
   const handleBeginJourney = () => {
     setIsTransitioning(true);
-    // Navigate after the animation finishes
+    // Navigate after the animation sequence finishes
     setTimeout(() => {
       navigate('/');
-    }, 2000); // Match this duration with the CSS animation duration
+    }, 2500); // Increased to match the combined CSS animation sequence duration
   };
   
   // Create particle elements for the starry background
@@ -77,7 +77,15 @@ const Landing1 = () => {
         <meta name="description" content="Enter the gate. Awaken the memory. The Akashic Archive awaits those who seek ancient wisdom." />
       </Helmet>
       
-      <div className={`light-transition ${isTransitioning ? 'active' : ''}`}></div>
+      <div className={`light-transition ${isTransitioning ? 'active' : ''}`}>
+        <div className="transition-grid"></div>
+        <div className="light-beams">
+          <div className="beam beam-1"></div>
+          <div className="beam beam-2"></div>
+          <div className="beam beam-3"></div>
+          <div className="beam beam-4"></div>
+        </div>
+      </div>
       
       <div className="landing-container">
         <div id="particles" className="particles-container"></div>
@@ -90,25 +98,19 @@ const Landing1 = () => {
           >
             <svg viewBox="0 0 100 100" className="symbol-svg">
               <motion.g
-                animate={{ 
-                  opacity: [0.8, 1, 0.8],
-                  scale: [1, 1.05, 1]
-                }}
-                transition={{ 
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
                 filter="none"
               >
-                {/* Triangle */}
+                {/* Main Triangle with Circle Inside */}
                 <motion.path 
-                  d="M50 20 L90 80 L10 80 Z" 
+                  d="M50 20 L10 85 L90 85 Z" 
                   fill="none" 
-                  stroke="rgba(255, 215, 0, 0.9)" 
-                  strokeWidth="2"
+                  stroke="rgba(66, 133, 180, 0.9)" 
+                  strokeWidth="3"
                   animate={{ 
-                    stroke: ["rgba(255, 215, 0, 0.9)", "rgba(255, 225, 0, 1)", "rgba(255, 215, 0, 0.9)"]
+                    stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
                   }}
                   transition={{ 
                     duration: 4,
@@ -117,16 +119,16 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Circle */}
+                {/* Circle that touches the triangle sides */}
                 <motion.circle 
                   cx="50" 
                   cy="55" 
-                  r="20" 
+                  r="22" 
                   fill="none" 
-                  stroke="rgba(255, 215, 0, 0.9)" 
-                  strokeWidth="2"
+                  stroke="rgba(66, 133, 180, 0.9)" 
+                  strokeWidth="3"
                   animate={{ 
-                    stroke: ["rgba(255, 215, 0, 0.9)", "rgba(255, 225, 0, 1)", "rgba(255, 215, 0, 0.9)"]
+                    stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
                   }}
                   transition={{ 
                     duration: 4,
@@ -138,14 +140,14 @@ const Landing1 = () => {
                 
                 {/* Line underneath */}
                 <motion.line 
-                  x1="30" 
-                  y1="85" 
-                  x2="70" 
-                  y2="85" 
-                  stroke="rgba(255, 215, 0, 0.9)" 
-                  strokeWidth="2"
+                  x1="10" 
+                  y1="95" 
+                  x2="90" 
+                  y2="95" 
+                  stroke="rgba(66, 133, 180, 0.9)" 
+                  strokeWidth="3"
                   animate={{ 
-                    stroke: ["rgba(255, 215, 0, 0.9)", "rgba(255, 225, 0, 1)", "rgba(255, 215, 0, 0.9)"]
+                    stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
                   }}
                   transition={{ 
                     duration: 4,
@@ -155,15 +157,14 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Dot above - positioned higher */}
+                {/* Dot above - with enough margin to prevent cropping */}
                 <motion.circle 
                   cx="50" 
-                  cy="5" 
-                  r="4" 
-                  fill="rgba(255, 215, 0, 0.9)"
+                  cy="10" 
+                  r="4.5" 
+                  fill="rgba(66, 133, 180, 0.9)"
                   animate={{ 
-                    fill: ["rgba(255, 215, 0, 0.9)", "rgba(255, 225, 0, 1)", "rgba(255, 215, 0, 0.9)"],
-                    r: [4, 4.5, 4]
+                    fill: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
                   }}
                   transition={{ 
                     duration: 4,
