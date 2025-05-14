@@ -171,6 +171,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
         stripePaymentIntentId: null
       });
       
+      // Add default inventory items for new users
+      // 1. Crystal Tablet of Enki
+      await storage.addInventoryItem({
+        userId: user.id,
+        name: "Crystal Tablet of Enki",
+        description: "An ancient crystalline tablet inscribed with the wisdom of Enki, the god of creation and intelligence.",
+        type: "tablet",
+        imageUrl: "/assets/crystal_tablet.png",
+        rarity: "rare",
+        quantity: 1,
+        isEquipped: false,
+        usesLeft: null,
+        attributes: { power: "wisdom", origin: "Sumerian" }
+      });
+      
+      // 2. Book of the Apkallu
+      await storage.addInventoryItem({
+        userId: user.id,
+        name: "Book of the Apkallu",
+        description: "A sacred text detailing the knowledge brought by the seven sages who taught humanity wisdom.",
+        type: "book",
+        imageUrl: "/assets/book_apkallu.png",
+        rarity: "uncommon",
+        quantity: 1,
+        isEquipped: false,
+        usesLeft: null,
+        attributes: { knowledge: "cosmic", language: "ancient" }
+      });
+      
+      // 3. Crystal Fragment
+      await storage.addInventoryItem({
+        userId: user.id,
+        name: "Crystal Fragment",
+        description: "A small shard of luminous crystal that resonates with mysterious energy. Used for various ritual purposes.",
+        type: "artifact",
+        imageUrl: "/assets/crystal_fragment.png",
+        rarity: "common",
+        quantity: 3,
+        isEquipped: false,
+        usesLeft: null,
+        attributes: { energy: "resonant", use: "ritual component" }
+      });
+      
       // Log the user in
       req.login(user, (err) => {
         if (err) {
