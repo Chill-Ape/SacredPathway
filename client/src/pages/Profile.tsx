@@ -145,13 +145,26 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
         });
       }, 500);
       
-      // Upload the file using fetch with proper auth headers
+      // Upload the file using apiRequest which handles authentication properly
+      // First, check if user is still authenticated
+      const authCheck = await apiRequest("GET", "/api/user");
+      if (!authCheck.ok) {
+        // User is not authenticated, redirect to login
+        toast({
+          title: "Session Expired",
+          description: "Please log in again to continue",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = '/auth';
+        }, 1500);
+        throw new Error("Authentication required");
+      }
+      
+      // Now proceed with the upload
       const response = await fetch('/api/user/upload-profile-picture', {
         method: 'POST',
         credentials: 'include', // Include cookies for authentication
-        headers: {
-          // No Content-Type header is set intentionally as it will be set automatically for FormData
-        },
         body: formData,
       });
       
@@ -375,23 +388,40 @@ type UserType = {
 };
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { userScrolls, isLoadingScrolls } = useUserScrolls();
   const [userData, setUserData] = useState<UserType | null>(null);
+  const { toast } = useToast();
+  const [location, navigate] = useLocation();
 
   // Update userData when user changes
   useEffect(() => {
     if (user) {
       setUserData(user);
+    } else if (!isLoading && !user) {
+      // Not loading and no user means we're not authenticated
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to view your profile",
+        variant: "destructive",
+      });
+      // Redirect to auth page
+      navigate('/auth');
     }
-  }, [user]);
+  }, [user, isLoading, navigate, toast]);
 
-  if (!user || !userData) {
+  // Show loading state
+  if (isLoading || (!userData && user)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-sacred-blue" />
       </div>
     );
+  }
+  
+  // If no user data, don't render anything (we're redirecting)
+  if (!userData) {
+    return null;
   }
 
   return (
