@@ -167,6 +167,7 @@ const TestHomePage = () => {
   
   // Initialize and handle ambient audio
   // Note: Audio feature is prepared but will be enabled when audio file is added to public directory
+  // Updated for deployment: May 14, 2025
   useEffect(() => {
     // Simulate audio behavior without actually using the real audio file yet
     const simulateAudio = () => {
