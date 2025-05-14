@@ -2,20 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet';
+import { Volume2, VolumeX } from 'lucide-react';
+import SacredHumGenerator from '../utils/SacredHumGenerator';
 import '../styles/landing1.css';
 
 const Landing1 = () => {
   const [, navigate] = useLocation();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
 
   // Handle transition to home page with enhanced animation
   const handleBeginJourney = () => {
     setIsTransitioning(true);
+    
+    // Gradually fade out the sacred hum
+    setTimeout(() => {
+      setSoundEnabled(false);
+    }, 500);
+    
     // Navigate after the animation sequence finishes
     setTimeout(() => {
       navigate('/');
     }, 2500); // Increased to match the combined CSS animation sequence duration
   };
+  
+  // Enable sound after a brief delay when component mounts
+  useEffect(() => {
+    const enableSound = setTimeout(() => {
+      setSoundEnabled(true);
+    }, 1000);
+    
+    return () => {
+      clearTimeout(enableSound);
+    };
+  }, []);
   
   // Create particle elements for the starry background
   useEffect(() => {
@@ -76,6 +96,18 @@ const Landing1 = () => {
         <title>The Archive | Akashic Archive</title>
         <meta name="description" content="Enter the gate. Awaken the memory. The Akashic Archive awaits those who seek ancient wisdom." />
       </Helmet>
+      
+      {/* Sacred hum ambient sound */}
+      <SacredHumGenerator isPlaying={soundEnabled} volume={0.3} />
+      
+      {/* Sound toggle button */}
+      <button 
+        className={`sound-toggle ${soundEnabled ? '' : 'muted'}`}
+        onClick={() => setSoundEnabled(!soundEnabled)}
+        aria-label={soundEnabled ? "Mute sacred ambience" : "Enable sacred ambience"}
+      >
+        {soundEnabled ? <Volume2 /> : <VolumeX />}
+      </button>
       
       <div className={`light-transition ${isTransitioning ? 'active' : ''}`}>
         <div className="transition-grid"></div>

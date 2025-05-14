@@ -690,6 +690,43 @@
   left: 100%;
 }
 
+/* Sound toggle button */
+.sound-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: transparent;
+  border: 1px solid rgba(66, 133, 180, 0.5);
+  color: rgba(100, 180, 255, 0.8);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.sound-toggle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  border-color: rgba(66, 133, 180, 0.8);
+  box-shadow: 0 0 15px rgba(66, 133, 180, 0.4);
+}
+
+.sound-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sound-toggle.muted {
+  border-color: rgba(180, 66, 66, 0.5);
+  color: rgba(255, 100, 100, 0.8);
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
   .sacred-symbol {
