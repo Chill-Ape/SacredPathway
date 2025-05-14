@@ -1088,7 +1088,233 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to complete mana purchase" });
     }
   });
-
+  
+  // INVENTORY SYSTEM ROUTES
+  
+  // Get user's inventory
+  app.get("/api/user/inventory", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const items = await storage.getUserInventory(req.user.id);
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+      res.status(500).json({ message: "Failed to fetch inventory" });
+    }
+  });
+  
+  // Get all equipped items
+  app.get("/api/user/inventory/equipped", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const items = await storage.getEquippedItems(req.user.id);
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching equipped items:", error);
+      res.status(500).json({ message: "Failed to fetch equipped items" });
+    }
+  });
+  
+  // Get a specific inventory item
+  app.get("/api/user/inventory/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+      
+      const item = await storage.getInventoryItemById(id);
+      if (!item) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+      
+      // Make sure the user owns this item
+      if (item.userId !== req.user.id) {
+        return res.status(403).json({ message: "You don't have access to this item" });
+      }
+      
+      res.json(item);
+    } catch (error) {
+      console.error("Error fetching inventory item:", error);
+      res.status(500).json({ message: "Failed to fetch inventory item" });
+    }
+  });
+  
+  // Add a new item to user's inventory
+  app.post("/api/user/inventory", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      // Validate request body
+      const itemData = insertInventoryItemSchema.parse({
+        ...req.body,
+        userId: req.user.id // Ensure the userId is set to the authenticated user
+      });
+      
+      // Add the item to the inventory
+      const newItem = await storage.addInventoryItem(itemData);
+      
+      res.status(201).json(newItem);
+    } catch (error) {
+      console.error("Error adding inventory item:", error);
+      res.status(500).json({ message: "Failed to add inventory item" });
+    }
+  });
+  
+  // Update an inventory item
+  app.patch("/api/user/inventory/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+      
+      // Check if the item exists and belongs to the user
+      const existingItem = await storage.getInventoryItemById(id);
+      if (!existingItem) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+      
+      if (existingItem.userId !== req.user.id) {
+        return res.status(403).json({ message: "You don't have permission to update this item" });
+      }
+      
+      // Update the item
+      const updatedItem = await storage.updateInventoryItem(id, req.body);
+      
+      res.json(updatedItem);
+    } catch (error) {
+      console.error("Error updating inventory item:", error);
+      res.status(500).json({ message: "Failed to update inventory item" });
+    }
+  });
+  
+  // Delete an inventory item
+  app.delete("/api/user/inventory/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+      
+      // Check if the item exists and belongs to the user
+      const existingItem = await storage.getInventoryItemById(id);
+      if (!existingItem) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+      
+      if (existingItem.userId !== req.user.id) {
+        return res.status(403).json({ message: "You don't have permission to delete this item" });
+      }
+      
+      // Delete the item
+      const result = await storage.removeInventoryItem(id);
+      
+      if (result) {
+        res.status(200).json({ message: "Item successfully removed" });
+      } else {
+        res.status(500).json({ message: "Failed to remove item" });
+      }
+    } catch (error) {
+      console.error("Error removing inventory item:", error);
+      res.status(500).json({ message: "Failed to remove inventory item" });
+    }
+  });
+  
+  // Update item quantity
+  app.patch("/api/user/inventory/:id/quantity", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+      
+      const { quantity } = req.body;
+      if (quantity === undefined || isNaN(quantity) || quantity < 0) {
+        return res.status(400).json({ message: "Invalid quantity" });
+      }
+      
+      // Check if the item exists and belongs to the user
+      const existingItem = await storage.getInventoryItemById(id);
+      if (!existingItem) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+      
+      if (existingItem.userId !== req.user.id) {
+        return res.status(403).json({ message: "You don't have permission to update this item" });
+      }
+      
+      // Update the item quantity
+      const updatedItem = await storage.updateItemQuantity(id, quantity);
+      
+      res.json(updatedItem);
+    } catch (error) {
+      console.error("Error updating item quantity:", error);
+      res.status(500).json({ message: "Failed to update item quantity" });
+    }
+  });
+  
+  // Equip or unequip an item
+  app.patch("/api/user/inventory/:id/equip", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+      
+      const { isEquipped } = req.body;
+      if (isEquipped === undefined) {
+        return res.status(400).json({ message: "isEquipped field is required" });
+      }
+      
+      // Check if the item exists and belongs to the user
+      const existingItem = await storage.getInventoryItemById(id);
+      if (!existingItem) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+      
+      if (existingItem.userId !== req.user.id) {
+        return res.status(403).json({ message: "You don't have permission to update this item" });
+      }
+      
+      // Equip or unequip the item
+      const updatedItem = await storage.equipItem(id, isEquipped);
+      
+      res.json(updatedItem);
+    } catch (error) {
+      console.error("Error equipping/unequipping item:", error);
+      res.status(500).json({ message: "Failed to equip/unequip item" });
+    }
+  });
+  
   return httpServer;
 }
 
