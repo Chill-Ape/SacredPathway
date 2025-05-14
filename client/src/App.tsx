@@ -70,7 +70,7 @@ function App() {
                 <Route path="/ark/tablets/:id" component={TabletDetail} />
                 <Route path="/ark/scrolls" component={ArkScrolls} />
                 <Route path="/ark/books" component={ArkBooks} />
-                <Route path="/test" component={TestHomePage} />
+                {/* Route already handled in the conditional at the top */}
                 <ProtectedRoute 
                   path="/profile" 
                   component={Profile} 
