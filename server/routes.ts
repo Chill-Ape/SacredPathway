@@ -19,6 +19,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error('STRIPE_SECRET_KEY is not set. Stripe functionality will not work.');
 }
+// Initialize without explicit API version to use the latest available
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 console.log('Stripe client initialized with secret key status:', process.env.STRIPE_SECRET_KEY ? 'Available' : 'Missing');
 
@@ -797,19 +798,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log successful session creation
       console.log('Stripe session created successfully, session ID:', session.id);
       
-      // Add a payment completion webhook to track the payment status
-      const webhookEndpoint = await stripe.webhookEndpoints.create({
-        url: `${domain}/api/mana/purchase/webhook`,
-        enabled_events: ['checkout.session.completed'],
-      }).catch(err => {
-        console.log('Warning: Could not create webhook endpoint:', err.message);
-        // Continue without webhook for now
-        return null;
-      });
-      
-      if (webhookEndpoint) {
-        console.log('Webhook endpoint created:', webhookEndpoint.url);
-      }
+      // Skip webhook creation in development since it requires HTTPS
+      // and just rely on success_url redirect instead
       
       res.json({
         sessionId: session.id,
