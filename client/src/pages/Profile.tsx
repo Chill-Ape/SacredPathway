@@ -435,7 +435,7 @@ export default function Profile() {
         <title>Your Sacred Journey | Akashic Archive</title>
         <meta
           name="description"
-          content="View your progress through the Sacred Archive and track your unlocked scrolls."
+          content="View your progress through the Sacred Archive and track your unlocked tablets, artifacts, scrolls, and books."
         />
       </Helmet>
 

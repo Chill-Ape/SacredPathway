@@ -177,7 +177,7 @@ export default function SacredScroll() {
         <p className="text-sacred-gray mb-6">The sacred text you seek may be hidden in deeper chambers.</p>
         <Link to="/scrolls">
           <Button variant="outline" className="font-cinzel">
-            Return to Scrolls
+            Return to Ark Contents
           </Button>
         </Link>
       </div>
@@ -203,7 +203,7 @@ export default function SacredScroll() {
         {/* Back button */}
         <Link to="/scrolls" className="inline-flex items-center text-sacred-blue hover:text-sacred-blue-dark mb-6 transition-colors">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          <span className="font-cinzel">Return to Scrolls</span>
+          <span className="font-cinzel">Return to Ark Contents</span>
         </Link>
         
         {/* Scroll container with white background */}

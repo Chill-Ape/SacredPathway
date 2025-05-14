@@ -71,7 +71,7 @@ export default function ScrollDetail() {
         <title>{scroll.title} | The Akashic Archive</title>
         <meta 
           name="description" 
-          content={`Read the ancient scroll of ${scroll.title} and discover its wisdom. Part of The Akashic Archive collection.`} 
+          content={`Explore the ancient ${scroll.type || 'scroll'} titled "${scroll.title}" and discover its wisdom. Part of The Akashic Archive collection.`} 
         />
       </Helmet>
       
@@ -101,7 +101,7 @@ export default function ScrollDetail() {
                 />
                 
                 <div className="text-center text-sacred-blue/80 italic font-playfair text-sm border-t border-sacred-blue/10 pt-4 mt-4">
-                  "This sacred text contains wisdom from the Fourth Cycle of the Akashic Records."
+                  "{`This sacred ${scroll.type || 'text'} contains wisdom from the Fourth Cycle of the Akashic Records.`}"
                 </div>
               </div>
             </div>
