@@ -677,7 +677,9 @@ export class MemStorage implements IStorage {
     const scroll: Scroll = { 
       ...insertScroll, 
       id,
-      isLocked: insertScroll.isLocked !== undefined ? insertScroll.isLocked : true
+      isLocked: insertScroll.isLocked !== undefined ? insertScroll.isLocked : true,
+      type: insertScroll.type || 'scroll', // Default type to 'scroll' if not provided
+      key: insertScroll.key || null, // Ensure key can be null
     };
     this.scrolls.set(id, scroll);
     return scroll;

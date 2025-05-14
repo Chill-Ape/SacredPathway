@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Loader2, Scroll as ScrollIcon, Lock, LockOpen, Upload, Camera, UserCircle, FileImage } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";

@@ -23,7 +23,8 @@ export const scrolls = pgTable("scrolls", {
   content: text("content").notNull(),
   image: text("image").notNull(), // URL to image
   isLocked: boolean("is_locked").notNull().default(true),
-  key: text("key").notNull(), // Key phrase to unlock the scroll
+  key: text("key"), // Key phrase to unlock the scroll
+  type: text("type").default("scroll"), // Type can be: tablet, artifact, scroll, book
 });
 
 // Define userScrolls relation table - using forward references
@@ -81,6 +82,7 @@ export const insertScrollSchema = createInsertSchema(scrolls).pick({
   image: true,
   isLocked: true,
   key: true,
+  type: true,
 });
 
 export const updateScrollSchema = createInsertSchema(scrolls).pick({
