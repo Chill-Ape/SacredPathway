@@ -8,6 +8,8 @@ import { Helmet } from "react-helmet";
 import ancientTabletImage from '../assets/ancient_tablet_dark.png';
 // @ts-ignore
 import artifactImage from '../assets/artifact_1.png';
+// @ts-ignore
+import scrollImage from '../assets/scroll_1.jpg';
 
 type CategoryCardProps = { 
   id: string;
@@ -162,8 +164,8 @@ export default function ArkContents() {
       title: "Scrolls",
       description: "Parchments containing arcane wisdom",
       poeticDescription: "Unfurled secrets. Language of the keepers.",
-      // Using the imported ancient tablet image 
-      imagePath: ancientTabletImage,
+      // Using the imported scroll image
+      imagePath: scrollImage,
       glyphPath: "/assets/sacred_geometry_2.svg",
       linkTo: "/ark/scrolls",
       delay: 0.8
