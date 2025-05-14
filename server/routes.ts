@@ -64,30 +64,7 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Add explicit health check endpoints for deployment
-  app.get('/health', (_req, res) => {
-    res.status(200).send('OK');
-  });
-  
-  // Special deployment health check endpoint
-  app.get('/_health', (_req, res) => {
-    res.status(200).json({ 
-      status: 'OK',
-      timestamp: new Date().toISOString(),
-      message: 'Akashic Archive is running properly'
-    });
-  });
-  
-  // Root path health check that won't interfere with SPA routing
-  app.get('/', (req, res, next) => {
-    // For health checks that don't accept HTML (deployment checks)
-    if (!req.headers.accept || !req.headers.accept.includes('text/html')) {
-      return res.status(200).send('OK');
-    }
-    
-    // For browser requests, let Vite/frontend router handle it
-    next();
-  });
+  // Health check routes are now defined in index.ts for better request handling order
   // Set up session and authentication using persistent storage
   const sessionSettings: session.SessionOptions = {
     // Use environment variable for session secret with fallback for development
