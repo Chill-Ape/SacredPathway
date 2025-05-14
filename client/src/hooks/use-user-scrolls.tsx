@@ -35,13 +35,13 @@ export function useUserScrolls() {
       queryClient.invalidateQueries({ queryKey: ["/api/scrolls", variables.scrollId] });
       
       toast({
-        title: "Scroll Unlocked!",
-        description: "You've successfully unlocked this sacred scroll.",
+        title: "Item Unlocked!",
+        description: "You've successfully unlocked this sacred item.",
       });
     },
     onError: (error: Error) => {
       toast({
-        title: "Failed to unlock scroll",
+        title: "Failed to unlock item",
         description: error.message,
         variant: "destructive",
       });

@@ -80,7 +80,7 @@ export default function ScrollDetail() {
           <Link to="/scrolls">
             <Button variant="outline" className="flex items-center font-cinzel text-sacred-blue">
               <ChevronLeft className="mr-1 h-4 w-4" />
-              Return to Scrolls
+              Return to Ark Contents
             </Button>
           </Link>
         </div>

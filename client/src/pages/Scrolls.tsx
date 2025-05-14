@@ -38,7 +38,7 @@ export default function Scrolls() {
     } catch (error: any) {
       toast({
         title: "Unlocking Failed",
-        description: error.message || "Failed to unlock scroll",
+        description: error.message || "Failed to unlock item",
         variant: "destructive",
       });
       return false;
