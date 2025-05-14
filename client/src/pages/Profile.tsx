@@ -49,13 +49,19 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
-  // Predefined avatar options
+  // Predefined avatar options with added images from assets
   const avatarOptions = [
     '/assets/default_avatar.svg',
     '/assets/avatars/mystical_1.svg',
     '/assets/avatars/mystical_2.svg',
     '/assets/avatars/mystical_3.svg',
     '/assets/avatars/mystical_4.svg',
+    '/assets/avatars/mystical_5.png',
+    '/assets/avatars/mystical_6.png',
+    '/assets/avatars/mystical_7.png',
+    '/assets/avatars/mystical_8.jpg',
+    '/assets/avatars/mystical_9.jpg',
+    '/assets/avatars/mystical_10.png',
   ];
   
   // Handle avatar selection from predefined options
@@ -268,7 +274,7 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
             </TabsList>
             
             <TabsContent value="avatars">
-              <div className="grid grid-cols-3 gap-4 py-4">
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 py-4 max-h-80 overflow-y-auto">
                 {avatarOptions.map((avatar, index) => (
                   <div 
                     key={index}
