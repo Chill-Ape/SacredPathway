@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import '../styles/landing1.css';
 
 const Landing1 = () => {
-  // Create particle elements
+  // Create particle elements for the starry background
   useEffect(() => {
     const createParticle = () => {
       const particles = document.getElementById('particles');
@@ -21,7 +21,7 @@ const Landing1 = () => {
       particle.style.top = `${posY}%`;
       
       // Random size
-      const size = Math.random() * 3 + 1;
+      const size = Math.random() * 2 + 0.5;
       particle.style.width = `${size}px`;
       particle.style.height = `${size}px`;
       
@@ -44,14 +44,14 @@ const Landing1 = () => {
     };
     
     // Create initial particles
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
       createParticle();
     }
     
     // Continue creating particles
     const interval = setInterval(() => {
       createParticle();
-    }, 1000);
+    }, 2000);
     
     return () => {
       clearInterval(interval);
@@ -61,7 +61,7 @@ const Landing1 = () => {
   return (
     <>
       <Helmet>
-        <title>The Archive Awaits | Akashic Archive</title>
+        <title>The Archive | Akashic Archive</title>
         <meta name="description" content="Enter the gate. Awaken the memory. The Akashic Archive awaits those who seek ancient wisdom." />
       </Helmet>
       
@@ -152,8 +152,8 @@ const Landing1 = () => {
             <motion.div 
               className="glow"
               animate={{ 
-                opacity: [0.4, 0.7, 0.4],
-                scale: [1, 1.2, 1]
+                opacity: [0.4, 0.8, 0.4],
+                scale: [1, 1.3, 1]
               }}
               transition={{ 
                 duration: 4,
@@ -169,33 +169,63 @@ const Landing1 = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
               duration: 1.5,
-              delay: 0.8,
+              delay: 1.2,
               ease: "easeOut"
             }}
           >
-            <h1 className="primary-message">If you're here, the Archive has already found you</h1>
-            <h2 className="secondary-message">Enter the Gate. Awaken the memory?</h2>
+            <motion.h1 
+              className="primary-message"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ 
+                duration: 2,
+                delay: 1.5
+              }}
+            >
+              THE ARCHIVE REMEMBERS.<br/>
+              DO YOU?
+            </motion.h1>
+            
+            <motion.h2 
+              className="secondary-message"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ 
+                duration: 2,
+                delay: 2.2
+              }}
+            >
+              ENTER THE GATE.<br/>
+              AWAKEN THE MEMORY.
+            </motion.h2>
             
             <Link to="/">
               <motion.button 
                 className="enter-button"
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 0 25px 8px rgba(255, 215, 0, 0.3)"
-                }}
-                whileTap={{ scale: 0.98 }}
-                animate={{
+                initial={{ opacity: 0 }}
+                animate={{ 
+                  opacity: 1,
                   boxShadow: ["0 0 15px 3px rgba(255, 215, 0, 0.3)", "0 0 20px 5px rgba(255, 215, 0, 0.5)", "0 0 15px 3px rgba(255, 215, 0, 0.3)"]
                 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 0 25px 8px rgba(255, 215, 0, 0.4)"
+                }}
+                whileTap={{ scale: 0.98 }}
                 transition={{
+                  opacity: {
+                    duration: 1.5,
+                    delay: 3
+                  },
                   boxShadow: {
                     duration: 3,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
+                    delay: 3
                   }
                 }}
               >
-                Open the Portal
+                BEGIN THE JOURNEY
               </motion.button>
             </Link>
           </motion.div>

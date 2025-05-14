@@ -27,6 +27,11 @@ import { ProtectedRoute } from "@/lib/protected-route";
 
 function App() {
   const [location] = useLocation();
+  
+  // Special handling for landing page - render without the normal layout
+  if (location === "/landing1") {
+    return <Landing1 />;
+  }
 
   return (
     <AuthProvider>
@@ -36,12 +41,6 @@ function App() {
           <main className="flex-grow pt-16">
             <AnimatePresence mode="wait">
               <Switch key={location}>
-                <Route path="/landing1">
-                  {() => {
-                    // Landing page should appear without the navbar
-                    return <Landing1 />;
-                  }}
-                </Route>
                 <Route path="/" component={Home} />
                 <Route path="/scrolls" component={Scrolls} />
                 <Route path="/scrolls/:id" component={ScrollDetail} />
