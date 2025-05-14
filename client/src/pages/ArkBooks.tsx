@@ -1,14 +1,7 @@
-import { useEffect, useState } from "react";
-import { useLocation, Link } from "wouter";
-import { motion } from "framer-motion";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ArrowLeft, Lock, Eye, KeyRound } from "lucide-react";
 import { Helmet } from "react-helmet";
-import { Scroll } from "@shared/schema";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 
 // Import book images directly using Vite's asset handling 
@@ -19,102 +12,18 @@ import epicOfApkalluImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png
 // @ts-ignore
 import bookOfThothImage from '../assets/ancient_tablet_dark.png';
 
-// Simple component for a book item card
-const BookCard = ({ 
-  title, 
-  description,
-  imagePath,
-  isLocked,
-  onClick 
-}: { 
-  title: string; 
-  description: string;
-  imagePath: string;
-  isLocked: boolean;
-  onClick: () => void;
-}) => {
-  return (
-    <motion.div
-      whileHover={{ 
-        scale: 1.03,
-        transition: { duration: 0.2 }
-      }}
-      className="h-full"
-    >
-      <Card 
-        className="cursor-pointer h-full bg-amber-50 border border-amber-200 shadow-md overflow-hidden relative group"
-        onClick={onClick}
-      >
-        {/* Golden glow on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-r from-amber-100/20 via-amber-100/30 to-amber-100/20"></div>
-        
-        {/* Image container */}
-        <div className="overflow-hidden aspect-[4/3] relative">
-          <img 
-            src={imagePath} 
-            alt={title}
-            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-            onError={(e) => {
-              // Use a try-catch to prevent any errors during fallback handling
-              try {
-                console.error("Image failed to load:", imagePath);
-                // Ensure we use a fallback image that definitely exists
-                e.currentTarget.src = "/assets/sacred_geometry.svg"; 
-                console.log("Setting fallback image for:", title);
-              } catch (err) {
-                console.error("Error setting fallback image:", err);
-              }
-            }}
-          />
-          
-          {/* Locked overlay */}
-          {isLocked && (
-            <div className="absolute inset-0 bg-amber-950/50 flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-amber-900/60 flex items-center justify-center">
-                <Lock className="w-5 h-5 text-amber-100" />
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Content */}
-        <CardContent className="p-4">
-          <h3 className="text-xl font-serif text-amber-800 mb-2 tracking-wide group-hover:text-amber-900 transition-colors">{title}</h3>
-          <p className="text-amber-700/80 text-sm font-serif line-clamp-2">
-            {description}
-          </p>
-        </CardContent>
-        
-        <CardFooter className="px-4 pb-4 pt-0 flex justify-between items-center">
-          <div className="text-xs text-amber-600/80 font-serif italic">
-            {isLocked ? 'Locked' : 'Accessible'}
-          </div>
-          <Button variant="ghost" size="sm" className="text-amber-700 hover:text-amber-800 hover:bg-amber-100 p-0 w-8 h-8">
-            {isLocked ? 
-              <KeyRound className="w-4 h-4" /> : 
-              <Eye className="w-4 h-4" />
-            }
-          </Button>
-        </CardFooter>
-      </Card>
-    </motion.div>
-  );
-};
-
-// Main component for books page
+// Completely static version of the page with NO DATA FETCHING to eliminate refresh issues
 export default function ArkBooks() {
   const [, setLocation] = useLocation();
-  const { user } = useAuth();
   const { toast } = useToast();
   
-  // Custom items specific to books
+  // Static book data
   const books = [
     {
       id: "book-of-thoth",
       title: "The Book of Thoth",
       description: "A legendary text attributed to the Egyptian deity of wisdom, containing powerful knowledge of astral realms.",
       isLocked: true,
-      key: "THOTH",
       image: bookOfThothImage
     },
     {
@@ -122,7 +31,6 @@ export default function ArkBooks() {
       title: "The Epic of the Apkallu",
       description: "An ancient Mesopotamian text chronicling the seven sages who brought wisdom and civilization to humanity before the Great Flood.",
       isLocked: false,
-      key: "APKALLU",
       image: epicOfApkalluImage
     },
     {
@@ -130,7 +38,6 @@ export default function ArkBooks() {
       title: "The First Codex",
       description: "Believed to be the earliest written account of the journey of consciousness through the cosmos.",
       isLocked: true,
-      key: "CODEX",
       image: firstCodexImage
     },
     {
@@ -138,68 +45,20 @@ export default function ArkBooks() {
       title: "Akashic Compendium Vol. I",
       description: "The first volume of the complete cosmic record, detailing the earliest eras of manifested reality.",
       isLocked: true,
-      key: "AKASHA",
       image: akashicCompendiumImage
     }
   ];
 
-  // Completely disable automatic query execution
-  const [isLoading, setIsLoading] = useState(true);
-  const [dbItems, setDbItems] = useState<Scroll[]>([]);
-  const [userScrolls, setUserScrolls] = useState<Scroll[]>([]);
-  
-  // One-time data load effect with processing in a single effect
-  useEffect(() => {
-    // Flag to prevent multiple data loads
-    let isMounted = true;
-    
-    const loadData = async () => {
-      if (!isMounted) return;
-      
-      try {
-        setIsLoading(true);
-        
-        // Fetch scrolls data
-        const scrollsResponse = await fetch('/api/scrolls');
-        const scrollsResult = await scrollsResponse.json();
-        
-        // Process scrolls immediately
-        if (isMounted) {
-          // Filter scrolls by "book" type
-          const filteredItems = scrollsResult
-            .filter(scroll => {
-              const scrollType = scroll.type || 'scroll';
-              return scrollType === 'book';
-            });
-          
-          setDbItems(filteredItems);
-        }
-        
-        // Fetch user scrolls if user is logged in
-        if (user && isMounted) {
-          const userScrollsResponse = await fetch('/api/user/scrolls');
-          const userScrollsResult = await userScrollsResponse.json();
-          setUserScrolls(userScrollsResult);
-        }
-      } catch (error) {
-        console.error("Error loading book data:", error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-    
-    loadData();
-    
-    // Cleanup function to prevent state updates after unmount
-    return () => {
-      isMounted = false;
-    };
-    
-    // We only want this to run once when the component mounts
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleBookClick = (bookId: string) => {
+    if (bookId === "epic-of-apkallu") {
+      setLocation("/epic-of-apkallu");
+    } else {
+      toast({
+        title: "Book page under construction",
+        description: "This book's detailed page is coming soon."
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -229,65 +88,64 @@ export default function ArkBooks() {
         </div>
       </div>
       
-      {/* Loading state */}
-      {isLoading && (
-        <div className="flex justify-center items-center py-20">
-          <Loader2 className="w-10 h-10 text-amber-700 animate-spin" />
-        </div>
-      )}
-      
-      {/* Grid of items */}
-      {!isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Custom books */}
-          {books.map((book, index) => {
-            const handleClick = () => {
-              // Navigate to specific book pages if they exist
-              if (book.id === "epic-of-apkallu") {
-                setLocation("/epic-of-apkallu");
-              } else {
-                console.log("Selected book:", book.id);
-                toast({
-                  title: "Book page under construction",
-                  description: "This book's detailed page is coming soon."
-                });
-              }
-            };
+      {/* Grid of books - STATIC DATA ONLY */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {books.map(book => (
+          <div
+            key={book.id}
+            className={`cursor-pointer h-full bg-amber-50 border border-amber-200 shadow-md overflow-hidden relative group rounded-lg
+                      transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${book.isLocked ? 'opacity-85' : 'opacity-100'}`}
+            onClick={() => handleBookClick(book.id)}
+          >
+            {/* Golden glow on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-r from-amber-100/20 via-amber-100/30 to-amber-100/20"></div>
             
-            return (
-              <BookCard
-                key={book.id}
-                title={book.title}
-                description={book.description}
-                imagePath={book.image}
-                isLocked={book.isLocked}
-                onClick={handleClick}
+            {/* Image container */}
+            <div className="overflow-hidden aspect-[4/3] relative">
+              <img 
+                src={book.image} 
+                alt={book.title}
+                className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                onError={(e) => {
+                  // Fallback for missing images
+                  e.currentTarget.src = "/assets/default_scroll.svg"; 
+                }}
               />
-            );
-          })}
-          
-          {/* Database books */}
-          {dbItems.map((item) => (
-            <BookCard
-              key={item.id}
-              title={item.title}
-              description={item.content?.slice(0, 100) + "..." || "Ancient wisdom awaits..."}
-              imagePath={item.image || "/assets/sacred_geometry.svg"}
-              isLocked={user ? !userScrolls?.some(scroll => scroll.id === item.id) : true}
-              onClick={() => console.log("Selected database item:", item.id)}
-            />
-          ))}
-        </div>
-      )}
-      
-      {/* Empty state */}
-      {!isLoading && books.length === 0 && dbItems.length === 0 && (
-        <div className="text-center py-20">
-          <p className="text-amber-800/70 font-serif text-lg">
-            No books have been discovered yet.
-          </p>
-        </div>
-      )}
+              
+              {/* Locked overlay */}
+              {book.isLocked && (
+                <div className="absolute inset-0 bg-amber-950/50 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-amber-900/60 flex items-center justify-center">
+                    <Lock className="w-5 h-5 text-amber-100" />
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Content */}
+            <div className="p-4">
+              <h3 className="text-xl font-serif text-amber-800 mb-2 tracking-wide group-hover:text-amber-900 transition-colors">
+                {book.title}
+              </h3>
+              <p className="text-amber-700/80 text-sm font-serif line-clamp-2">
+                {book.description}
+              </p>
+            </div>
+            
+            <div className="px-4 pb-4 pt-0 flex justify-between items-center">
+              <div className="text-xs text-amber-600/80 font-serif italic">
+                {book.isLocked ? 'Locked' : 'Accessible'}
+              </div>
+              <div className="text-amber-700 p-0 w-8 h-8 flex items-center justify-center">
+                {book.isLocked ? 
+                  <KeyRound className="w-4 h-4" /> : 
+                  <Eye className="w-4 h-4" />
+                }
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
