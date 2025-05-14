@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Book, Scroll, Tablet, Archive } from 'lucide-react';
+import { Book, Scroll, Tablet, Archive, Volume2, VolumeX } from 'lucide-react';
 import { Helmet } from 'react-helmet';
+import { Slider } from '@/components/ui/slider';
 
 // Import assets
 import tabletImage from '../assets/crystal_tablet.png';
@@ -115,21 +116,42 @@ const MemoryProgress = () => {
   
   return (
     <motion.div 
-      className="mt-16 md:mt-24 text-center opacity-70"
+      className="mt-16 md:mt-24 text-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 3, duration: 1.2 }}
     >
-      <h4 className="text-amber-100/70 text-sm tracking-widest mb-2">MEMORY FRAGMENTS RECOVERED</h4>
-      <div className="w-full max-w-xs mx-auto h-2 bg-slate-800/60 rounded-full overflow-hidden">
-        <motion.div 
-          className="h-full bg-amber-500/60 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ delay: 3.2, duration: 1, ease: "easeOut" }}
-        />
+      <h4 className="text-amber-100/80 text-sm tracking-widest font-medium mb-3 flex items-center justify-center">
+        <span className="inline-block w-8 h-0.5 bg-amber-500/50 mr-3"></span>
+        MEMORY FRAGMENTS RECOVERED
+        <span className="inline-block w-8 h-0.5 bg-amber-500/50 ml-3"></span>
+      </h4>
+      
+      <div className="relative w-full max-w-md mx-auto">
+        <div className="w-full h-2 bg-slate-800/60 rounded-full overflow-hidden border border-amber-800/20">
+          <motion.div 
+            className="h-full bg-gradient-to-r from-amber-700/60 to-amber-500/70 rounded-full relative"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ delay: 3.2, duration: 1, ease: "easeOut" }}
+          >
+            <span className="absolute top-0 right-0 h-full w-1 bg-amber-300/60 rounded-full filter blur-[1px]"></span>
+          </motion.div>
+        </div>
+        
+        <div className="mt-4 flex items-center justify-between text-xs text-amber-200/70 font-medium">
+          <span>0%</span>
+          <span className="flex flex-col items-center">
+            <span className="text-amber-400/90 text-base">{progress}%</span>
+            <span className="mt-1 text-[10px] opacity-80">Current Recovery</span>
+          </span>
+          <span>100%</span>
+        </div>
       </div>
-      <p className="mt-1 text-xs text-amber-200/60">{progress}%</p>
+      
+      <div className="mt-6 text-xs text-amber-200/60 max-w-md mx-auto">
+        <p>Continue exploring the Archive to recover more memory fragments</p>
+      </div>
     </motion.div>
   );
 };
@@ -221,6 +243,53 @@ const TestHomePage = () => {
     localStorage.setItem('hasSeenIntro', 'true');
   };
 
+  // Toggle audio function
+  const toggleAudio = () => {
+    if (!audioRef.current) return;
+    
+    if (isAudioPlaying) {
+      // Fade out and pause
+      let vol = audioRef.current.volume;
+      const fadeOutInterval = setInterval(() => {
+        vol = Math.max(0, vol - 0.05);
+        if (audioRef.current) audioRef.current.volume = vol;
+        setAudioVolume(vol);
+        
+        if (vol <= 0.01) {
+          clearInterval(fadeOutInterval);
+          if (audioRef.current) audioRef.current.pause();
+          setIsAudioPlaying(false);
+        }
+      }, 50);
+    } else {
+      // Start playing and fade in
+      audioRef.current.play().then(() => {
+        setIsAudioPlaying(true);
+        
+        let vol = 0;
+        const targetVol = 0.2;
+        const fadeInInterval = setInterval(() => {
+          vol = Math.min(vol + 0.01, targetVol);
+          if (audioRef.current) audioRef.current.volume = vol;
+          setAudioVolume(vol);
+          
+          if (vol >= targetVol) {
+            clearInterval(fadeInInterval);
+          }
+        }, 50);
+      });
+    }
+  };
+  
+  // Handle volume change
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0];
+    setAudioVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -288,8 +357,46 @@ const TestHomePage = () => {
 
       {/* Main content */}
       <div className="min-h-screen sacred-simulation-bg py-12 md:py-16">
+        {/* Audio controls */}
+        <motion.div 
+          className="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-slate-900/80 backdrop-blur-sm p-2 rounded-lg border border-amber-600/30"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 4, duration: 0.5 }}
+        >
+          <button
+            onClick={toggleAudio}
+            className="p-2 text-amber-500/70 hover:text-amber-400 transition-colors"
+            aria-label={isAudioPlaying ? "Mute ambient sound" : "Play ambient sound"}
+          >
+            {isAudioPlaying ? (
+              <Volume2 size={18} />
+            ) : (
+              <VolumeX size={18} />
+            )}
+          </button>
+          
+          {isAudioPlaying && (
+            <div className="w-24">
+              <Slider
+                defaultValue={[audioVolume]}
+                max={0.5}
+                step={0.01}
+                value={[audioVolume]}
+                onValueChange={handleVolumeChange}
+                className="cursor-pointer"
+              />
+            </div>
+          )}
+        </motion.div>
+        
         {/* Floating particles */}
         <div className="mystical-particles">
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
           <div className="particle"></div>
           <div className="particle"></div>
           <div className="particle"></div>

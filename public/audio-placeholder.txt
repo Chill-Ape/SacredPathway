@@ -1,0 +1,13 @@
+To fully implement the ambient audio feature for the test homepage, you'll need to add an audio file:
+
+1. Create an MP3 file called "ambient-mystical.mp3" 
+2. Place it in the public directory
+3. This file should be a subtle, atmospheric ambient sound that matches the mystical theme
+
+The audio implementation is already set up to:
+- Auto-play when the page loads
+- Fade in/out smoothly
+- Provide user controls to adjust volume or mute
+- Stop playing when navigating away from the page
+
+For testing purposes, any ambient MP3 file can be used. For the final implementation, we recommend using a properly licensed mystical ambient track that enhances the sacred, ancient atmosphere of the application.
