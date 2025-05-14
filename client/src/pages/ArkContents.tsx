@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye } from "lucide-react";
 import { Helmet } from "react-helmet";
 // Import images directly using relative paths
 // @ts-ignore
@@ -128,7 +128,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                 className="text-amber-700 p-0 w-8 h-8 flex items-center justify-center"
                 whileHover={{ scale: 1.1 }}
               >
-                <Eye className="w-4 h-4" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
               </motion.div>
             </div>
           </div>
