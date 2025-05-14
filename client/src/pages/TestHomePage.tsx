@@ -166,7 +166,29 @@ const TestHomePage = () => {
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   
   // Initialize and handle ambient audio
+  // Note: Audio feature is prepared but will be enabled when audio file is added to public directory
   useEffect(() => {
+    // Simulate audio behavior without actually using the real audio file yet
+    const simulateAudio = () => {
+      // This function simulates audio playback while waiting for actual audio files
+      console.log("Audio playback simulation initiated");
+      setIsAudioPlaying(true);
+      setAudioVolume(0.2);
+    };
+    
+    const simulationTimer = setTimeout(() => {
+      if (!isLoading) {
+        simulateAudio();
+      }
+    }, 3000);
+    
+    return () => {
+      clearTimeout(simulationTimer);
+      setAudioVolume(0);
+    };
+    
+    /* 
+    // Actual audio implementation - uncomment when audio file is available
     // Create audio element for ambient sound
     const ambientAudio = new Audio('/ambient-mystical.mp3');
     ambientAudio.loop = true;
@@ -221,6 +243,7 @@ const TestHomePage = () => {
         ambientAudio.pause();
       }, 1000);
     };
+    */
   }, [isLoading]);
   
   // Simulate loading and show intro modal
@@ -285,6 +308,8 @@ const TestHomePage = () => {
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     setAudioVolume(newVolume);
+    // Audio volume will be applied when the actual audio is implemented
+    console.log("Volume changed to:", newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
     }
