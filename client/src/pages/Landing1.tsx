@@ -3,19 +3,24 @@ import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import { Volume2, VolumeX } from 'lucide-react';
-import SacredHumGenerator from '../utils/SacredHumGenerator';
+import PeacefulAmbience from '../utils/PeacefulAmbience';
+import PortalWhoosh from '../utils/PortalWhoosh';
 import '../styles/landing1.css';
 
 const Landing1 = () => {
   const [, navigate] = useLocation();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [playWhoosh, setPlayWhoosh] = useState(false);
 
   // Handle transition to home page with enhanced animation
   const handleBeginJourney = () => {
     setIsTransitioning(true);
     
-    // Gradually fade out the sacred hum
+    // Play the portal whooshing sound immediately
+    setPlayWhoosh(true);
+    
+    // Gradually fade out the peaceful ambient sound
     setTimeout(() => {
       setSoundEnabled(false);
     }, 500);
@@ -97,14 +102,21 @@ const Landing1 = () => {
         <meta name="description" content="Enter the gate. Awaken the memory. The Akashic Archive awaits those who seek ancient wisdom." />
       </Helmet>
       
-      {/* Sacred hum ambient sound */}
-      <SacredHumGenerator isPlaying={soundEnabled} volume={0.3} />
+      {/* Peaceful ambient background sound */}
+      <PeacefulAmbience isPlaying={soundEnabled} volume={0.25} />
+      
+      {/* Portal whoosh sound effect for transition */}
+      <PortalWhoosh 
+        play={playWhoosh} 
+        volume={0.6} 
+        onComplete={() => setPlayWhoosh(false)}
+      />
       
       {/* Sound toggle button */}
       <button 
         className={`sound-toggle ${soundEnabled ? '' : 'muted'}`}
         onClick={() => setSoundEnabled(!soundEnabled)}
-        aria-label={soundEnabled ? "Mute sacred ambience" : "Enable sacred ambience"}
+        aria-label={soundEnabled ? "Mute ambient sound" : "Enable ambient sound"}
       >
         {soundEnabled ? <Volume2 /> : <VolumeX />}
       </button>
