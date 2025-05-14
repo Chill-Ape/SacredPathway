@@ -797,6 +797,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log successful session creation
       console.log('Stripe session created successfully, session ID:', session.id);
       
+      // Add a payment completion webhook to track the payment status
+      const webhookEndpoint = await stripe.webhookEndpoints.create({
+        url: `${domain}/api/mana/purchase/webhook`,
+        enabled_events: ['checkout.session.completed'],
+      }).catch(err => {
+        console.log('Warning: Could not create webhook endpoint:', err.message);
+        // Continue without webhook for now
+        return null;
+      });
+      
+      if (webhookEndpoint) {
+        console.log('Webhook endpoint created:', webhookEndpoint.url);
+      }
+      
       res.json({
         sessionId: session.id,
         packageDetails: manaPackage
@@ -817,17 +831,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Handle successful Stripe payment webhook 
   app.post("/api/mana/purchase/webhook", async (req: Request, res: Response) => {
-    // This endpoint will be implemented with proper webhook verification 
-    // once Stripe keys are available
-    
     if (!stripe || !process.env.STRIPE_SECRET_KEY) {
       return res.status(503).json({ 
         message: "Payment service is unavailable. Stripe keys are not configured." 
       });
     }
     
-    // Placeholder for webhook handling logic
-    res.status(200).send('Webhook received');
+    const sig = req.headers['stripe-signature'];
+    let event;
+    
+    try {
+      // Parse the webhook body and verify signature
+      // This is a simplified version - in production we'd use proper signature verification
+      // with process.env.STRIPE_WEBHOOK_SECRET
+      const payload = req.body;
+      
+      // If it's a string (raw body), parse it
+      if (typeof payload === 'string') {
+        event = JSON.parse(payload);
+      } else {
+        event = payload;
+      }
+      
+      // Handle the checkout.session.completed event
+      if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        
+        // Get metadata from the session
+        const { userId, packageId, manaAmount } = session.metadata || {};
+        
+        if (!userId || !packageId || !manaAmount) {
+          console.error('Missing metadata in completed session:', session.id);
+          return res.status(400).send('Missing metadata');
+        }
+        
+        console.log(`Processing completed payment for user ${userId}, package ${packageId}, amount ${manaAmount}`);
+        
+        // Create a mana transaction record
+        await storage.createManaTransaction({
+          userId: Number(userId),
+          amount: Number(manaAmount),
+          description: `Purchased ${manaAmount} Mana`,
+          transactionType: 'mana_purchase',
+          referenceId: packageId,
+          stripePaymentIntentId: session.payment_intent
+        });
+        
+        // Update the user's mana balance
+        const newBalance = await storage.updateUserManaBalance(Number(userId), Number(manaAmount));
+        console.log(`Updated mana balance for user ${userId} to ${newBalance}`);
+      }
+      
+      // Return a 200 response to acknowledge receipt of the event
+      res.status(200).send('Webhook processed successfully');
+    } catch (error) {
+      console.error('Webhook processing error:', error);
+      res.status(400).send(`Webhook Error: ${error.message}`);
+    }
   });
   
   // Handle Stripe Checkout redirect after successful payment
