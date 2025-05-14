@@ -124,12 +124,24 @@ const ManaPackages: React.FC = () => {
         throw new Error('Stripe failed to load. Please check your Stripe public key.');
       }
       
-      // Important: We need to use window.location for the redirect for better compatibility
-      // instead of the Stripe redirect API to prevent the multiple redirects issue
-      window.location.href = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
+      // Log the redirect URL for debugging
+      console.log(`[${new Date().toISOString()}] Redirecting to Stripe checkout:`, 
+        `https://checkout.stripe.com/c/pay/${data.sessionId}`);
       
-      // Never reached - but needed in case the redirect fails somehow
-      return;
+      // Use Stripe's redirectToCheckout function instead of direct window.location
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId
+      });
+      
+      // Handle any errors from redirectToCheckout
+      if (error) {
+        console.error('Redirect to checkout error:', error);
+        throw new Error(error.message || 'Failed to redirect to checkout page');
+      }
+      
+      // This code should never be reached unless the redirect fails
+      console.log("Redirect didn't immediately happen - fallback to direct URL");
+      window.location.href = `https://checkout.stripe.com/c/pay/${data.sessionId}`;
     } catch (error: any) {
       // Log and display errors
       console.error(`[${new Date().toISOString()}] Purchase error:`, error);

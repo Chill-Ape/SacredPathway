@@ -785,7 +785,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ],
         mode: 'payment',
         customer: stripeCustomerId,
-        success_url: `${domain}/api/mana/purchase/complete?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${domain}/mana?status=success&amount=${manaPackage.amount}`,
         cancel_url: `${domain}/mana?status=canceled`,
         metadata: {
           packageId: manaPackage.id.toString(),
