@@ -208,9 +208,11 @@ export default function ProfileMenu({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <AvatarFallback className="bg-sacred-blue/10 text-sacred-blue font-cinzel">
-                {user.username[0].toUpperCase()}
-              </AvatarFallback>
+              <img 
+                src="/assets/sacred_symbol.png" 
+                alt={`${user.username}'s profile`} 
+                className="h-full w-full object-cover"
+              />
             )}
           </Avatar>
         </Button>

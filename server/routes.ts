@@ -211,12 +211,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const updatedUser = await storage.updateUserProfilePicture(req.user.id, profilePicture);
       
-      res.json({ 
-        user: { 
-          id: updatedUser.id, 
-          username: updatedUser.username,
-          profilePicture: updatedUser.profilePicture 
-        } 
+      // Update the req.user object with the new profile picture so it's available in subsequent requests
+      req.user.profilePicture = updatedUser.profilePicture;
+      
+      // Save the session to persist the user object changes
+      req.session.save(err => {
+        if (err) {
+          console.error('Error saving session:', err);
+        }
+        
+        res.json({ 
+          user: { 
+            id: updatedUser.id, 
+            username: updatedUser.username,
+            profilePicture: updatedUser.profilePicture 
+          } 
+        });
       });
     } catch (error) {
       console.error('Error updating profile picture:', error);
@@ -249,14 +259,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Update user's profile picture in the database
         const updatedUser = await storage.updateUserProfilePicture(req.user.id, profilePictureUrl);
-
-        res.json({
-          user: {
-            id: updatedUser.id,
-            username: updatedUser.username,
-            profilePicture: updatedUser.profilePicture
-          },
-          message: 'Profile picture uploaded successfully'
+        
+        // Update the req.user object with the new profile picture so it's available in subsequent requests
+        req.user.profilePicture = updatedUser.profilePicture;
+        
+        // Save the session to persist the user object changes
+        req.session.save(err => {
+          if (err) {
+            console.error('Error saving session:', err);
+          }
+          
+          res.json({
+            user: {
+              id: updatedUser.id,
+              username: updatedUser.username,
+              profilePicture: updatedUser.profilePicture
+            },
+            message: 'Profile picture uploaded successfully'
+          });
         });
       } catch (error) {
         console.error('Error processing uploaded profile picture:', error);
