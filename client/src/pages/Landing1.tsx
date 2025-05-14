@@ -100,6 +100,13 @@ const Landing1 = () => {
           <div className="flowing-light light-4"></div>
           <div className="flowing-light light-5"></div>
           <div className="flowing-light light-6"></div>
+          <div className="flowing-light light-7"></div>
+          <div className="flowing-light light-8"></div>
+          <div className="flowing-light light-9"></div>
+          <div className="flowing-light light-10"></div>
+          <div className="flowing-light light-bright-1"></div>
+          <div className="flowing-light light-bright-2"></div>
+          <div className="flowing-light light-bright-3"></div>
         </div>
         
         <div className="content-container">
@@ -113,13 +120,7 @@ const Landing1 = () => {
                 transition={{ duration: 1 }}
                 filter="none"
               >
-                {/* Main Triangle with Circle Inside - using clipPath to contain the circle */}
-                <defs>
-                  <clipPath id="triangleClip">
-                    <path d="M50 20 L10 85 L90 85 Z" />
-                  </clipPath>
-                </defs>
-                
+                {/* Sacred geometry - perfectly proportioned triangle and circle */}
                 <motion.path 
                   d="M50 20 L10 85 L90 85 Z" 
                   fill="none" 
@@ -135,15 +136,14 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Circle that touches the triangle sides - clipped to stay inside triangle */}
+                {/* Perfect circle centered in triangle */}
                 <motion.circle 
                   cx="50" 
-                  cy="55" 
-                  r="20" 
+                  cy="50" 
+                  r="19" 
                   fill="none" 
                   stroke="rgba(66, 133, 180, 0.9)" 
                   strokeWidth="3"
-                  clipPath="url(#triangleClip)"
                   animate={{ 
                     stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
                   }}
@@ -155,11 +155,11 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Line underneath - extending to match triangle width */}
+                {/* Line underneath - extending beyond the triangle */}
                 <motion.line 
-                  x1="10" 
+                  x1="5" 
                   y1="95" 
-                  x2="90" 
+                  x2="95" 
                   y2="95" 
                   stroke="rgba(66, 133, 180, 0.9)" 
                   strokeWidth="3"

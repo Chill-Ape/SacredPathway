@@ -329,6 +329,79 @@
   animation-delay: 7.5s;
 }
 
+.light-7 {
+  width: 140px;
+  height: 140px;
+  top: 15%;
+  left: 35%;
+  background: radial-gradient(circle, rgba(75, 145, 215, 0.35) 0%, transparent 70%);
+  animation-delay: 2s;
+}
+
+.light-8 {
+  width: 190px;
+  height: 190px;
+  bottom: 35%;
+  right: 10%;
+  background: radial-gradient(circle, rgba(85, 155, 225, 0.28) 0%, transparent 70%);
+  animation-delay: 5.2s;
+}
+
+.light-9 {
+  width: 160px;
+  height: 160px;
+  top: 40%;
+  left: 18%;
+  background: radial-gradient(circle, rgba(70, 140, 210, 0.32) 0%, transparent 70%);
+  animation-delay: 8.8s;
+}
+
+.light-10 {
+  width: 170px;
+  height: 170px;
+  bottom: 50%;
+  right: 25%;
+  background: radial-gradient(circle, rgba(65, 135, 205, 0.3) 0%, transparent 70%);
+  animation-delay: 1.5s;
+}
+
+/* Extra bright flowing lights */
+.light-bright-1 {
+  width: 200px;
+  height: 200px;
+  top: 30%;
+  left: 50%;
+  background: radial-gradient(circle, rgba(140, 210, 255, 0.9) 0%, rgba(100, 180, 255, 0.7) 30%, transparent 80%);
+  filter: blur(50px);
+  animation: floatLightBright 18s infinite ease-in-out;
+  animation-delay: 0s;
+  z-index: 5;
+}
+
+.light-bright-2 {
+  width: 230px;
+  height: 230px;
+  bottom: 35%;
+  right: 45%;
+  background: radial-gradient(circle, rgba(120, 200, 255, 0.95) 0%, rgba(80, 170, 250, 0.75) 30%, transparent 80%);
+  filter: blur(55px);
+  animation: floatLightBright 22s infinite ease-in-out;
+  animation-delay: 5s;
+  z-index: 5;
+}
+
+.light-bright-3 {
+  width: 180px;
+  height: 180px;
+  top: 60%;
+  right: 20%;
+  background: radial-gradient(circle, rgba(150, 220, 255, 0.85) 0%, rgba(110, 190, 250, 0.65) 30%, transparent 80%);
+  filter: blur(45px);
+  animation: floatLightBright 20s infinite ease-in-out;
+  animation-delay: 10s;
+  z-index: 5;
+}
+
 @keyframes floatLight {
   0% {
     opacity: 0;
@@ -349,6 +422,29 @@
   100% {
     opacity: 0;
     transform: translate(0, 0) scale(0.8);
+  }
+}
+
+@keyframes floatLightBright {
+  0% {
+    opacity: 0.2;
+    transform: translate(0, 0) scale(0.9);
+  }
+  25% {
+    opacity: 0.8;
+    transform: translate(30px, -40px) scale(1.2);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translate(60px, -20px) scale(1);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translate(30px, 30px) scale(1.3);
+  }
+  100% {
+    opacity: 0.2;
+    transform: translate(0, 0) scale(0.9);
   }
 }
 
@@ -432,33 +528,33 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(66, 133, 180, 0.8) 0%, transparent 70%);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(100, 180, 255, 0.9) 0%, transparent 70%);
   border-radius: 50%;
-  filter: blur(22px);
+  filter: blur(25px);
   z-index: 5;
   animation: pulseGold 5s ease-in-out infinite;
 }
 
 @keyframes pulseGold {
-  0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85); }
-  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
-  100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85); }
+  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.85); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.85); }
 }
 
-/* Blue light aura behind symbol - brighter central glow */
+/* Super bright blue light aura behind symbol */
 .sacred-symbol:before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(66, 133, 180, 0.65) 0%, rgba(40, 110, 190, 0.3) 40%, transparent 70%);
+  width: 270px;
+  height: 270px;
+  background: radial-gradient(circle, rgba(120, 200, 255, 0.85) 0%, rgba(60, 150, 230, 0.5) 40%, transparent 70%);
   border-radius: 50%;
-  filter: blur(30px);
+  filter: blur(35px);
   z-index: 3;
   animation: breatheBlueLight 7s ease-in-out infinite;
 }
@@ -470,11 +566,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(80, 150, 240, 0.4) 0%, rgba(40, 120, 200, 0.2) 50%, transparent 70%);
+  width: 230px;
+  height: 230px;
+  background: radial-gradient(circle, rgba(140, 210, 255, 0.7) 0%, rgba(70, 160, 240, 0.4) 50%, transparent 70%);
   border-radius: 50%;
-  filter: blur(25px);
+  filter: blur(30px);
   z-index: 2;
   animation: breatheBlueLightSlow 9s ease-in-out infinite;
 }
@@ -486,11 +582,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(100, 180, 255, 0.7) 0%, transparent 80%);
+  width: 170px;
+  height: 170px;
+  background: radial-gradient(circle, rgba(160, 220, 255, 0.9) 0%, rgba(100, 180, 255, 0.6) 40%, transparent 80%);
   border-radius: 50%;
-  filter: blur(15px);
+  filter: blur(20px);
   z-index: 4;
   animation: pulseBright 6s ease-in-out infinite;
 }
