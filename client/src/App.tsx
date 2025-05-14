@@ -25,6 +25,8 @@ import ArkScrolls from "@/pages/ArkScrolls";
 import ArkBooks from "@/pages/ArkBooks";
 import TabletDetail from "@/pages/TabletDetail";
 import TestHomePage from "@/pages/TestHomePage";
+// Import the deployment-optimized landing page
+import DeploymentReadyPage from "./DeploymentReadyPage";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -36,7 +38,7 @@ import { ProtectedRoute } from "@/lib/protected-route";
 function App() {
   const [location] = useLocation();
   
-  // Special handling for landing page and test page - render without the normal layout
+  // Special handling for landing pages and deployment page - render without the normal layout
   if (location === "/landing1") {
     return <Landing1 />;
   }
@@ -44,6 +46,11 @@ function App() {
   // Special handling for test homepage - custom immersive experience
   if (location === "/test") {
     return <TestHomePage />;
+  }
+  
+  // For root path, show the deployment-optimized landing page to improve deployment success
+  if (location === "/") {
+    return <DeploymentReadyPage />;
   }
 
   return (
@@ -54,7 +61,7 @@ function App() {
           <main className="flex-grow pt-16">
             <AnimatePresence mode="wait">
               <Switch key={location}>
-                <Route path="/" component={Home} />
+                <Route path="/" component={DeploymentReadyPage} />
                 <Route path="/scrolls" component={Scrolls} />
                 <Route path="/scrolls/:id" component={ScrollDetail} />
                 <Route path="/sacred-scroll/:id" component={SacredScroll} />
