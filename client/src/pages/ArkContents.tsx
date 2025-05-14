@@ -41,8 +41,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           onHoverEnd={() => setIsHovered(false)}
           whileHover={{ scale: 1.03 }}
         >
-          {/* Base relic container */}
-          <div className="relative overflow-hidden rounded-lg aspect-square bg-amber-50 shadow-md border border-amber-200">
+          {/* Modernized card container with improved styling */}
+          <div className="relative overflow-hidden rounded-xl aspect-square bg-gradient-to-b from-amber-50 to-amber-100/80 shadow-lg border border-amber-200/50">
             {/* Background glyph symbol - very faint by default */}
             <motion.div 
               className="absolute inset-0 opacity-5 pointer-events-none z-0 flex items-center justify-center"
@@ -58,22 +58,35 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
               />
             </motion.div>
 
-            {/* Item image */}
-            <div className="absolute inset-0 flex items-center justify-center p-6 transition-opacity">
-              <img 
-                src={imagePath} 
-                alt={title}
-                className="w-full h-full object-contain rounded-md transition-all duration-700 drop-shadow-lg"
-                onError={(e) => {
-                  console.error("Image failed to load:", imagePath);
-                  e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
+            {/* Item image - improved positioning and styling */}
+            <div className="absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-all duration-500 transform">
+              <motion.div
+                animate={{
+                  y: isHovered ? -8 : 0,
+                  scale: isHovered ? 1.05 : 1
                 }}
-              />
+                transition={{ duration: 0.5 }}
+                className="w-5/6 h-5/6 flex items-center justify-center"
+              >
+                <img 
+                  src={imagePath} 
+                  alt={title}
+                  className="object-contain max-h-full max-w-full rounded-md drop-shadow-lg"
+                  style={{ 
+                    filter: isHovered ? 'brightness(1.1) contrast(1.05)' : 'brightness(1) contrast(1)',
+                    transition: 'filter 0.5s ease'
+                  }}
+                  onError={(e) => {
+                    console.log("Setting fallback image for:", title);
+                    e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
+                  }}
+                />
+              </motion.div>
             </div>
 
-            {/* Glowing border - initially subtle, brighter on hover */}
+            {/* Enhanced glowing border - subtle but elegant */}
             <motion.div 
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none rounded-xl"
               initial={{ opacity: 0.1 }}
               animate={{ 
                 opacity: isHovered ? 0.8 : 0.3,
@@ -84,29 +97,30 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
               transition={{ duration: 0.8 }}
             />
 
-            {/* Pulsing glow effect */}
+            {/* Pulsing glow effect - refined animation */}
             <motion.div 
-              className="absolute inset-0 border border-amber-400/10 rounded-lg pointer-events-none"
+              className="absolute inset-0 rounded-xl pointer-events-none"
               animate={{ 
                 boxShadow: isHovered ? 
-                  ['0 0 10px rgba(193, 145, 30, 0.2)', '0 0 15px rgba(193, 145, 30, 0.3)', '0 0 10px rgba(193, 145, 30, 0.2)'] : 
-                  ['0 0 5px rgba(193, 145, 30, 0.05)', '0 0 10px rgba(193, 145, 30, 0.1)', '0 0 5px rgba(193, 145, 30, 0.05)']
+                  'inset 0 0 15px rgba(193, 145, 30, 0.25), 0 0 10px rgba(193, 145, 30, 0.2)' : 
+                  'inset 0 0 5px rgba(193, 145, 30, 0.1), 0 0 2px rgba(193, 145, 30, 0.1)'
               }}
               transition={{ 
-                duration: 3, 
+                duration: 2, 
                 repeat: Infinity, 
+                repeatType: "reverse",
                 ease: "easeInOut" 
               }}
             />
 
-            {/* Title and poetic description - slide up on hover */}
+            {/* Modern title container with refined gradient */}
             <motion.div 
-              className="absolute bottom-0 left-0 right-0 px-4 py-4 bg-gradient-to-t from-amber-50/95 via-amber-50/80 to-transparent"
+              className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-amber-100/95 via-amber-50/85 to-transparent"
               initial={{ y: 0 }}
-              animate={{ y: isHovered ? -15 : 0 }}
+              animate={{ y: isHovered ? -8 : 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="text-amber-800 font-serif text-2xl text-center tracking-wider mb-1">{title}</h3>
+              <h3 className="text-amber-800 font-serif text-xl md:text-2xl text-center tracking-wide mb-1 drop-shadow-sm">{title}</h3>
               <motion.p
                 className="text-xs md:text-sm text-amber-700/90 italic text-center font-serif mt-1"
                 initial={{ opacity: 0 }}
@@ -185,20 +199,34 @@ export default function ArkContents() {
 
   return (
     <div 
-      className="min-h-screen w-full bg-white relative overflow-hidden"
+      className="min-h-screen w-full bg-gradient-to-b from-white to-amber-50/50 relative overflow-hidden"
     >
       <Helmet>
-        <title>Ark Contents | Akashic Archive</title>
-        <meta name="description" content="Explore the Ark Contents - ancient artifacts, tablets, scrolls, and books containing forgotten wisdom and cosmic secrets." />
+        <title>Sacred Vault | Akashic Archive</title>
+        <meta name="description" content="Explore the Sacred Vault - ancient artifacts, tablets, scrolls, and books containing forgotten wisdom and cosmic secrets." />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" />
       </Helmet>
       
-      {/* Subtle sacred glyph background pattern */}
-      <div className="absolute inset-0 z-0 opacity-5">
-        <div className="absolute top-0 left-0 w-full h-full bg-repeat opacity-20" 
-             style={{backgroundImage: "url('/assets/sacred_symbol.svg')", backgroundSize: "300px"}}>
-        </div>
+      {/* Enhanced sacred glyph background pattern with subtle animation */}
+      <div className="absolute inset-0 z-0">
+        <motion.div 
+          className="absolute top-0 left-0 w-full h-full bg-repeat opacity-10" 
+          style={{backgroundImage: "url('/assets/sacred_symbol.svg')", backgroundSize: "300px"}}
+          animate={{
+            backgroundPosition: ["0px 0px", "20px 20px", "0px 0px"],
+          }}
+          transition={{
+            duration: 20,
+            ease: "linear",
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
+        >
+        </motion.div>
       </div>
+      
+      {/* Subtle radial gradient overlay */}
+      <div className="absolute inset-0 z-0 bg-radial-gradient from-transparent to-amber-50/30"></div>
       
       {/* Content container */}
       <div className="relative z-10 container mx-auto px-4 py-8 md:py-16">
@@ -206,23 +234,40 @@ export default function ArkContents() {
         <AnimatePresence>
           {isLoaded && (
             <>
-              {/* Header section with reveal animation */}
+              {/* Enhanced header section with reveal animation */}
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="mb-12 md:mb-16 text-center"
+                className="mb-16 md:mb-20 text-center"
               >
                 <motion.button
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
-                  className="mb-8 text-amber-800 hover:text-amber-900 hover:bg-amber-100 px-4 py-2 rounded-full border border-amber-300 bg-amber-50 shadow-sm flex items-center justify-center mx-auto group"
+                  className="mb-10 text-amber-800 hover:text-amber-900 hover:bg-amber-100 px-5 py-2 rounded-full border border-amber-300 bg-amber-50/80 shadow-md backdrop-blur-sm flex items-center justify-center mx-auto group transition-all duration-300"
                   onClick={() => setLocation("/")}
                 >
                   <ArrowLeft className="mr-2 h-4 w-4 group-hover:translate-x-[-3px] transition-transform" /> 
-                  <span className="font-cormorant text-lg">Return to Gateway</span>
+                  <span className="font-cormorant text-lg tracking-wide">Return to Gateway</span>
                 </motion.button>
+                
+                {/* Decorative symbol above title */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2, duration: 1, ease: "easeOut" }}
+                  className="mb-5 flex justify-center"
+                >
+                  <div className="w-12 h-12 opacity-70 relative">
+                    <div className="absolute inset-0 rounded-full border border-amber-700/30"></div>
+                    <div className="absolute inset-2 rounded-full border border-amber-700/40"></div>
+                    <div className="absolute inset-4 rounded-full border border-amber-700/50"></div>
+                    <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+                      <div className="w-1 h-1 bg-amber-800 rounded-full"></div>
+                    </div>
+                  </div>
+                </motion.div>
                 
                 <motion.h1 
                   className="text-5xl md:text-6xl text-amber-800 font-serif mb-6 tracking-wider font-cormorant" 
@@ -234,14 +279,14 @@ export default function ArkContents() {
                 </motion.h1>
                 
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
-                  className="h-[1px] w-20 bg-gradient-to-r from-transparent via-amber-700 to-transparent mx-auto mb-6"
+                  initial={{ opacity: 0, width: "0%" }}
+                  animate={{ opacity: 1, width: "80px" }}
+                  transition={{ delay: 0.2, duration: 1.2 }}
+                  className="h-[1px] bg-gradient-to-r from-transparent via-amber-700 to-transparent mx-auto mb-6"
                 />
                 
                 <motion.p 
-                  className="text-amber-700/90 text-lg md:text-xl max-w-2xl mx-auto font-cormorant"
+                  className="text-amber-700/90 text-lg md:text-xl max-w-2xl mx-auto font-cormorant leading-relaxed"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.8 }}
@@ -251,20 +296,31 @@ export default function ArkContents() {
                 </motion.p>
               </motion.div>
               
-              {/* Grid layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
+              {/* Modern staggered card grid with improved spacing */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 max-w-6xl mx-auto px-2 md:px-4">
                 {categories.map((category) => (
-                  <CategoryCard
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.7, 
+                      delay: category.delay * 1.2,
+                      ease: "easeOut"
+                    }}
                     key={category.id}
-                    id={category.id}
-                    title={category.title}
-                    imagePath={category.imagePath}
-                    description={category.description}
-                    poeticDescription={category.poeticDescription}
-                    glyphPath={category.glyphPath}
-                    linkTo={category.linkTo}
-                    delay={category.delay}
-                  />
+                    className="transform hover:z-10"
+                  >
+                    <CategoryCard
+                      id={category.id}
+                      title={category.title}
+                      imagePath={category.imagePath}
+                      description={category.description}
+                      poeticDescription={category.poeticDescription}
+                      glyphPath={category.glyphPath}
+                      linkTo={category.linkTo}
+                      delay={0} // We're handling the delay in the parent motion.div
+                    />
+                  </motion.div>
                 ))}
               </div>
             </>
