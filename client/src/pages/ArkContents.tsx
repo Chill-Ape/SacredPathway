@@ -10,6 +10,8 @@ import ancientTabletImage from '../assets/ancient_tablet_dark.png';
 import artifactImage from '../assets/artifact_1.png';
 // @ts-ignore
 import scrollImage from '../assets/scroll_1.jpg';
+// @ts-ignore
+import bookImage from '../assets/book_1.png';
 
 type CategoryCardProps = { 
   id: string;
@@ -189,8 +191,8 @@ export default function ArkContents() {
       title: "Books",
       description: "Tomes of collected mystical teachings",
       poeticDescription: "Bound chronicles. Whispers from the ages.",
-      // Using the imported ancient tablet image
-      imagePath: ancientTabletImage,
+      // Using the imported book image
+      imagePath: bookImage,
       glyphPath: "/assets/sacred_geometry_3.svg",
       linkTo: "/ark/books",
       delay: 1.0
