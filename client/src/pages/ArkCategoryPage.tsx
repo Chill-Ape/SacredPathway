@@ -32,7 +32,7 @@ const categories = {
         description: "A remarkable crystal with unusual vibrational properties that appears to amplify certain frequencies.",
         isLocked: true,
         key: "CRYSTAL_FREQUENCY",
-        image: "/assets/content-types/crystal_artifact.jpg"
+        image: "/assets/crystal_tablet.png" // Updated path to an existing image
       }
     ]
   },
@@ -49,7 +49,7 @@ const categories = {
         description: "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
         isLocked: true,
         key: "ENKI",
-        image: "/assets/tablets/crystal_tablet.png"
+        image: "/assets/tablets/crystal_tablet.png" // This image exists
       },
       {
         id: "emerald-tablet-1",
@@ -57,7 +57,7 @@ const categories = {
         description: "First fragment of the fabled emerald tablet, containing alchemical wisdom.",
         isLocked: true,
         key: "HERMES",
-        image: "/assets/tablets/emerald_tablets.png"
+        image: "/assets/ancient_tablets_green.png" // Updated path to an existing image
       },
       {
         id: "clay-tablet-of-adam",
@@ -65,7 +65,7 @@ const categories = {
         description: "Ancient tablet detailing the origin of consciousness in humanity.",
         isLocked: true,
         key: "GENESIS",
-        image: "/assets/tablets/stone_tablet.png"
+        image: "/assets/ancient_tablet_cracked.png" // Updated path to an existing image
       }
     ]
   },
@@ -90,7 +90,7 @@ const categories = {
         description: "Chronicles from the forgotten era when Leo ruled the celestial sphere.",
         isLocked: true,
         key: "LEO",
-        image: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png"
+        image: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png" // Updated path
       },
       {
         id: "age-of-taurus",
@@ -98,7 +98,7 @@ const categories = {
         description: "Wisdom from the time when the Bull governed the cosmic order.",
         isLocked: true,
         key: "TAURUS",
-        image: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png"
+        image: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png" // Updated path
       },
       {
         id: "age-of-pisces",
@@ -106,7 +106,7 @@ const categories = {
         description: "The story of the Fish and the transition to our current age.",
         isLocked: true,
         key: "PISCES",
-        image: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png"
+        image: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png" // Updated path
       },
       {
         id: "epic-of-flood",
@@ -114,7 +114,7 @@ const categories = {
         description: "The definitive account of the great cataclysm that reshaped our world.",
         isLocked: true,
         key: "DELUGE",
-        image: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png"
+        image: "/assets/ChatGPT Image May 10, 2025, 04_36_48 PM.png" // Updated path
       },
       {
         id: "seven-sages",
@@ -122,7 +122,7 @@ const categories = {
         description: "Biographies of the seven masters who preserved knowledge through the darkness.",
         isLocked: true,
         key: "SEVEN",
-        image: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png"
+        image: "/assets/ChatGPT Image May 10, 2025, 05_25_40 PM.png" // Updated path
       }
     ]
   }
@@ -339,7 +339,7 @@ const CategoryItemCard = ({
             className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             onError={(e) => {
               console.error("Image failed to load:", item.image);
-              e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
+              e.currentTarget.src = "/assets/sacred_geometry.svg"; // Updated fallback image
             }}
           />
           
