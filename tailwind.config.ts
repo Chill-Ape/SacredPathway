@@ -5,6 +5,13 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'cinzel': ['Cinzel', 'serif'],
+        'cormorant': ['Cormorant Garamond', 'serif'],
+        'eb-garamond': ['EB Garamond', 'serif'],
+        'playfair': ['Playfair Display', 'serif'],
+        'raleway': ['Raleway', 'sans-serif'],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
