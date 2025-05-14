@@ -120,14 +120,12 @@ const Landing1 = () => {
                 transition={{ duration: 1 }}
                 filter="none"
               >
-                {/* Sacred geometry - perfectly proportioned triangle and circle */}
+                {/* Sacred geometry - filled triangle with overlaid circle */}
                 <motion.path 
-                  d="M50 20 L10 85 L90 85 Z" 
-                  fill="none" 
-                  stroke="rgba(66, 133, 180, 0.9)" 
-                  strokeWidth="3"
+                  d="M50 15 L10 80 L90 80 Z" 
+                  fill="rgba(66, 133, 180, 0.9)" 
                   animate={{ 
-                    stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
+                    fill: ["rgba(66, 133, 180, 0.9)", "rgba(76, 143, 190, 1)", "rgba(66, 133, 180, 0.9)"]
                   }}
                   transition={{ 
                     duration: 4,
@@ -136,16 +134,17 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Perfect circle centered in triangle */}
+                {/* Circle overlaid on the triangle - positioned to touch triangle sides */}
                 <motion.circle 
                   cx="50" 
-                  cy="50" 
-                  r="19" 
+                  cy="60" 
+                  r="21" 
                   fill="none" 
                   stroke="rgba(66, 133, 180, 0.9)" 
-                  strokeWidth="3"
+                  strokeWidth="4"
+                  strokeLinecap="round"
                   animate={{ 
-                    stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
+                    stroke: ["rgba(66, 133, 180, 0.9)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.9)"]
                   }}
                   transition={{ 
                     duration: 4,
@@ -157,14 +156,15 @@ const Landing1 = () => {
                 
                 {/* Line underneath - extending beyond the triangle */}
                 <motion.line 
-                  x1="5" 
-                  y1="95" 
-                  x2="95" 
-                  y2="95" 
+                  x1="10" 
+                  y1="100" 
+                  x2="90" 
+                  y2="100" 
                   stroke="rgba(66, 133, 180, 0.9)" 
-                  strokeWidth="3"
+                  strokeWidth="5"
+                  strokeLinecap="round"
                   animate={{ 
-                    stroke: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
+                    stroke: ["rgba(66, 133, 180, 0.9)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.9)"]
                   }}
                   transition={{ 
                     duration: 4,
@@ -174,14 +174,14 @@ const Landing1 = () => {
                   }}
                 />
                 
-                {/* Dot above - smaller and positioned higher */}
+                {/* Dot above the triangle */}
                 <motion.circle 
                   cx="50" 
                   cy="5" 
-                  r="3.5" 
+                  r="4" 
                   fill="rgba(66, 133, 180, 0.9)"
                   animate={{ 
-                    fill: ["rgba(66, 133, 180, 0.8)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.8)"]
+                    fill: ["rgba(66, 133, 180, 0.9)", "rgba(96, 163, 210, 1)", "rgba(66, 133, 180, 0.9)"]
                   }}
                   transition={{ 
                     duration: 4,
