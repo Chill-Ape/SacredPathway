@@ -96,58 +96,93 @@ function InventoryItemCard({ item }: { item: InventoryItem }) {
     }
   };
   
+  // Determine the glow effect based on rarity
+  const getGlowEffect = (rarity: string | null) => {
+    switch(rarity) {
+      case RARITY_LEVELS.COMMON:
+        return "hover:shadow-md";
+      case RARITY_LEVELS.UNCOMMON:
+        return "hover:shadow-md hover:shadow-green-200";
+      case RARITY_LEVELS.RARE:
+        return "hover:shadow-md hover:shadow-blue-300";
+      case RARITY_LEVELS.EPIC:
+        return "hover:shadow-md hover:shadow-purple-300";
+      case RARITY_LEVELS.LEGENDARY:
+        return "hover:shadow-md hover:shadow-amber-300";
+      case RARITY_LEVELS.MYTHIC:
+        return "hover:shadow-md hover:shadow-red-300";
+      case RARITY_LEVELS.DIVINE:
+        return "hover:shadow-md hover:shadow-indigo-300";
+      default:
+        return "hover:shadow-md";
+    }
+  };
+  
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{item.name}</CardTitle>
-          <Badge className={getRarityColor(item.rarity)}>
-            {item.rarity || "Common"}
-          </Badge>
-        </div>
-        <CardDescription>
-          {getItemTypeDisplayName(item.type)}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex-grow">
+    <Card className={`h-full flex flex-col transition-all duration-300 ${getGlowEffect(item.rarity)} ${item.isEquipped ? 'border-sacred-blue' : ''}`}>
+      <div className="relative">
         {item.imageUrl && (
-          <div className="mb-3 rounded overflow-hidden">
+          <div className="overflow-hidden rounded-t-lg">
             <img
               src={item.imageUrl}
               alt={item.name}
-              className="w-full h-32 object-cover"
+              className="w-full h-40 object-cover transform hover:scale-105 transition-transform duration-500"
             />
           </div>
         )}
-        <p className="text-sm text-muted-foreground">{item.description}</p>
-        {item.quantity > 1 && (
-          <Badge variant="outline" className="mt-2">
-            Quantity: {item.quantity}
-          </Badge>
+        <Badge className={`${getRarityColor(item.rarity)} absolute top-2 right-2`}>
+          {item.rarity ? item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1) : "Common"}
+        </Badge>
+        {item.isEquipped && (
+          <div className="absolute top-2 left-2 bg-sacred-blue text-white text-xs px-2 py-1 rounded-full">
+            Equipped
+          </div>
         )}
+      </div>
+      
+      <CardHeader className="pb-2 pt-3">
+        <CardTitle className="text-lg font-serif">{item.name}</CardTitle>
+        <CardDescription className="flex justify-between items-center">
+          <span>{getItemTypeDisplayName(item.type)}</span>
+          {item.quantity > 1 && (
+            <Badge variant="outline" className="ml-auto">
+              x{item.quantity}
+            </Badge>
+          )}
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent className="flex-grow">
+        <p className="text-sm text-muted-foreground">{item.description}</p>
         {item.usesLeft !== null && item.usesLeft > 0 && (
-          <Badge variant="outline" className="mt-2 ml-2">
-            Uses: {item.usesLeft}
-          </Badge>
+          <div className="mt-2 text-xs">
+            <span className="text-muted-foreground">Uses remaining: </span>
+            <span className="font-medium">{item.usesLeft}</span>
+          </div>
         )}
       </CardContent>
-      <CardFooter className="flex justify-between">
+      
+      <CardFooter className="flex justify-between pt-2 pb-3">
         <Button 
           variant={item.isEquipped ? "default" : "outline"} 
           size="sm"
           onClick={handleToggleEquip}
           disabled={toggleEquipMutation.isPending}
+          className={item.isEquipped 
+            ? "bg-sacred-blue hover:bg-sacred-blue-light text-white" 
+            : "hover:border-sacred-blue hover:text-sacred-blue"}
         >
           {toggleEquipMutation.isPending && item.id === (toggleEquipMutation.variables as any)?.itemId ? (
             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
           ) : null}
-          {item.isEquipped ? "Equipped" : "Equip"}
+          {item.isEquipped ? "Unequip" : "Equip"}
         </Button>
         <Button 
-          variant="destructive" 
+          variant="outline" 
           size="sm"
           onClick={handleRemove}
           disabled={removeItemMutation.isPending}
+          className="hover:bg-red-50 hover:text-red-600 hover:border-red-200"
         >
           {removeItemMutation.isPending && item.id === (removeItemMutation.variables as any) ? (
             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -367,9 +402,15 @@ function InventoryContent() {
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Inventory</h1>
-        <Button onClick={() => setIsAddItemDialogOpen(true)}>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+          <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1">Akashic Inventory</h1>
+          <p className="text-sm text-muted-foreground">Manage your sacred artifacts and mystical items</p>
+        </div>
+        <Button 
+          onClick={() => setIsAddItemDialogOpen(true)}
+          className="bg-sacred-gold hover:bg-sacred-gold/90 text-sacred-dark"
+        >
           Add New Item
         </Button>
       </div>
@@ -379,59 +420,77 @@ function InventoryContent() {
         onClose={() => setIsAddItemDialogOpen(false)} 
       />
       
-      <Tabs defaultValue="all">
-        <TabsList className="mb-4">
-          <TabsTrigger value="all">All Items ({items?.length || 0})</TabsTrigger>
-          <TabsTrigger value="equipped">Equipped ({equippedItems?.length || 0})</TabsTrigger>
-          {Object.values(ITEM_TYPES).map((type) => {
-            const count = items?.filter(item => item.type === type).length || 0;
-            if (count === 0) return null;
-            return (
-              <TabsTrigger key={type} value={type}>
-                {getItemTypeDisplayName(type)} ({count})
+      <div className="bg-gradient-to-r from-sacred-dark-light to-sacred-dark-lighter p-6 rounded-xl shadow-lg mb-8">
+        <Tabs defaultValue="all" className="w-full">
+          <div className="overflow-x-auto pb-2">
+            <TabsList className="mb-6 bg-sacred-dark-lightest border border-sacred-gold/20">
+              <TabsTrigger 
+                value="all" 
+                className="data-[state=active]:bg-sacred-gold/10 data-[state=active]:text-sacred-gold"
+              >
+                All Items ({items?.length || 0})
               </TabsTrigger>
-            );
-          })}
-        </TabsList>
-        
-        <TabsContent value="all">
-          {items && items.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.map((item) => (
-                <InventoryItemCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 border rounded-lg bg-muted/20">
-              <p className="text-muted-foreground">Your inventory is empty.</p>
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="equipped">
-          {equippedItems && equippedItems.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {equippedItems.map((item) => (
-                <InventoryItemCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 border rounded-lg bg-muted/20">
-              <p className="text-muted-foreground">You have no equipped items.</p>
-            </div>
-          )}
-        </TabsContent>
-        
-        {Object.values(ITEM_TYPES).map((type) => (
-          <TabsContent key={type} value={type}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items?.filter(item => item.type === type).map((item) => (
-                <InventoryItemCard key={item.id} item={item} />
-              ))}
-            </div>
+              <TabsTrigger 
+                value="equipped"
+                className="data-[state=active]:bg-sacred-blue/10 data-[state=active]:text-sacred-blue"
+              >
+                Equipped ({equippedItems?.length || 0})
+              </TabsTrigger>
+              {Object.values(ITEM_TYPES).map((type) => {
+                const count = items?.filter(item => item.type === type).length || 0;
+                if (count === 0) return null;
+                return (
+                  <TabsTrigger 
+                    key={type} 
+                    value={type}
+                    className="data-[state=active]:bg-sacred-secondary/10 data-[state=active]:text-sacred-secondary"
+                  >
+                    {getItemTypeDisplayName(type)} ({count})
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
+          
+          <TabsContent value="all">
+            {items && items.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {items.map((item: InventoryItem) => (
+                  <InventoryItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 border border-sacred-gold/10 rounded-lg bg-sacred-dark-lightest">
+                <p className="text-sacred-white/70">Your inventory is empty. Seek out artifacts in your journey.</p>
+              </div>
+            )}
           </TabsContent>
-        ))}
-      </Tabs>
+          
+          <TabsContent value="equipped">
+            {equippedItems && equippedItems.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {equippedItems.map((item: InventoryItem) => (
+                  <InventoryItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 border border-sacred-gold/10 rounded-lg bg-sacred-dark-lightest">
+                <p className="text-sacred-white/70">You have no equipped items. Equip items to enhance your abilities.</p>
+              </div>
+            )}
+          </TabsContent>
+          
+          {Object.values(ITEM_TYPES).map((type) => (
+            <TabsContent key={type} value={type}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {items?.filter(item => item.type === type).map((item: InventoryItem) => (
+                  <InventoryItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
     </div>
   );
 }
