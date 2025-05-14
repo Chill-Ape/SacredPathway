@@ -10,6 +10,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
+// Import book images directly using Vite's asset handling via @assets alias
+import bookOfThothImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_19 PM.png';
+import firstCodexImage from '@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png';
+import akashicCompendiumImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png';
+
 // Simple component for a book item card
 const BookCard = ({ 
   title, 
@@ -105,7 +110,7 @@ export default function ArkBooks() {
       description: "A legendary text attributed to the Egyptian deity of wisdom, containing powerful knowledge of astral realms.",
       isLocked: true,
       key: "THOTH",
-      image: "/assets/ancient_city.png"
+      image: bookOfThothImage
     },
     {
       id: "first-codex",
@@ -113,7 +118,7 @@ export default function ArkBooks() {
       description: "Believed to be the earliest written account of the journey of consciousness through the cosmos.",
       isLocked: true,
       key: "CODEX",
-      image: "/assets/ancient_settlement.png"
+      image: firstCodexImage
     },
     {
       id: "akashic-compendium",
@@ -121,7 +126,7 @@ export default function ArkBooks() {
       description: "The first volume of the complete cosmic record, detailing the earliest eras of manifested reality.",
       isLocked: true,
       key: "AKASHA",
-      image: "/assets/before_history.png"
+      image: akashicCompendiumImage
     }
   ];
 
