@@ -145,15 +145,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userData.password = await hashPassword(userData.password);
       }
       
-      // Create user
-      const user = await storage.createUser(userData);
+      // Create user with initial mana balance
+      const userDataWithMana = {
+        ...userData,
+        manaBalance: 50  // Add initial mana balance for new users
+      };
+      
+      const user = await storage.createUser(userDataWithMana as any);
+      
+      // Create a record of the welcome bonus mana transaction
+      await storage.createManaTransaction({
+        userId: user.id,
+        amount: 50,
+        description: "Welcome bonus for new registration",
+        transactionType: "welcome_bonus",
+        referenceId: null,
+        stripePaymentIntentId: null
+      });
       
       // Log the user in
       req.login(user, (err) => {
         if (err) {
           return res.status(500).json({ message: 'Error logging in after registration' });
         }
-        return res.status(201).json({ user: { id: user.id, username: user.username } });
+        return res.status(201).json({ 
+          user: { id: user.id, username: user.username },
+          welcomeBonus: 50
+        });
       });
     } catch (error) {
       console.error('Registration error:', error);

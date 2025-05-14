@@ -59,16 +59,18 @@ export const userScrollsRelations = relations(userScrolls, ({ one }) => ({
 
 // Define insert schemas
 
-// User insert schema with required email, password and optional phone
+// User insert schema with required email, password, optional phone, and manaBalance
 export const insertUserSchema = createInsertSchema(users)
   .pick({
     username: true,
     email: true,
     phone: true,
     password: true,
+    manaBalance: true,
   })
   .partial({
     phone: true,
+    manaBalance: true,  // Make manaBalance optional with default value of 0 in the database
   })
   // Add explicit validation for password (ensure it's required)
   .refine((data) => !!data.password, {

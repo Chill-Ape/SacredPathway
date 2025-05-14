@@ -109,15 +109,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: (data) => {
       console.log("Registration successful, setting user data:", data);
       queryClient.setQueryData(["/api/user"], data);
+      
+      // Force refetch of mana balance to show the welcome bonus
+      queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
+      
       toast({
         title: "Registration successful",
-        description: `Welcome, ${data.user.username}!`,
+        description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
       });
       
       // Add a small delay before forcing a navigation
       setTimeout(() => {
         window.location.href = '/';
-      }, 500);
+      }, 1000);
     },
     onError: (error: Error) => {
       toast({
