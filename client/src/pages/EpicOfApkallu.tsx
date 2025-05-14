@@ -14,7 +14,7 @@ export default function EpicOfApkallu() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [keyInput, setKeyInput] = useState("");
-  const [isLocked, setIsLocked] = useState(true);
+  const [isLocked, setIsLocked] = useState(false);
   const [isKeyDialogOpen, setIsKeyDialogOpen] = useState(false);
   
   const correctKey = "APKALLU";

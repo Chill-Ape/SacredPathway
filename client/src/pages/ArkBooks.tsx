@@ -121,7 +121,7 @@ export default function ArkBooks() {
       id: "epic-of-apkallu",
       title: "The Epic of the Apkallu",
       description: "An ancient Mesopotamian text chronicling the seven sages who brought wisdom and civilization to humanity before the Great Flood.",
-      isLocked: true,
+      isLocked: false,
       key: "APKALLU",
       image: epicOfApkalluImage
     },
@@ -143,23 +143,27 @@ export default function ArkBooks() {
     }
   ];
 
-  // Get database items 
+  // Get database items with caching to prevent constant refreshes
   const { isLoading, data: scrollsData } = useQuery<Scroll[]>({
     queryKey: ["/api/scrolls"],
-    staleTime: 60000,
+    staleTime: 300000, // 5 minutes cache
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
-  // Get user's unlocked scrolls
+  // Get user's unlocked scrolls with caching to prevent constant refreshes
   const { data: userScrolls } = useQuery<Scroll[]>({
     queryKey: ["/api/user/scrolls"],
-    staleTime: 60000,
+    staleTime: 300000, // 5 minutes cache
+    retry: false,
+    refetchOnWindowFocus: false,
     enabled: !!user,
   });
 
   // Filtered items from database
   const [dbItems, setDbItems] = useState<Scroll[]>([]);
 
-  // Process DB items
+  // Process DB items once without constantly re-filtering
   useEffect(() => {
     if (scrollsData) {
       // Filter scrolls by "book" type
@@ -168,7 +172,16 @@ export default function ArkBooks() {
           const scrollType = scroll.type || 'scroll';
           return scrollType === 'book';
         });
-      setDbItems(filteredItems);
+      
+      // Compare with current state to avoid unnecessary updates
+      setDbItems(prev => {
+        // Only update if the items have actually changed
+        if (prev.length === filteredItems.length && 
+            prev.every((item, i) => item.id === filteredItems[i]?.id)) {
+          return prev;
+        }
+        return filteredItems;
+      });
     }
   }, [scrollsData]);
 
