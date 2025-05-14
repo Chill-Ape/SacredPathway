@@ -85,6 +85,9 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
       // Call the parent's update function
       if (onUpdate) onUpdate(data.user);
       
+      // Force a refresh of user data
+      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      
       toast({
         title: "Profile Updated",
         description: "Your profile picture has been updated successfully.",
@@ -92,6 +95,11 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
       
       // Close the dialog
       setIsDialogOpen(false);
+      
+      // Refresh the page after a short delay to ensure the profile picture is updated everywhere
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error: any) {
       toast({
         title: "Update Failed",
@@ -190,6 +198,9 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
       // Call the parent's update function
       if (onUpdate) onUpdate(data.user);
       
+      // Force a refresh of user data
+      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      
       // Cleanup the preview URL
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setSelectedFile(null);
@@ -202,6 +213,11 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
       
       // Close the dialog
       setIsDialogOpen(false);
+      
+      // Refresh the page after a short delay to ensure the profile picture is updated everywhere
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error: any) {
       toast({
         title: "Upload Failed",
