@@ -23,6 +23,7 @@ import ArkArtifacts from "@/pages/ArkArtifacts";
 import ArkTablets from "@/pages/ArkTablets";
 import ArkScrolls from "@/pages/ArkScrolls";
 import ArkBooks from "@/pages/ArkBooks";
+import ArkContentsTest from "@/pages/ArkContentsTest";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { AnimatePresence } from "framer-motion";
@@ -57,6 +58,7 @@ function App() {
                 <Route path="/simulation" component={Simulation} />
                 <Route path="/auth" component={AuthPage} />
                 <Route path="/ark-contents" component={ArkContents} />
+                <Route path="/ark-contents-test" component={ArkContentsTest} />
                 <Route path="/ark/artifacts" component={ArkArtifacts} />
                 <Route path="/ark/tablets" component={ArkTablets} />
                 <Route path="/ark/scrolls" component={ArkScrolls} />
