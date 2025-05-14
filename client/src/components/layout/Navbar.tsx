@@ -34,8 +34,8 @@ export default function Navbar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Base navigation links for all users
-  const baseNavLinks = [
+  // Navigation links
+  const navLinks = [
     { name: "Home", path: "/" },
     { name: "Ark Contents", path: "/ark-contents" },
     { name: "Akashic Lore", path: "/lore" },
@@ -43,16 +43,6 @@ export default function Navbar() {
     { name: "The Simulation", path: "/simulation" },
     { name: "Contact", path: "/contact" },
   ];
-  
-  // Additional links for authenticated users
-  const authNavLinks = [
-    { name: "Inventory", path: "/inventory" },
-  ];
-  
-  // Combine links based on authentication status
-  const navLinks = user 
-    ? [...baseNavLinks, ...authNavLinks]
-    : baseNavLinks;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-sacred-white bg-opacity-90 backdrop-blur-sm border-b border-sacred-blue/10 font-cinzel tracking-wider">
