@@ -10,10 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
-// Import book images directly using Vite's asset handling via @assets alias
-import bookOfThothImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_19 PM.png';
+// Import book images directly using Vite's asset handling 
 import firstCodexImage from '@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png';
 import akashicCompendiumImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png';
+// For Book of Thoth, importing from client assets directly
+// @ts-ignore
+import bookOfThothImage from '../assets/ancient_tablet_dark.png';
 
 // Simple component for a book item card
 const BookCard = ({ 
