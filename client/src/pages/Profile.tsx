@@ -51,7 +51,7 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
   
   // Predefined avatar options with added images from assets
   const avatarOptions = [
-    '/assets/default_avatar.svg',
+    '/assets/sacred_symbol.png', // Set as first (default) option
     '/assets/avatars/mystical_1.svg',
     '/assets/avatars/mystical_2.svg',
     '/assets/avatars/mystical_3.svg',
@@ -69,37 +69,32 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
     try {
       setIsUploading(true);
       
-      const response = await apiRequest("POST", "/api/user/profile-picture", {
-        profilePicture: avatarPath
+      const response = await fetch("/api/user/profile-picture", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ profilePicture: avatarPath })
       });
       
       if (!response.ok) {
         throw new Error("Failed to update profile picture");
       }
       
-      const data = await response.json();
-      
-      // Update the user data in the cache
-      queryClient.setQueryData(["/api/user"], { user: data.user });
-      
-      // Call the parent's update function
-      if (onUpdate) onUpdate(data.user);
-      
-      // Force a refresh of user data
-      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
-      
+      // Force a hard page refresh to ensure all components update
       toast({
         title: "Profile Updated",
-        description: "Your profile picture has been updated successfully.",
+        description: "Your profile picture has been updated. Page will refresh.",
       });
       
       // Close the dialog
       setIsDialogOpen(false);
       
-      // Refresh the page after a short delay to ensure the profile picture is updated everywhere
+      // Give time for the toast to show, then force a full page reload
       setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        window.location.href = window.location.pathname;
+      }, 1500);
     } catch (error: any) {
       toast({
         title: "Update Failed",
@@ -151,73 +146,37 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
       const formData = new FormData();
       formData.append('profileImage', selectedFile);
       
-      // Simulate progress (in a real app, you'd use upload progress events)
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
-          const next = prev + 20;
-          return next < 90 ? next : 90;
-        });
-      }, 500);
+      // Set progress to simulate upload
+      setUploadProgress(30);
       
-      // Upload the file using apiRequest which handles authentication properly
-      // First, check if user is still authenticated
-      const authCheck = await apiRequest("GET", "/api/user");
-      if (!authCheck.ok) {
-        // User is not authenticated, redirect to login
-        toast({
-          title: "Session Expired",
-          description: "Please log in again to continue",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = '/auth';
-        }, 1500);
-        throw new Error("Authentication required");
-      }
-      
-      // Now proceed with the upload
+      // Upload the file
       const response = await fetch('/api/user/upload-profile-picture', {
         method: 'POST',
-        credentials: 'include', // Include cookies for authentication
+        credentials: 'include',
         body: formData,
       });
       
-      clearInterval(progressInterval);
       setUploadProgress(100);
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to upload profile picture");
+        throw new Error("Failed to upload profile picture");
       }
       
       const data = await response.json();
       
-      // Update the user data in the cache
-      queryClient.setQueryData(["/api/user"], { user: data.user });
-      
-      // Call the parent's update function
-      if (onUpdate) onUpdate(data.user);
-      
-      // Force a refresh of user data
-      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
-      
-      // Cleanup the preview URL
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setSelectedFile(null);
-      setPreviewUrl(null);
-      
+      // Force a hard page refresh to ensure all components update
       toast({
         title: "Profile Updated",
-        description: "Your profile picture has been uploaded successfully.",
+        description: "Your profile picture has been uploaded. Page will refresh.",
       });
       
-      // Close the dialog
+      // Close the dialog and refresh the page
       setIsDialogOpen(false);
       
-      // Refresh the page after a short delay to ensure the profile picture is updated everywhere
+      // Give time for the toast to show, then force a full page reload
       setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        window.location.href = window.location.pathname;
+      }, 1500);
     } catch (error: any) {
       toast({
         title: "Upload Failed",

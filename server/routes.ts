@@ -189,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user: { 
           id: req.user.id, 
           username: req.user.username,
-          profilePicture: req.user.profilePicture || '/assets/default_avatar.svg'
+          profilePicture: req.user.profilePicture || '/assets/sacred_symbol.png'
         } 
       });
     }
