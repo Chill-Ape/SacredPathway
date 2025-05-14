@@ -149,7 +149,7 @@ export default function ProfileMenu({
                 }`}
               >
                 <Library className="h-5 w-5 mr-2" />
-                My Scrolls
+                My Collection
               </Button>
             </Link>
             
@@ -233,7 +233,7 @@ export default function ProfileMenu({
         
         <Link to="/my-scrolls">
           <DropdownMenuItem className="cursor-pointer">
-            My Scrolls
+            My Collection
           </DropdownMenuItem>
         </Link>
         

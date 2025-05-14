@@ -29,7 +29,7 @@ export default function Footer() {
   
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Akashic Scrolls", path: "/scrolls" },
+    { name: "Ark Contents", path: "/scrolls" },
     { name: "Akashic Lore", path: "/lore" },
     { name: "The Oracle", path: "/oracle" },
     { name: "Contact", path: "/contact" },
