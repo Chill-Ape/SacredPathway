@@ -1,32 +1,19 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/use-auth';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { ManaTransaction } from '@shared/schema';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, ArrowDown, ArrowUp, TrendingUp, Sparkles, CreditCard } from 'lucide-react';
 import { format } from 'date-fns';
 
 const ManaTransactions: React.FC = () => {
   const { user } = useAuth();
   
+  // Query for transaction history
   const { data: transactions, isLoading, error } = useQuery<ManaTransaction[]>({
     queryKey: ['/api/user/mana/transactions'],
     enabled: !!user,
   });
-
-  if (!user) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle>Mana Transactions</CardTitle>
-          <CardDescription>
-            You need to be logged in to view your transactions.
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
-  }
 
   if (isLoading) {
     return (
@@ -51,62 +38,57 @@ const ManaTransactions: React.FC = () => {
 
   if (transactions.length === 0) {
     return (
-      <Card className="w-full">
+      <Card className="w-full max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Mana Transactions</CardTitle>
+          <CardTitle>No Transactions</CardTitle>
           <CardDescription>
-            Your transaction history will appear here.
+            You haven't made any Mana transactions yet.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="text-center p-6 text-gray-500">
-            No transactions yet. Purchase Mana or use it to unlock content!
-          </div>
+        <CardContent className="text-center text-gray-500">
+          Purchase some Mana to see your transaction history here.
         </CardContent>
       </Card>
     );
   }
 
+  // Get transaction icon based on type
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'mana_purchase':
+        return <CreditCard className="h-5 w-5 text-green-500" />;
+      case 'mana_spend':
+        return <ArrowDown className="h-5 w-5 text-red-500" />;
+      case 'mana_earn':
+        return <ArrowUp className="h-5 w-5 text-green-500" />;
+      case 'mana_reward':
+        return <TrendingUp className="h-5 w-5 text-blue-500" />;
+      default:
+        return <Sparkles className="h-5 w-5 text-purple-500" />;
+    }
+  };
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Mana Transactions</CardTitle>
-        <CardDescription>
-          Your recent Mana activity
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {transactions.map((transaction) => (
-              <TableRow key={transaction.id}>
-                <TableCell className="font-medium whitespace-nowrap">
-                  {format(new Date(transaction.createdAt), 'MMM d, yyyy')}
-                </TableCell>
-                <TableCell>{transaction.description}</TableCell>
-                <TableCell className="text-right whitespace-nowrap">
-                  <span className={`flex items-center justify-end gap-1 font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {transaction.amount > 0 ? (
-                      <ArrowDownLeft className="h-4 w-4" />
-                    ) : (
-                      <ArrowUpRight className="h-4 w-4" />
-                    )}
-                    {transaction.amount > 0 ? '+' : ''}{transaction.amount}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      {transactions.map((transaction) => (
+        <Card key={transaction.id} className="overflow-hidden">
+          <div className="p-4 flex items-center gap-4">
+            <div className="flex-shrink-0 p-2 rounded-full bg-gray-100">
+              {getTransactionIcon(transaction.transactionType)}
+            </div>
+            <div className="flex-grow">
+              <div className="font-medium">{transaction.description}</div>
+              <div className="text-sm text-gray-500">
+                {format(new Date(transaction.createdAt), 'MMM d, yyyy, h:mm a')}
+              </div>
+            </div>
+            <div className={`text-lg font-semibold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {transaction.amount > 0 ? '+' : ''}{transaction.amount} Mana
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
   );
 };
 

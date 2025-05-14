@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/use-auth';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { ManaPackage } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { loadStripe } from '@stripe/stripe-js';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 // Initialize Stripe with the public key
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
@@ -17,77 +18,64 @@ if (!stripePublicKey) {
   console.error('VITE_STRIPE_PUBLIC_KEY is missing. Stripe checkout will not work.');
 }
 
-const stripePromise = loadStripe(stripePublicKey || '');
+const stripePromise = stripePublicKey ? loadStripe(stripePublicKey) : null;
 
 const ManaPackages: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [processingPackageId, setProcessingPackageId] = useState<number | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
+  // Check URL parameters for status
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('status') === 'success') {
+      setShowSuccessMessage(true);
+      // Clear the status after 5 seconds
+      const timer = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+  
+  // Fetch mana packages
   const { data: packages, isLoading, error } = useQuery<ManaPackage[]>({
     queryKey: ['/api/mana/packages'],
     // Allow anyone to see the packages, even if not logged in
     enabled: true,
   });
 
-  const createPaymentIntent = useMutation({
-    mutationFn: async (packageId: number) => {
-      const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { packageId });
-      return response.json();
-    },
-    onSuccess: async (data) => {
-      // Redirect to Stripe Checkout with the client secret
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
-      }
-
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
-
-      if (error) {
-        toast({
-          title: 'Payment Error',
-          description: error.message,
-          variant: 'destructive',
-        });
-      }
-      
-      setProcessingPackageId(null);
-      queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: 'Payment Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-      setProcessingPackageId(null);
-    },
-  });
-
+  // Handle purchase button click
   const handlePurchase = async (pkg: ManaPackage) => {
-    if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
+    // Check if Stripe is available
+    if (!stripePublicKey || !stripePromise) {
       toast({
         title: "Payment System Not Available",
-        description: "The Mana purchase system is currently being set up. Please check back later.",
+        description: "The Stripe payment system is currently unavailable. Please try again later or contact support.",
         variant: "destructive"
       });
       return;
     }
     
     try {
-      console.log('Starting purchase process for package:', pkg.id, pkg.name);
+      // Set the package as processing
       setProcessingPackageId(pkg.id);
       
-      // Make the API request directly here for better control
-      console.log('Making API request to create payment intent...');
-      const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { packageId: pkg.id });
+      // Log the start of the purchase process
+      console.log(`[${new Date().toISOString()}] Starting purchase process for package:`, pkg.id, pkg.name);
       
-      console.log('API response status:', response.status);
+      // Create payment intent on the server
+      console.log(`[${new Date().toISOString()}] Making API request to create payment intent...`);
+      const response = await apiRequest('POST', '/api/mana/purchase/create-payment-intent', { 
+        packageId: pkg.id 
+      });
       
+      // Log the response status
+      console.log(`[${new Date().toISOString()}] API response status:`, response.status);
+      
+      // Handle non-OK responses
       if (!response.ok) {
         let errorMessage = 'Failed to create payment session';
         try {
@@ -101,16 +89,15 @@ const ManaPackages: React.FC = () => {
         throw new Error(errorMessage);
       }
       
+      // Parse the response data
       const data = await response.json();
-      console.log('Received data:', data);
+      console.log(`[${new Date().toISOString()}] Received data:`, data);
       
-      // Handle the case where authentication is required
+      // Check if authentication is required (user not logged in)
       if (data.requiresAuthentication) {
-        // This case should not normally occur because the component already checks for user
-        // before displaying purchase buttons, but we handle it for completeness
         toast({
           title: 'Authentication Required',
-          description: data.message || 'You need to be logged in to purchase Mana.',
+          description: 'You need to be logged in to purchase Mana.',
           variant: 'default',
         });
         
@@ -119,38 +106,58 @@ const ManaPackages: React.FC = () => {
         return;
       }
       
-      // Check for session ID which is needed for Stripe checkout
+      // Verify we have a session ID
       if (!data.sessionId) {
         throw new Error('No session ID received from server');
       }
       
-      // Redirect to Stripe Checkout
-      console.log('Loading Stripe...');
+      // Load Stripe and redirect to checkout
+      console.log(`[${new Date().toISOString()}] Loading Stripe and redirecting to checkout...`);
       const stripe = await stripePromise;
+      
       if (!stripe) {
         throw new Error('Stripe failed to load. Please check your Stripe public key.');
       }
       
-      console.log('Redirecting to Stripe checkout...');
+      // Redirect to Stripe checkout
       const { error } = await stripe.redirectToCheckout({
         sessionId: data.sessionId,
       });
       
+      // Handle redirect errors
       if (error) {
-        console.error('Stripe redirect error:', error);
-        throw new Error(error.message);
+        console.error(`[${new Date().toISOString()}] Stripe redirect error:`, error);
+        throw new Error(error.message || 'Failed to redirect to payment page');
       }
+      
     } catch (error: any) {
-      console.error('Purchase error:', error);
+      // Log and display errors
+      console.error(`[${new Date().toISOString()}] Purchase error:`, error);
       toast({
         title: 'Payment Error',
         description: error.message || 'An error occurred during checkout',
         variant: 'destructive',
       });
+      
+      // Reset processing state
       setProcessingPackageId(null);
     }
   };
 
+  // Show success message when purchase is complete
+  if (showSuccessMessage) {
+    return (
+      <Alert className="mb-6 bg-green-50 border-green-200">
+        <CheckCircle2 className="h-4 w-4 text-green-600" />
+        <AlertTitle className="text-green-800">Purchase Successful</AlertTitle>
+        <AlertDescription className="text-green-700">
+          Your Mana purchase was successful and has been added to your account.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // Show login prompt for non-authenticated users
   if (!user) {
     return (
       <Card className="w-full max-w-md mx-auto">
@@ -173,6 +180,7 @@ const ManaPackages: React.FC = () => {
     );
   }
 
+  // Show loading state
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -181,6 +189,7 @@ const ManaPackages: React.FC = () => {
     );
   }
 
+  // Show error state
   if (error || !packages) {
     return (
       <Card className="w-full max-w-md mx-auto">
@@ -194,6 +203,7 @@ const ManaPackages: React.FC = () => {
     );
   }
 
+  // Main component rendering
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {packages && packages.length > 0 ? (
@@ -223,7 +233,7 @@ const ManaPackages: React.FC = () => {
               <Button 
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                 onClick={() => handlePurchase(pkg)}
-                disabled={processingPackageId === pkg.id || createPaymentIntent.isPending}
+                disabled={processingPackageId === pkg.id}
               >
                 {processingPackageId === pkg.id ? (
                   <>
