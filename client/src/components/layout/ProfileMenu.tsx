@@ -153,16 +153,16 @@ export default function ProfileMenu({
               </Button>
             </Link>
             
-            <Link to="/mana">
+            <Link to="/mana-debug">
               <Button
                 variant="ghost"
                 className={`w-full justify-start font-cinzel text-left ${
-                  location === "/mana" ? "bg-sacred-blue/5 text-sacred-blue" : "text-sacred-gray"
+                  location === "/mana-debug" ? "bg-sacred-blue/5 text-sacred-blue" : "text-sacred-gray"
                 }`}
-                onClick={() => console.log("Manage Mana clicked in mobile menu")}
+                onClick={() => console.log("Mana Debug clicked in mobile menu at", new Date().toISOString())}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
-                Manage Mana
+                Mana Debug
               </Button>
             </Link>
             
@@ -237,10 +237,10 @@ export default function ProfileMenu({
           </DropdownMenuItem>
         </Link>
         
-        <Link to="/mana">
-          <DropdownMenuItem className="cursor-pointer" onClick={() => console.log("Manage Mana clicked in dropdown menu")}>
+        <Link to="/mana-debug">
+          <DropdownMenuItem className="cursor-pointer" onClick={() => console.log("Mana Debug clicked in dropdown menu at", new Date().toISOString())}>
             <Sparkles className="h-4 w-4 mr-2" />
-            Manage Mana
+            Mana Debug
           </DropdownMenuItem>
         </Link>
         
