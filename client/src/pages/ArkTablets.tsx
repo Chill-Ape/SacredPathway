@@ -11,8 +11,8 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 // Import tablet images using relative paths
-import clayTabletImage from '../assets/clay_tablet_1.png';  
-import emeraldTabletImage from '../assets/ancient_tablet_dark.png';
+import clayTabletImage from '../assets/clay_tablet_3.png';  
+import emeraldTabletImage from '../assets/ancient_tablets_green.png';
 import crystalTabletImage from '../assets/crystal_tablet.png';
 
 // Simple component for a tablet item card
