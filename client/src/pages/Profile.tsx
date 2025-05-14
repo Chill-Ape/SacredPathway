@@ -49,19 +49,19 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
-  // Predefined avatar options with added images from assets
+  // Predefined avatar options with images from the assets folder
   const avatarOptions = [
     '/assets/sacred_symbol.png', // Set as first (default) option
-    '/assets/avatars/mystical_1.svg',
-    '/assets/avatars/mystical_2.svg',
-    '/assets/avatars/mystical_3.svg',
-    '/assets/avatars/mystical_4.svg',
-    '/assets/avatars/mystical_5.png',
-    '/assets/avatars/mystical_6.png',
-    '/assets/avatars/mystical_7.png',
-    '/assets/avatars/mystical_8.jpg',
-    '/assets/avatars/mystical_9.jpg',
-    '/assets/avatars/mystical_10.png',
+    '/assets/avatars/sacred_geometry.png',
+    '/assets/avatars/mystical_vessel.png',
+    '/assets/avatars/crystal_tablet.png',
+    '/assets/avatars/ancient_tablet_dark.png',
+    '/assets/avatars/ancient_tablet_cracked.png',
+    '/assets/avatars/clay_tablet_1.png',
+    '/assets/avatars/clay_tablet_3.png',
+    '/assets/avatars/memory_carriers.png',
+    '/assets/avatars/scroll_1.jpg',
+    '/assets/avatars/IMG_8635.jpg',
   ];
   
   // Handle avatar selection from predefined options
