@@ -105,7 +105,7 @@ export default function ArkTablets() {
       description: "A transparent crystalline tablet containing vibration-encoded data from the antediluvian era.",
       isLocked: true,
       key: "ENKI",
-      image: "/assets/tablets/clay_tablet_1.png"
+      image: "/assets/sample_tablet.svg"
     },
     {
       id: "emerald-tablet-1",
@@ -113,7 +113,7 @@ export default function ArkTablets() {
       description: "First fragment of the fabled emerald tablet, containing alchemical wisdom.",
       isLocked: true,
       key: "HERMES",
-      image: "/assets/tablets/clay_tablet_1.png"
+      image: "/assets/sample_tablet.svg"
     },
     {
       id: "clay-tablet-of-adam",
@@ -121,7 +121,7 @@ export default function ArkTablets() {
       description: "Ancient tablet detailing the origin of consciousness in humanity.",
       isLocked: true,
       key: "GENESIS",
-      image: "/assets/tablets/clay_tablet_1.png"
+      image: "/assets/sample_tablet.svg"
     }
   ];
 
