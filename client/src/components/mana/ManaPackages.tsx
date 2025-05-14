@@ -158,29 +158,6 @@ const ManaPackages: React.FC = () => {
     );
   }
 
-  // Show login prompt for non-authenticated users
-  if (!user) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle>Mana Packages</CardTitle>
-          <CardDescription>
-            You need to be logged in to purchase Mana.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-center">
-          <a href="/auth">
-            <Button 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4"
-            >
-              Log in or Register
-            </Button>
-          </a>
-        </CardContent>
-      </Card>
-    );
-  }
-
   // Show loading state
   if (isLoading) {
     return (
@@ -207,70 +184,96 @@ const ManaPackages: React.FC = () => {
   // Main component rendering
   return (
     <>
-      {/* Information alert about real payment processing */}
-      <Alert className="mb-6 bg-blue-50 border-blue-200">
-        <AlertTitle className="text-blue-800">Secure Payment</AlertTitle>
-        <AlertDescription className="text-blue-700">
-          All transactions are processed securely via Stripe. You will be redirected to Stripe's checkout page to complete your purchase with a credit card.
-        </AlertDescription>
-      </Alert>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {packages && packages.length > 0 ? (
-          packages.map((pkg) => (
-            <Card key={pkg.id} className="w-full overflow-hidden">
-              <CardHeader className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
-                <CardTitle className="flex items-center">
-                  <Sparkles className="h-5 w-5 mr-2 text-yellow-300" />
-                  {pkg.name}
-                </CardTitle>
-                <CardDescription className="text-blue-100">
-                  {pkg.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="text-center">
-                  <span className="text-3xl font-bold text-yellow-500">
-                    {pkg.amount}
-                  </span>
-                  <span className="text-lg ml-2">Mana</span>
-                </div>
-                <div className="text-center mt-2 text-sm text-gray-500">
-                  ${(pkg.price / 100).toFixed(2)} USD
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col gap-2">
-                <Button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center gap-2"
-                  onClick={() => handlePurchase(pkg)}
-                  disabled={processingPackageId === pkg.id}
-                >
-                  {processingPackageId === pkg.id ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <span>Purchase with Card</span>
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                        <path d="M1 4v16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2zm19 16H4c-.55 0-1-.45-1-1V9h18v10c0 .55-.45 1-1 1zM3 5c0-.55.45-1 1-1h16c.55 0 1 .45 1 1v2H3V5z"/>
-                      </svg>
-                    </>
-                  )}
-                </Button>
-                <div className="text-xs text-gray-500 text-center mt-1">
-                  Secured by <span className="font-medium">Stripe</span>
-                </div>
-              </CardFooter>
-            </Card>
-          ))
-        ) : (
-          <div className="col-span-full text-center p-8 border rounded-lg bg-gray-50">
-            <p className="text-gray-500">No Mana packages available. Please check back later.</p>
+      {/* Show login prompt for non-authenticated users */}
+      {!user ? (
+        <Card className="w-full max-w-md mx-auto">
+          <CardHeader>
+            <CardTitle>Authentication Required</CardTitle>
+            <CardDescription>
+              You need to be logged in to purchase Mana.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center gap-4">
+            <p className="text-center text-muted-foreground">
+              Please log in or create an account to purchase Mana packages. Your Mana balance is tied to your user account.
+            </p>
+            <a href="/auth?redirect=/mana">
+              <Button 
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4"
+              >
+                Log in or Register
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          {/* Information alert about real payment processing */}
+          <Alert className="mb-6 bg-blue-50 border-blue-200">
+            <AlertTitle className="text-blue-800">Secure Payment</AlertTitle>
+            <AlertDescription className="text-blue-700">
+              All transactions are processed securely via Stripe. You will be redirected to Stripe's checkout page to complete your purchase with a credit card.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {packages && packages.length > 0 ? (
+              packages.map((pkg) => (
+                <Card key={pkg.id} className="w-full overflow-hidden">
+                  <CardHeader className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
+                    <CardTitle className="flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2 text-yellow-300" />
+                      {pkg.name}
+                    </CardTitle>
+                    <CardDescription className="text-blue-100">
+                      {pkg.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <span className="text-3xl font-bold text-yellow-500">
+                        {pkg.amount}
+                      </span>
+                      <span className="text-lg ml-2">Mana</span>
+                    </div>
+                    <div className="text-center mt-2 text-sm text-gray-500">
+                      ${(pkg.price / 100).toFixed(2)} USD
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex flex-col gap-2">
+                    <Button 
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center gap-2"
+                      onClick={() => handlePurchase(pkg)}
+                      disabled={processingPackageId === pkg.id}
+                    >
+                      {processingPackageId === pkg.id ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <span>Purchase with Card</span>
+                          <svg className="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                            <path d="M1 4v16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2zm19 16H4c-.55 0-1-.45-1-1V9h18v10c0 .55-.45 1-1 1zM3 5c0-.55.45-1 1-1h16c.55 0 1 .45 1 1v2H3V5z"/>
+                          </svg>
+                        </>
+                      )}
+                    </Button>
+                    <div className="text-xs text-gray-500 text-center mt-1">
+                      Secured by <span className="font-medium">Stripe</span>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full text-center p-8 border rounded-lg bg-gray-50">
+                <p className="text-gray-500">No Mana packages available. Please check back later.</p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </>
   );
 };

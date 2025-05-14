@@ -767,7 +767,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create a Stripe payment intent for purchasing Mana
   app.post("/api/mana/purchase/create-payment-intent", async (req: Request, res: Response) => {
-    // Authentication is now handled later in the function to allow anonymous users to view packages
+    // Require authentication for purchasing Mana
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ 
+        requiresAuthentication: true,
+        success: false,
+        message: "Please log in to purchase mana" 
+      });
+    }
     
     try {
       const { packageId } = req.body;
@@ -776,7 +783,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Package ID is required" });
       }
       
-      // Get the mana package - this works for both authenticated and anonymous users
+      // Get the mana package - only for authenticated users
       const manaPackage = await storage.getManaPackageById(Number(packageId));
       if (!manaPackage) {
         return res.status(404).json({ message: "Mana package not found" });
@@ -786,15 +793,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!stripe || !process.env.STRIPE_SECRET_KEY) {
         return res.status(503).json({ 
           message: "Payment service is unavailable. Stripe keys are not configured." 
-        });
-      }
-      
-      // Return package info for anonymous users without creating a payment intent
-      if (!req.isAuthenticated()) {
-        return res.json({ 
-          packageDetails: manaPackage,
-          requiresAuthentication: true,
-          message: "Please log in to purchase this package"
         });
       }
       
