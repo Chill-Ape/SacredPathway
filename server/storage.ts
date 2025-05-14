@@ -14,6 +14,8 @@ import {
   InsertManaTransaction,
   ManaPackage,
   InsertManaPackage,
+  InventoryItem,
+  InsertInventoryItem,
   users,
   scrolls,
   userScrolls,
@@ -22,7 +24,8 @@ import {
   keeperMessages,
   manaTransactions,
   manaPackages,
-  oracleUsage
+  oracleUsage,
+  inventoryItems
 } from "@shared/schema";
 import { db, pool, isDatabaseAvailable } from "./db";
 import { eq, and } from "drizzle-orm";
@@ -440,6 +443,65 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return result;
+  }
+  
+  // Inventory system methods
+  async getUserInventory(userId: number): Promise<InventoryItem[]> {
+    return await db.select().from(inventoryItems).where(eq(inventoryItems.userId, userId));
+  }
+  
+  async getInventoryItemById(id: number): Promise<InventoryItem | undefined> {
+    const [item] = await db.select().from(inventoryItems).where(eq(inventoryItems.id, id));
+    return item;
+  }
+  
+  async addInventoryItem(item: InsertInventoryItem): Promise<InventoryItem> {
+    const [newItem] = await db.insert(inventoryItems).values(item).returning();
+    return newItem;
+  }
+  
+  async updateInventoryItem(id: number, updates: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined> {
+    const [updatedItem] = await db
+      .update(inventoryItems)
+      .set(updates)
+      .where(eq(inventoryItems.id, id))
+      .returning();
+    return updatedItem;
+  }
+  
+  async removeInventoryItem(id: number): Promise<boolean> {
+    const result = await db.delete(inventoryItems).where(eq(inventoryItems.id, id));
+    return !!result;
+  }
+  
+  async updateItemQuantity(id: number, quantity: number): Promise<InventoryItem | undefined> {
+    const [updatedItem] = await db
+      .update(inventoryItems)
+      .set({ quantity })
+      .where(eq(inventoryItems.id, id))
+      .returning();
+    return updatedItem;
+  }
+  
+  async equipItem(id: number, isEquipped: boolean): Promise<InventoryItem | undefined> {
+    const [updatedItem] = await db
+      .update(inventoryItems)
+      .set({ isEquipped })
+      .where(eq(inventoryItems.id, id))
+      .returning();
+    return updatedItem;
+  }
+  
+  async getEquippedItems(userId: number): Promise<InventoryItem[]> {
+    return await db
+      .select()
+      .from(inventoryItems)
+      .where(
+        and(
+          eq(inventoryItems.userId, userId),
+          eq(inventoryItems.isEquipped, true)
+        )
+      );
   }
   
   // Oracle usage tracking for session-based limitations
