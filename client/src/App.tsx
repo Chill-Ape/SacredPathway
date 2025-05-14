@@ -27,6 +27,7 @@ import TabletDetail from "@/pages/TabletDetail";
 import TestHomePage from "@/pages/TestHomePage";
 // Import the deployment-optimized landing page
 import DeploymentReadyPage from "./DeploymentReadyPage";
+import EpicOfApkallu from "@/pages/EpicOfApkallu";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/sacred-scroll/:id" component={SacredScroll} />
                 <Route path="/lore" component={Lore} />
                 <Route path="/deploy" component={DeploymentReadyPage} />
+                <Route path="/epic-of-apkallu" component={EpicOfApkallu} />
                 <Route path="/oracle" component={Oracle} />
                 <Route path="/keeper" component={Keeper} />
                 <Route path="/contact" component={Contact} />

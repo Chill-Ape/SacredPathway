@@ -9,10 +9,12 @@ import { Scroll } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 
 // Import book images directly using Vite's asset handling 
 import firstCodexImage from '@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png';
 import akashicCompendiumImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png';
+import epicOfApkalluImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png';
 // For Book of Thoth, importing from client assets directly
 // @ts-ignore
 import bookOfThothImage from '../assets/ancient_tablet_dark.png';
@@ -103,6 +105,7 @@ const BookCard = ({
 export default function ArkBooks() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+  const { toast } = useToast();
   
   // Custom items specific to books
   const books = [
@@ -113,6 +116,14 @@ export default function ArkBooks() {
       isLocked: true,
       key: "THOTH",
       image: bookOfThothImage
+    },
+    {
+      id: "epic-of-apkallu",
+      title: "The Epic of the Apkallu",
+      description: "An ancient Mesopotamian text chronicling the seven sages who brought wisdom and civilization to humanity before the Great Flood.",
+      isLocked: true,
+      key: "APKALLU",
+      image: epicOfApkalluImage
     },
     {
       id: "first-codex",
@@ -200,16 +211,31 @@ export default function ArkBooks() {
       {!isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Custom books */}
-          {books.map((book, index) => (
-            <BookCard
-              key={book.id}
-              title={book.title}
-              description={book.description}
-              imagePath={book.image}
-              isLocked={book.isLocked}
-              onClick={() => console.log("Selected book:", book.id)}
-            />
-          ))}
+          {books.map((book, index) => {
+            const handleClick = () => {
+              // Navigate to specific book pages if they exist
+              if (book.id === "epic-of-apkallu") {
+                setLocation("/epic-of-apkallu");
+              } else {
+                console.log("Selected book:", book.id);
+                toast({
+                  title: "Book page under construction",
+                  description: "This book's detailed page is coming soon."
+                });
+              }
+            };
+            
+            return (
+              <BookCard
+                key={book.id}
+                title={book.title}
+                description={book.description}
+                imagePath={book.image}
+                isLocked={book.isLocked}
+                onClick={handleClick}
+              />
+            );
+          })}
           
           {/* Database books */}
           {dbItems.map((item) => (
