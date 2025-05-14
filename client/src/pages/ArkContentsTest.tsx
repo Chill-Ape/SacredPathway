@@ -6,11 +6,11 @@ import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { BookOpen, Scroll, Database, FlaskConical } from 'lucide-react';
 
-// Use direct paths to public assets that we know exist
-const tabletImage = '/assets/test/tablet.jpg';
-const scrollImage = '/assets/test/scroll.jpg';
-const bookImage = '/assets/test/book.png';
-const artifactImage = '/assets/test/artifact.png';
+// Import directly from attached assets
+import tabletImage from '@assets/IMG_8635.jpg';
+import scrollImage from '@assets/powerful-ancient-enchanted-mystical-magical-scroll_1277187-6644.avif.jpg';
+import bookImage from '@assets/d6aee2c1-7a80-46e1-a32f-12d89525784f.png';
+import artifactImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png';
 
 // Create a simple card component for each category
 const CategoryCard = ({ 
