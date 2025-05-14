@@ -35,7 +35,7 @@ export default function MyScrolls() {
   if (error) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl text-sacred-blue font-cinzel mb-4">Error Loading Scrolls</h2>
+        <h2 className="text-2xl text-sacred-blue font-cinzel mb-4">Error Loading Your Collection</h2>
         <p className="text-sacred-gray">Please try again later.</p>
       </div>
     );
@@ -50,8 +50,8 @@ export default function MyScrolls() {
       className="container mx-auto px-4 py-12"
     >
       <Helmet>
-        <title>My Unlocked Scrolls | The Akashic Archive</title>
-        <meta name="description" content="View your unlocked sacred scrolls from the Akashic Archive. Access ancient wisdom and hidden knowledge from your personal collection." />
+        <title>My Unlocked Collection | The Akashic Archive</title>
+        <meta name="description" content="View your unlocked tablets, artifacts, scrolls, and books from the Akashic Archive. Access ancient wisdom and hidden knowledge from your personal collection." />
       </Helmet>
       
       <h1 className="text-4xl md:text-5xl font-cinzel text-sacred-blue text-center mb-3">
@@ -66,7 +66,7 @@ export default function MyScrolls() {
       <div className="max-w-md mx-auto mb-10">
         <input
           type="text"
-          placeholder="Search your scrolls..."
+          placeholder="Search your collection..."
           className="w-full p-3 border border-sacred-blue/20 rounded-lg font-raleway focus:outline-none focus:ring-2 focus:ring-sacred-blue/50"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -76,12 +76,12 @@ export default function MyScrolls() {
       {filteredScrolls.length === 0 ? (
         <div className="text-center py-12 bg-sacred-blue/5 rounded-xl max-w-2xl mx-auto">
           <h2 className="text-2xl text-sacred-blue font-cinzel mb-4">
-            {searchTerm ? "No matching scrolls found" : "No scrolls unlocked yet"}
+            {searchTerm ? "No matching items found" : "No items unlocked yet"}
           </h2>
           <p className="text-sacred-gray max-w-lg mx-auto">
             {searchTerm 
-              ? "Try different search terms or browse all scrolls to find what you're looking for." 
-              : "As you explore the Archive, you'll unlock scrolls containing ancient wisdom. Return here to access your personal collection."}
+              ? "Try different search terms or browse the Ark Contents to find what you're looking for." 
+              : "As you explore the Archive, you'll unlock tablets, artifacts, scrolls, and books containing ancient wisdom. Return here to access your personal collection."}
           </p>
         </div>
       ) : (
