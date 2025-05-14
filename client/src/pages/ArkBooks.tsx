@@ -143,47 +143,63 @@ export default function ArkBooks() {
     }
   ];
 
-  // Get database items with caching to prevent constant refreshes
-  const { isLoading, data: scrollsData } = useQuery<Scroll[]>({
-    queryKey: ["/api/scrolls"],
-    staleTime: 300000, // 5 minutes cache
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
-  // Get user's unlocked scrolls with caching to prevent constant refreshes
-  const { data: userScrolls } = useQuery<Scroll[]>({
-    queryKey: ["/api/user/scrolls"],
-    staleTime: 300000, // 5 minutes cache
-    retry: false,
-    refetchOnWindowFocus: false,
-    enabled: !!user,
-  });
-
-  // Filtered items from database
+  // Completely disable automatic query execution
+  const [isLoading, setIsLoading] = useState(true);
   const [dbItems, setDbItems] = useState<Scroll[]>([]);
-
-  // Process DB items once without constantly re-filtering
+  const [userScrolls, setUserScrolls] = useState<Scroll[]>([]);
+  
+  // One-time data load effect with processing in a single effect
   useEffect(() => {
-    if (scrollsData) {
-      // Filter scrolls by "book" type
-      const filteredItems = scrollsData
-        .filter(scroll => {
-          const scrollType = scroll.type || 'scroll';
-          return scrollType === 'book';
-        });
+    // Flag to prevent multiple data loads
+    let isMounted = true;
+    
+    const loadData = async () => {
+      if (!isMounted) return;
       
-      // Compare with current state to avoid unnecessary updates
-      setDbItems(prev => {
-        // Only update if the items have actually changed
-        if (prev.length === filteredItems.length && 
-            prev.every((item, i) => item.id === filteredItems[i]?.id)) {
-          return prev;
+      try {
+        setIsLoading(true);
+        
+        // Fetch scrolls data
+        const scrollsResponse = await fetch('/api/scrolls');
+        const scrollsResult = await scrollsResponse.json();
+        
+        // Process scrolls immediately
+        if (isMounted) {
+          // Filter scrolls by "book" type
+          const filteredItems = scrollsResult
+            .filter(scroll => {
+              const scrollType = scroll.type || 'scroll';
+              return scrollType === 'book';
+            });
+          
+          setDbItems(filteredItems);
         }
-        return filteredItems;
-      });
-    }
-  }, [scrollsData]);
+        
+        // Fetch user scrolls if user is logged in
+        if (user && isMounted) {
+          const userScrollsResponse = await fetch('/api/user/scrolls');
+          const userScrollsResult = await userScrollsResponse.json();
+          setUserScrolls(userScrollsResult);
+        }
+      } catch (error) {
+        console.error("Error loading book data:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    loadData();
+    
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
+    
+    // We only want this to run once when the component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8">
