@@ -63,7 +63,7 @@ const TabletCard = ({
         <CardFooter className="p-4 pt-0 flex justify-between">
           {isLocked ? (
             <Button 
-              variant="subtle" 
+              variant="default"
               size="sm"
               className="w-full bg-amber-700/80 text-white hover:bg-amber-800"
             >
@@ -72,7 +72,7 @@ const TabletCard = ({
             </Button>
           ) : (
             <Button 
-              variant="subtle" 
+              variant="default"
               size="sm"
               className="w-full bg-amber-700/80 text-white hover:bg-amber-800"
             >

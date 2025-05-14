@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import tabletsData from '@/data/tablets.json';
+import '@/styles/tabletDetail.css';
 
 export default function TabletDetail() {
   const [, setLocation] = useLocation();
@@ -84,7 +85,7 @@ export default function TabletDetail() {
 
   return (
     <div 
-      className="min-h-screen pt-16 pb-20"
+      className="min-h-screen pt-16 pb-20 crystal-tablet-background"
       style={{ 
         backgroundColor: tablet.backgroundColor || '#0c0c0e',
         fontFamily: tablet.fontFamily || 'Cormorant Garamond, serif',
@@ -186,6 +187,16 @@ export default function TabletDetail() {
                 }}
               />
             </div>
+            
+            {/* Sacred glyph/sigil */}
+            <motion.div 
+              className="flex justify-center mb-4 glyph-flicker"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5 }}
+            >
+              <span className="text-3xl text-amber-500/70">🜂</span>
+            </motion.div>
 
             <motion.h1 
               className="text-4xl md:text-5xl mb-3 text-amber-300 font-medium tracking-wide"
@@ -219,13 +230,13 @@ export default function TabletDetail() {
             <div className="absolute -left-4 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-amber-600/20 to-transparent" />
             <div className="absolute -right-4 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-amber-600/20 to-transparent" />
 
-            {tablet.sections.map((section, index) => (
+            {tablet.sections.map((section: {heading: string, content: string}, index: number) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 + (index * 0.1) }}
-                className="relative"
+                className="relative crystal-tablet-glow"
               >
                 <h3 className="text-2xl md:text-3xl text-amber-400 mb-4 font-medium">
                   {section.heading}
