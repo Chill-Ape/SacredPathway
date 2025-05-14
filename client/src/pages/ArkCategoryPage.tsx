@@ -163,15 +163,16 @@ const ContentDialog = ({
   item, 
   isOpen, 
   onClose,
-  onUnlock
+  onUnlock,
+  user
 }: { 
   item: DisplayItem | null; 
   isOpen: boolean; 
   onClose: () => void;
   onUnlock: (key: string) => void;
+  user: any;
 }) => {
   const [showUnlockForm, setShowUnlockForm] = useState(false);
-  const { user } = useAuth();
   const form = useForm<z.infer<typeof unlockSchema>>({
     resolver: zodResolver(unlockSchema),
     defaultValues: {
@@ -654,6 +655,7 @@ export default function ArkCategoryPage({ category }: { category: "artifacts" | 
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onUnlock={handleUnlock}
+        user={user}
       />
     </div>
   );
