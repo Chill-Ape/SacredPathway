@@ -135,7 +135,8 @@ export default function ArkContents() {
       title: "Artifacts",
       description: "Ancient devices of mysterious origin",
       poeticDescription: "Remnants of impossible technology. Echoes of forgotten stars.",
-      imagePath: "/assets/content-types/crystal_artifact.jpg", 
+      // Updated to use a verified existing image path
+      imagePath: "/assets/crystal_tablet.png", 
       glyphPath: "/assets/sacred_symbol.svg", 
       linkTo: "/ark/artifacts",
       delay: 0.4
@@ -145,7 +146,8 @@ export default function ArkContents() {
       title: "Tablets",
       description: "Stone records of forbidden knowledge",
       poeticDescription: "Inscribed in crystal. Memory carved in vibration.",
-      imagePath: "/assets/tablets/stone_tablet.png",
+      // Updated to use a verified existing image path
+      imagePath: "/assets/tablets/crystal_tablet.png",
       glyphPath: "/assets/sacred_geometry.svg",
       linkTo: "/ark/tablets",
       delay: 0.6
@@ -155,7 +157,8 @@ export default function ArkContents() {
       title: "Scrolls",
       description: "Parchments containing arcane wisdom",
       poeticDescription: "Unfurled secrets. Language of the keepers.",
-      imagePath: "/assets/content-types/enchanted_scroll.jpg",
+      // Updated to use a verified existing image path
+      imagePath: "/assets/ancient_tablets_green.png",
       glyphPath: "/assets/sacred_geometry_2.svg",
       linkTo: "/ark/scrolls",
       delay: 0.8
@@ -165,7 +168,8 @@ export default function ArkContents() {
       title: "Books",
       description: "Tomes of collected mystical teachings",
       poeticDescription: "Bound chronicles. Whispers from the ages.",
-      imagePath: "/assets/ChatGPT Image Apr 24, 2025, 06_05_26 PM.png",
+      // Updated to use a verified existing image path
+      imagePath: "/assets/ChatGPT Image May 8, 2025, 08_50_12 PM.png",
       glyphPath: "/assets/sacred_geometry_3.svg",
       linkTo: "/ark/books",
       delay: 1.0

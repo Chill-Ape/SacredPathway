@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g opacity="0.5">
+    <!-- Torus Knot Pattern -->
+    <circle cx="150" cy="150" r="120" stroke="#C1912E" stroke-width="1.5"/>
+    
+    <!-- Sacred Spiral -->
+    <path d="M150 150 L160 140 Q180 120 200 130 Q220 140 210 170 Q200 200 170 210 Q140 220 120 190 Q100 160 120 130 Q140 100 170 110 Q200 120 190 150 Q180 180 150 170 Q120 160 130 130" stroke="#C1912E" stroke-width="1.5" fill="none"/>
+    
+    <!-- Golden Ratio Spiral Points -->
+    <circle cx="150" cy="150" r="3" fill="#C1912E"/>
+    <circle cx="170" cy="150" r="3" fill="#C1912E"/>
+    <circle cx="170" cy="170" r="3" fill="#C1912E"/>
+    <circle cx="150" cy="170" r="3" fill="#C1912E"/>
+    <circle cx="150" cy="130" r="3" fill="#C1912E"/>
+    <circle cx="170" cy="130" r="3" fill="#C1912E"/>
+    <circle cx="190" cy="130" r="3" fill="#C1912E"/>
+    <circle cx="190" cy="150" r="3" fill="#C1912E"/>
+    <circle cx="190" cy="170" r="3" fill="#C1912E"/>
+    <circle cx="190" cy="190" r="3" fill="#C1912E"/>
+    
+    <!-- Tree of Life Structure -->
+    <circle cx="150" cy="70" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="120" cy="100" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="180" cy="100" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="120" cy="150" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="180" cy="150" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="150" cy="150" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="120" cy="200" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="180" cy="200" r="15" stroke="#C1912E" stroke-width="1"/>
+    <circle cx="150" cy="230" r="15" stroke="#C1912E" stroke-width="1"/>
+    
+    <!-- Connecting Lines -->
+    <line x1="150" y1="85" x2="150" y2="135" stroke="#C1912E" stroke-width="0.75"/>
+    <line x1="150" y1="165" x2="150" y2="215" stroke="#C1912E" stroke-width="0.75"/>
+    <line x1="135" y1="100" x2="165" y2="100" stroke="#C1912E" stroke-width="0.75"/>
+    <line x1="135" y1="150" x2="165" y2="150" stroke="#C1912E" stroke-width="0.75"/>
+    <line x1="135" y1="200" x2="165" y2="200" stroke="#C1912E" stroke-width="0.75"/>
+  </g>
+</svg>
