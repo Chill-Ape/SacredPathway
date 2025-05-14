@@ -125,7 +125,7 @@ export default function ArkTablets() {
   });
 
   // Filter to tablets from the server data
-  const dbTablets = scrollsData?.filter(scroll => scroll.contentType === "tablet") || [];
+  const dbTablets = scrollsData?.filter(scroll => scroll.type === "tablet") || [];
   
   // State for the currently selected tablet
   const [selectedTablet, setSelectedTablet] = useState<string | null>(null);
@@ -160,9 +160,9 @@ export default function ArkTablets() {
       return {
         id: dbTablet.id.toString(),
         title: dbTablet.title,
-        description: dbTablet.description || "",
-        isLocked: !dbTablet.isUnlocked,
-        key: dbTablet.unlockKey || "UNKNOWN",
+        description: dbTablet.content.substring(0, 100) + "...", // Using content as description
+        isLocked: dbTablet.isLocked,
+        key: dbTablet.key || "UNKNOWN",
         image: dbTablet.image || "/assets/sacred_geometry_2.svg"
       };
     }
@@ -221,9 +221,9 @@ export default function ArkTablets() {
                   <TabletCard
                     key={tablet.id}
                     title={tablet.title}
-                    description={tablet.description || ""}
+                    description={tablet.content.substring(0, 100) + "..."}
                     imagePath={tablet.image || "/assets/sacred_geometry_2.svg"}
-                    isLocked={!tablet.isUnlocked}
+                    isLocked={tablet.isLocked}
                     onClick={() => handleTabletClick(tablet.id.toString())}
                   />
                 ))}
