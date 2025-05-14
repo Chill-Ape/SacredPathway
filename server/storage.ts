@@ -16,6 +16,12 @@ import {
   InsertManaPackage,
   InventoryItem,
   InsertInventoryItem,
+  CraftingRecipe,
+  InsertCraftingRecipe,
+  UserRecipe,
+  InsertUserRecipe,
+  CraftingQueueItem,
+  InsertCraftingQueueItem,
   users,
   scrolls,
   userScrolls,
@@ -25,7 +31,10 @@ import {
   manaTransactions,
   manaPackages,
   oracleUsage,
-  inventoryItems
+  inventoryItems,
+  craftingRecipes,
+  userRecipes,
+  craftingQueue
 } from "@shared/schema";
 import { db, pool, isDatabaseAvailable } from "./db";
 import { eq, and } from "drizzle-orm";

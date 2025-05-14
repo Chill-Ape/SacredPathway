@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, primaryKey, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, primaryKey, jsonb, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -53,11 +53,6 @@ export const inventoryItems = pgTable("inventory_items", {
   createdAt: timestamp("created_at").defaultNow(),
   attributes: jsonb("attributes"), // Flexible attributes as JSON
 });
-
-export const usersRelations = relations(users, ({ many }) => ({
-  unlockedScrolls: many(userScrolls),
-  inventoryItems: many(inventoryItems),
-}));
 
 export const scrollsRelations = relations(scrolls, ({ many }) => ({
   unlockedBy: many(userScrolls),
@@ -254,3 +249,105 @@ export const insertInventoryItemSchema = createInsertSchema(inventoryItems)
 
 export type InventoryItem = typeof inventoryItems.$inferSelect;
 export type InsertInventoryItem = z.infer<typeof insertInventoryItemSchema>;
+
+// Crafting system tables
+export const craftingRecipes = pgTable("crafting_recipes", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  resultItemName: text("result_item_name").notNull(),
+  resultItemType: text("result_item_type").notNull(),
+  resultItemRarity: text("result_item_rarity").notNull().default("common"),
+  resultItemDescription: text("result_item_description").notNull(),
+  resultItemImageUrl: text("result_item_image_url"),
+  resultItemQuantity: integer("result_item_quantity").default(1),
+  resultItemAttributes: jsonb("result_item_attributes"),
+  ingredients: jsonb("ingredients").notNull(), // Array of {itemName, quantity} objects
+  requiredLevel: integer("required_level").default(1),
+  craftingTime: integer("crafting_time").default(0), // In seconds
+  manaPrice: integer("mana_price").default(0),
+  isDiscovered: boolean("is_discovered").default(false), // Default recipes are discoverable, rare ones need to be found
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const userRecipes = pgTable("user_recipes", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  recipeId: integer("recipe_id").notNull().references(() => craftingRecipes.id),
+  discoveredAt: timestamp("discovered_at").defaultNow(),
+});
+
+export const craftingQueue = pgTable("crafting_queue", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  recipeId: integer("recipe_id").notNull().references(() => craftingRecipes.id),
+  startedAt: timestamp("started_at").defaultNow(),
+  completesAt: timestamp("completes_at").notNull(),
+  isCompleted: boolean("is_completed").default(false),
+  isClaimed: boolean("is_claimed").default(false),
+});
+
+// Define relations for crafting
+export const craftingRecipesRelations = relations(craftingRecipes, ({ many }) => ({
+  userRecipes: many(userRecipes),
+  craftingQueue: many(craftingQueue),
+}));
+
+export const userRecipesRelations = relations(userRecipes, ({ one }) => ({
+  user: one(users, {
+    fields: [userRecipes.userId],
+    references: [users.id],
+  }),
+  recipe: one(craftingRecipes, {
+    fields: [userRecipes.recipeId],
+    references: [craftingRecipes.id],
+  }),
+}));
+
+export const craftingQueueRelations = relations(craftingQueue, ({ one }) => ({
+  user: one(users, {
+    fields: [craftingQueue.userId],
+    references: [users.id],
+  }),
+  recipe: one(craftingRecipes, {
+    fields: [craftingQueue.recipeId],
+    references: [craftingRecipes.id],
+  }),
+}));
+
+// Update user relations to include crafting
+export const usersRelations = relations(users, ({ many }) => ({
+  unlockedScrolls: many(userScrolls),
+  inventoryItems: many(inventoryItems),
+  userRecipes: many(userRecipes),
+  craftingQueue: many(craftingQueue),
+}));
+
+// Create schemas for inserts
+export const insertCraftingRecipeSchema = createInsertSchema(craftingRecipes)
+  .omit({
+    id: true,
+    createdAt: true,
+  });
+
+export const insertUserRecipeSchema = createInsertSchema(userRecipes)
+  .omit({
+    id: true,
+    discoveredAt: true,
+  });
+
+export const insertCraftingQueueSchema = createInsertSchema(craftingQueue)
+  .omit({
+    id: true,
+    startedAt: true,
+  });
+
+// Export types
+export type CraftingRecipe = typeof craftingRecipes.$inferSelect;
+export type InsertCraftingRecipe = z.infer<typeof insertCraftingRecipeSchema>;
+
+export type UserRecipe = typeof userRecipes.$inferSelect;
+export type InsertUserRecipe = z.infer<typeof insertUserRecipeSchema>;
+
+export type CraftingQueueItem = typeof craftingQueue.$inferSelect;
+export type InsertCraftingQueueItem = z.infer<typeof insertCraftingQueueSchema>;
