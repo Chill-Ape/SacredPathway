@@ -393,7 +393,7 @@ export default function Hero() {
           className="relative"
           /* Mouse hover effects removed as part of cursor fix */
         >
-          <Link href="/scrolls">
+          <Link href="/ark-contents">
             <Button
               className="bg-sacred-blue hover:bg-sacred-blue-light text-sacred-white font-cinzel tracking-widest text-lg px-10 py-8 rounded-md border border-sacred-blue/30 shadow-lg transform hover:scale-105 transition-all duration-500"
               size="lg"

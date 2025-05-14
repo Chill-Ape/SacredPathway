@@ -884,9 +884,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Return a 200 response to acknowledge receipt of the event
       res.status(200).send('Webhook processed successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Webhook processing error:', error);
-      res.status(400).send(`Webhook Error: ${error.message}`);
+      res.status(400).send(`Webhook Error: ${error.message || 'Unknown error'}`);
     }
   });
   
