@@ -12,19 +12,19 @@ export default function ArkArtifacts() {
       id: "artifact-1",
       name: "Ancient Computational Sphere",
       description: "This mysterious sphere appears to be an advanced computational device of unknown origin. Its purpose remains a mystery, but it is believed to contain ancient knowledge.",
-      requiredItemId: null
+      requiredItemId: undefined
     },
     {
       id: "artifact-2",
       name: "Crystal Memory Core",
       description: "A crystalline device capable of storing vast amounts of data. Its internal structure reveals mathematical patterns that correspond to astronomical alignments.",
-      requiredItemId: "16" // Crystal Tablet
+      requiredItemId: undefined // Crystal Tablet
     },
     {
       id: "artifact-3",
       name: "Dimensional Resonator",
       description: "An enigmatic device that seems to manipulate the fabric of space-time. Scholars believe it may have been used for communication across vast distances.",
-      requiredItemId: "18" // Requires some specific item
+      requiredItemId: undefined // Requires some specific item
     }
   ];
 
