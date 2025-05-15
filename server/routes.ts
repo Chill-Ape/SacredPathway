@@ -22,6 +22,58 @@ import { profileUpload, getProfilePictureUrl } from './utils/uploads';
 import fs from 'fs';
 import path from 'path';
 
+// Crystal collection data for inventory
+const CRYSTAL_COLLECTION = [
+  {
+    name: "Quartz Crystal",
+    description: "A clear quartz crystal known for its amplifying energy. It's believed to enhance clarity of thought and spiritual connection.",
+    type: "crystal",
+    imageUrl: "/assets/crystals/quartz.png",
+    rarity: "common",
+    attributes: { energy: "amplifying", element: "universal" }
+  },
+  {
+    name: "Fire Crystal",
+    description: "A vibrant red crystal that emanates warmth. Associated with passion, courage, and the transformative power of fire.",
+    type: "crystal",
+    imageUrl: "/assets/crystals/fire.png",
+    rarity: "uncommon",
+    attributes: { energy: "transformative", element: "fire" }
+  },
+  {
+    name: "Green Crystal",
+    description: "An emerald-green crystal connected to growth and healing. It resonates with the heart and natural life force.",
+    type: "crystal", 
+    imageUrl: "/assets/crystals/green.png",
+    rarity: "uncommon",
+    attributes: { energy: "healing", element: "earth" }
+  },
+  {
+    name: "Blue Cluster Crystal",
+    description: "A cluster of blue crystals that vibrate with communicative energy. They enhance intuition and clarity of expression.",
+    type: "crystal",
+    imageUrl: "/assets/crystals/blue _cluster.png",
+    rarity: "rare",
+    attributes: { energy: "communicative", element: "water", form: "cluster" }
+  },
+  {
+    name: "Sky Blue Crystal",
+    description: "A translucent sky-blue crystal that connects to higher realms of consciousness. It aids in spiritual insight and elevating awareness.",
+    type: "crystal",
+    imageUrl: "/assets/crystals/sky_blue.png",
+    rarity: "rare",
+    attributes: { energy: "elevating", element: "air" }
+  },
+  {
+    name: "Obsidian Crystal",
+    description: "A dark, protective stone formed from volcanic glass. It shields against negative energies and grounds spiritual experiences.",
+    type: "crystal",
+    imageUrl: "/assets/crystals/obsidian.png",
+    rarity: "uncommon",
+    attributes: { energy: "protective", element: "earth", origin: "volcanic" }
+  }
+];
+
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -53,6 +105,7 @@ declare global {
       manaBalance: number;
       stripeCustomerId: string | null;
       profilePicture: string | null;
+      isAdmin: boolean;
       createdAt: Date;
     }
   }
@@ -214,6 +267,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isEquipped: false,
         usesLeft: null,
         attributes: { energy: "resonant", use: "ritual component" }
+      });
+      
+      // 4. Quartz Crystal - Welcome gift
+      const quartzCrystal = CRYSTAL_COLLECTION[0]; // Get quartz crystal data
+      await storage.addInventoryItem({
+        userId: user.id,
+        name: quartzCrystal.name,
+        description: quartzCrystal.description,
+        type: quartzCrystal.type,
+        imageUrl: quartzCrystal.imageUrl,
+        rarity: quartzCrystal.rarity,
+        quantity: 1,
+        isEquipped: false,
+        usesLeft: null,
+        attributes: quartzCrystal.attributes
       });
       
       // Log the user in
