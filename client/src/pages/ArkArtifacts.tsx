@@ -111,7 +111,7 @@ export default function ArkArtifacts() {
                       }`}
                       onClick={() => setSelectedArtifactId(artifact.id)}
                     >
-                      <Cube className="h-5 w-5 mr-2 text-primary" />
+                      <Box className="h-5 w-5 mr-2 text-primary" />
                       <div>
                         <p className="font-medium">{artifact.name}</p>
                         <p className="text-xs text-muted-foreground">{artifact.shortDescription}</p>
@@ -128,7 +128,7 @@ export default function ArkArtifacts() {
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="bg-black/50 border border-primary/30">
                 <TabsTrigger value="view" className="data-[state=active]:bg-primary/20">
-                  <Cube className="h-4 w-4 mr-2" />
+                  <Box className="h-4 w-4 mr-2" />
                   Artifact Viewer
                 </TabsTrigger>
                 <TabsTrigger value="info" className="data-[state=active]:bg-primary/20">
