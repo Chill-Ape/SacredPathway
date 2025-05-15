@@ -16,6 +16,7 @@ import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
 import ManageMana from "@/pages/ManageMana";
 import Inventory from "@/pages/Inventory";
+import Crafting from "@/pages/Crafting";
 
 import Simulation from "@/pages/Simulation";
 import Landing1 from "@/pages/Landing1";
@@ -60,59 +61,65 @@ function App() {
   return (
     <AuthProvider>
       <InventoryProvider>
-        <TooltipProvider>
-          <div className="min-h-screen flex flex-col sacred-pattern">
-            <Navbar />
-            <main className="flex-grow pt-16">
-              <AnimatePresence mode="wait">
-                <Switch key={location}>
-                  <Route path="/" component={Home} />
-                  <Route path="/scrolls" component={Scrolls} />
-                  <Route path="/scrolls/:id" component={ScrollDetail} />
-                  <Route path="/sacred-scroll/:id" component={SacredScroll} />
-                  <Route path="/lore" component={Lore} />
-                  <Route path="/deploy" component={DeploymentReadyPage} />
-                  <Route path="/epic-of-apkallu" component={EpicOfApkallu} />
-                  <Route path="/oracle" component={Oracle} />
-                  <Route path="/keeper" component={Keeper} />
-                  <Route path="/contact" component={Contact} />
-                  <Route path="/simulation" component={Simulation} />
-                  <Route path="/auth" component={AuthPage} />
-                  <Route path="/ark-contents" component={ArkContents} />
-                  <Route path="/ark/artifacts" component={ArkArtifacts} />
-                  <Route path="/ark/tablets" component={ArkTablets} />
-                  <Route path="/ark/tablets/:id" component={TabletDetail} />
-                  <Route path="/ark/scrolls" component={ArkScrolls} />
-                  <Route path="/ark/books" component={ArkBooks} />
-                  {/* Route already handled in the conditional at the top */}
-                  <ProtectedRoute 
-                    path="/profile" 
-                    component={Profile} 
-                  />
-                  <ProtectedRoute 
-                    path="/my-scrolls" 
-                    component={MyScrolls} 
-                  />
-                  <ProtectedRoute 
-                    path="/admin" 
-                    component={Admin} 
-                  />
-                  <ProtectedRoute 
-                    path="/mana" 
-                    component={ManageMana} 
-                  />
-                  <ProtectedRoute 
-                    path="/inventory" 
-                    component={Inventory} 
-                  />
-                  <Route component={NotFound} />
-                </Switch>
-              </AnimatePresence>
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </TooltipProvider>
+        <CraftingProvider>
+          <TooltipProvider>
+            <div className="min-h-screen flex flex-col sacred-pattern">
+              <Navbar />
+              <main className="flex-grow pt-16">
+                <AnimatePresence mode="wait">
+                  <Switch key={location}>
+                    <Route path="/" component={Home} />
+                    <Route path="/scrolls" component={Scrolls} />
+                    <Route path="/scrolls/:id" component={ScrollDetail} />
+                    <Route path="/sacred-scroll/:id" component={SacredScroll} />
+                    <Route path="/lore" component={Lore} />
+                    <Route path="/deploy" component={DeploymentReadyPage} />
+                    <Route path="/epic-of-apkallu" component={EpicOfApkallu} />
+                    <Route path="/oracle" component={Oracle} />
+                    <Route path="/keeper" component={Keeper} />
+                    <Route path="/contact" component={Contact} />
+                    <Route path="/simulation" component={Simulation} />
+                    <Route path="/auth" component={AuthPage} />
+                    <Route path="/ark-contents" component={ArkContents} />
+                    <Route path="/ark/artifacts" component={ArkArtifacts} />
+                    <Route path="/ark/tablets" component={ArkTablets} />
+                    <Route path="/ark/tablets/:id" component={TabletDetail} />
+                    <Route path="/ark/scrolls" component={ArkScrolls} />
+                    <Route path="/ark/books" component={ArkBooks} />
+                    {/* Route already handled in the conditional at the top */}
+                    <ProtectedRoute 
+                      path="/profile" 
+                      component={Profile} 
+                    />
+                    <ProtectedRoute 
+                      path="/my-scrolls" 
+                      component={MyScrolls} 
+                    />
+                    <ProtectedRoute 
+                      path="/admin" 
+                      component={Admin} 
+                    />
+                    <ProtectedRoute 
+                      path="/mana" 
+                      component={ManageMana} 
+                    />
+                    <ProtectedRoute 
+                      path="/inventory" 
+                      component={Inventory} 
+                    />
+                    <ProtectedRoute 
+                      path="/crafting" 
+                      component={Crafting} 
+                    />
+                    <Route component={NotFound} />
+                  </Switch>
+                </AnimatePresence>
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </TooltipProvider>
+        </CraftingProvider>
       </InventoryProvider>
     </AuthProvider>
   );

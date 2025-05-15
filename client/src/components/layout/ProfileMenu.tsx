@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
-import { User, LogOut, Library, Sparkles, Backpack } from "lucide-react";
+import { User, LogOut, Library, Sparkles, Backpack, Flask } from "lucide-react";
 import ManaBalance from "@/components/mana/ManaBalance";
 
 type ProfileMenuProps = {
