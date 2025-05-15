@@ -7,7 +7,9 @@ import {
   insertKeeperMessageSchema, 
   scrolls, 
   insertManaTransactionSchema,
-  insertInventoryItemSchema 
+  insertInventoryItemSchema,
+  insertCraftingRecipeSchema,
+  insertCraftingQueueSchema
 } from "@shared/schema";
 import { ITEM_TYPES, RARITY_LEVELS } from "@shared/constants";
 import OpenAI from "openai";
