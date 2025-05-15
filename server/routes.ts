@@ -1428,6 +1428,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // CRYSTAL COLLECTION ENDPOINTS
+  
+  // Get all available crystals
+  app.get("/api/crystals", (_req: Request, res: Response) => {
+    // Return the full crystal collection data
+    res.json(CRYSTAL_COLLECTION);
+  });
+
+  // Purchase a crystal using mana
+  app.post("/api/crystals/purchase", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
+    try {
+      const { crystalName } = req.body;
+      
+      if (!crystalName) {
+        return res.status(400).json({ message: "Crystal name is required" });
+      }
+      
+      // Find the crystal in the collection
+      const crystal = CRYSTAL_COLLECTION.find(c => c.name === crystalName);
+      
+      if (!crystal) {
+        return res.status(404).json({ message: "Crystal not found" });
+      }
+      
+      // Set price based on rarity
+      let price = 50; // Default price for common crystals
+      if (crystal.rarity === "uncommon") {
+        price = 100;
+      } else if (crystal.rarity === "rare") {
+        price = 200;
+      }
+      
+      // Check if user has enough mana
+      const userMana = await storage.getUserManaBalance(req.user.id);
+      
+      if (userMana < price) {
+        return res.status(400).json({ 
+          message: "Not enough mana", 
+          requiredMana: price, 
+          currentMana: userMana 
+        });
+      }
+      
+      // Check if user already has this crystal
+      const userInventory = await storage.getUserInventory(req.user.id);
+      const existingCrystal = userInventory.find(item => item.name === crystal.name);
+      
+      if (existingCrystal) {
+        // Update quantity if user already has this crystal
+        await storage.updateItemQuantity(existingCrystal.id, existingCrystal.quantity + 1);
+      } else {
+        // Add crystal to user's inventory
+        await storage.addInventoryItem({
+          userId: req.user.id,
+          name: crystal.name,
+          description: crystal.description,
+          type: crystal.type,
+          imageUrl: crystal.imageUrl,
+          rarity: crystal.rarity,
+          quantity: 1,
+          isEquipped: false,
+          usesLeft: null,
+          attributes: crystal.attributes
+        });
+      }
+      
+      // Deduct mana from user's balance
+      const newBalance = await storage.updateUserManaBalance(req.user.id, -price);
+      
+      // Create mana transaction record
+      await storage.createManaTransaction({
+        userId: req.user.id,
+        amount: -price,
+        description: `Purchased ${crystal.name}`,
+        transactionType: "crystal_purchase",
+        referenceId: null,
+        stripePaymentIntentId: null
+      });
+      
+      res.json({ 
+        success: true, 
+        message: `Successfully purchased ${crystal.name}`,
+        newManaBalance: newBalance
+      });
+    } catch (error) {
+      console.error("Error purchasing crystal:", error);
+      res.status(500).json({ message: "Failed to purchase crystal" });
+    }
+  });
+  
   // CRAFTING SYSTEM ROUTES
   
   // Get all crafting recipes
