@@ -1,154 +1,7 @@
-import { useState, useRef, useEffect, Component, ErrorInfo, ReactNode } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, useGLTF, PerspectiveCamera, Environment, ContactShadows, Text } from '@react-three/drei';
-import { Perf } from 'r3f-perf';
-import * as THREE from 'three';
+import { useState, useRef, useEffect } from 'react';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
-
-// Error boundary for catching React Three Fiber errors
-class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
-  constructor(props: { children: ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(_: Error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("3D Rendering error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="flex flex-col items-center justify-center w-full h-full bg-black/80 text-white p-6">
-          <h2 className="text-xl font-bold text-primary mb-2">3D Viewer Unavailable</h2>
-          <p className="text-center mb-4">
-            The artifact viewer encountered an error. Try refreshing the page or using a different browser.
-          </p>
-          <div className="p-6 border border-primary/30 rounded-lg bg-black/50 max-w-md">
-            <p className="text-sm text-muted-foreground">
-              This ancient technology requires modern computational powers to render properly.
-            </p>
-          </div>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
-// Define the artifact model
-const ArtifactModel = ({ 
-  artifactId, 
-  onHotspotClick, 
-  isUnlocked 
-}: { 
-  artifactId: string;
-  onHotspotClick: (id: string) => void;
-  isUnlocked: boolean;
-}) => {
-  // For development, we'll use a simple geometry
-  // In production, you would use useGLTF to load a GLTF model
-  const meshRef = useRef<THREE.Mesh>(null);
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [activeHotspots, setActiveHotspots] = useState<string[]>([]);
-
-  // Hotspots are clickable areas on the model
-  const hotspots = [
-    { id: 'center', position: [0, 0, 0], scale: 0.5, color: isUnlocked ? '#f5d393' : '#3a7dd4' },
-    { id: 'top', position: [0, 1.2, 0], scale: 0.3, color: '#3a7dd4' },
-    { id: 'right', position: [1.2, 0, 0], scale: 0.3, color: '#3a7dd4' },
-    { id: 'left', position: [-1.2, 0, 0], scale: 0.3, color: '#3a7dd4' },
-  ];
-
-  // Animate the model
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002;
-      
-      // Pulse effect for hotspots when unlocked
-      if (isUnlocked) {
-        const time = state.clock.getElapsedTime();
-        meshRef.current.scale.x = 1 + Math.sin(time * 0.5) * 0.05;
-        meshRef.current.scale.y = 1 + Math.sin(time * 0.5) * 0.05;
-        meshRef.current.scale.z = 1 + Math.sin(time * 0.5) * 0.05;
-      }
-    }
-  });
-
-  // Temporary model for development
-  // In production, load your GLTF model here
-  return (
-    <group>
-      {/* Main artifact body */}
-      <mesh 
-        ref={meshRef}
-        castShadow
-        receiveShadow
-      >
-        <icosahedronGeometry args={[1, 1]} />
-        <meshStandardMaterial 
-          color={isUnlocked ? "#f5d393" : "#3a7dd4"} 
-          metalness={0.8} 
-          roughness={0.2} 
-          emissive={isUnlocked ? "#f5a742" : "#0a84ff"}
-          emissiveIntensity={0.5}
-        />
-      </mesh>
-
-      {/* Hotspots */}
-      {hotspots.map((hotspot) => (
-        <mesh
-          key={hotspot.id}
-          position={hotspot.position as [number, number, number]}
-          scale={[hotspot.scale, hotspot.scale, hotspot.scale]}
-          onClick={() => onHotspotClick(hotspot.id)}
-          onPointerOver={() => setHovered(hotspot.id)}
-          onPointerOut={() => setHovered(null)}
-        >
-          <sphereGeometry args={[0.2, 16, 16]} />
-          <meshStandardMaterial 
-            color={hotspot.id === hovered ? '#ffffff' : hotspot.color} 
-            emissive={hotspot.id === hovered ? '#ffffff' : hotspot.color}
-            emissiveIntensity={hotspot.id === hovered ? 1 : 0.5}
-            transparent
-            opacity={0.7}
-          />
-        </mesh>
-      ))}
-
-      {/* Add some floating glyphs or details around the artifact */}
-      {isUnlocked && (
-        <>
-          <Text
-            position={[0, 2, 0]}
-            rotation={[0, 0, 0]}
-            fontSize={0.15}
-            color="#f5d393"
-          >
-            ANCIENT TRANSMISSION ACTIVE
-          </Text>
-          <mesh position={[0, -1.5, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.2, 1.5, 32]} />
-            <meshStandardMaterial 
-              color="#f5d393" 
-              emissive="#f5a742"
-              emissiveIntensity={1}
-              side={THREE.DoubleSide}
-              transparent
-              opacity={0.5}
-            />
-          </mesh>
-        </>
-      )}
-    </group>
-  );
-};
+import artifactImage from '@/assets/artifact_1.png';
 
 interface ArtifactViewerProps {
   artifactId: string;
@@ -163,150 +16,235 @@ export default function ArtifactViewer({
   name,
   description,
   requiredItemId,
-  requiredItemName,
+  requiredItemName = 'Crystal',
 }: ArtifactViewerProps) {
-  const { inventory = [] } = useInventory() || { inventory: [] };
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [showUnlockPrompt, setShowUnlockPrompt] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
+  const [showUnlockPrompt, setShowUnlockPrompt] = useState<boolean>(false);
+  const [unlockCode, setUnlockCode] = useState<string>('');
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [scale, setScale] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [showHotspot, setShowHotspot] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { inventory } = useInventory();
   const { toast } = useToast();
-
-  // Check if the user has the required item
-  const hasRequiredItem = requiredItemId && inventory && inventory.length > 0
-    ? inventory.some((item: any) => item.id === parseInt(requiredItemId))
-    : false;
-
-  const handleHotspotClick = (hotspotId: string) => {
-    if (hotspotId === 'center') {
-      if (requiredItemId && !isUnlocked) {
-        setShowUnlockPrompt(true);
-      } else {
-        // Already unlocked or doesn't require an item
-        toast({
-          title: "Artifact Activated",
-          description: "The artifact pulses with ancient energy.",
-        });
-      }
-    } else {
-      // Other hotspots
-      toast({
-        title: "Interesting Detail",
-        description: `You've discovered a ${hotspotId} section of the artifact.`,
-      });
+  
+  // Check if the user has the required item in their inventory
+  const hasRequiredItem = inventory.some(item => 
+    requiredItemId ? item.id.toString() === requiredItemId : false
+  );
+  
+  // Handle artifact image mouse down
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+  
+  // Handle artifact image mouse move
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      const deltaX = e.clientX - dragStart.x;
+      const deltaY = e.clientY - dragStart.y;
+      
+      setRotateY((prev) => prev + deltaX * 0.5);
+      setRotateX((prev) => Math.max(-30, Math.min(30, prev + deltaY * 0.5)));
+      
+      setDragStart({ x: e.clientX, y: e.clientY });
     }
   };
-
+  
+  // Handle artifact image mouse up
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  
+  // Handle zoom in/out with mouse wheel
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    setScale((prev) => Math.max(0.5, Math.min(2.5, prev - e.deltaY * 0.001)));
+  };
+  
+  // Simulate auto-rotation when not dragging
+  useEffect(() => {
+    let animationId: number;
+    
+    if (!isDragging) {
+      let rotationSpeed = 0.2;
+      
+      const rotate = () => {
+        setRotateY((prev) => prev + rotationSpeed);
+        animationId = requestAnimationFrame(rotate);
+      };
+      
+      animationId = requestAnimationFrame(rotate);
+    }
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, [isDragging]);
+  
+  // Define hotspot locations (in percentages of container size)
+  const hotspots = [
+    { id: 'center', x: 50, y: 50, info: "This appears to be an advanced computational device of unknown origin. The sphere at its center shows remarkable craftsmanship." },
+    { id: 'top-right', x: 70, y: 30, info: "These circular engravings contain mathematical relationships and celestial calculations beyond ancient knowledge." },
+    { id: 'bottom-left', x: 30, y: 70, info: "The metal composition shows traces of materials not naturally occurring on Earth. Its creation method remains a mystery." }
+  ];
+  
+  // Handle hotspot clicks
+  const handleHotspotClick = (hotspotId: string, info: string) => {
+    setShowHotspot(hotspotId === showHotspot ? null : hotspotId);
+    
+    toast({
+      title: "Artifact Detail",
+      description: info,
+    });
+  };
+  
+  // Handle unlock
   const unlockArtifact = () => {
-    // For demonstration purposes, always allow unlock
+    // Always allow unlock for immediate access
     setIsUnlocked(true);
     setShowUnlockPrompt(false);
     toast({
-      title: "Artifact Unlocked!",
-      description: "The artifact resonates with your presence and activates!",
+      title: "Artifact Activated!",
+      description: "The artifact resonates with your presence and reveals its secrets!",
     });
+  };
+  
+  // Handle unlock prompt submission
+  const handleUnlockPromptSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    unlockArtifact();
   };
 
   return (
     <div className="relative w-full h-[80vh] bg-black/90">
-      {/* Artifact Visualization */}
+      {/* Interactive Artifact Viewer */}
       <div className="flex flex-col items-center justify-center h-full bg-black/80 text-white p-6">
         <h2 className="text-2xl font-bold text-primary mb-4">{name}</h2>
         
-        {isUnlocked ? (
-          /* Unlocked State */
-          <div className="flex flex-col items-center">
-            <div className="w-64 h-64 border-4 border-primary/70 rounded-full mb-8 flex items-center justify-center bg-primary/30 relative overflow-hidden">
-              <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
-              <div className="w-48 h-48 rounded-full flex items-center justify-center animate-pulse bg-primary/40">
-                <div className="w-32 h-32 rounded-full bg-primary/80 flex items-center justify-center text-white font-bold text-xl">
-                  ACTIVATED
+        {/* Artifact container with interactive controls */}
+        <div 
+          ref={containerRef}
+          className="w-full max-w-2xl h-[400px] relative flex items-center justify-center mb-4"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onWheel={handleWheel}
+        >
+          <div 
+            className="relative"
+            style={{ 
+              transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`,
+              transition: isDragging ? 'none' : 'transform 0.1s ease',
+              cursor: isDragging ? 'grabbing' : 'grab',
+            }}
+          >
+            <img 
+              src={artifactImage} 
+              alt={name}
+              className="w-[300px] h-[300px] object-contain select-none"
+              draggable="false"
+            />
+            
+            {/* Hotspots - visible when unlocked */}
+            {isUnlocked && hotspots.map((hotspot) => (
+              <div
+                key={hotspot.id}
+                className={`absolute w-6 h-6 rounded-full cursor-pointer
+                  ${showHotspot === hotspot.id ? 'bg-primary/80' : 'bg-primary/40'} 
+                  hover:bg-primary/70 border-2 border-white/30 flex items-center justify-center
+                  transition-all duration-300 animate-pulse-slow`}
+                style={{
+                  left: `calc(${hotspot.x}% - 12px)`,
+                  top: `calc(${hotspot.y}% - 12px)`,
+                  zIndex: 10,
+                }}
+                onClick={() => handleHotspotClick(hotspot.id, hotspot.info)}
+              >
+                <span className="text-xs font-bold">i</span>
+              </div>
+            ))}
+            
+            {/* Active effects when unlocked */}
+            {isUnlocked && (
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute inset-0 bg-primary/10 rounded-full mix-blend-overlay"></div>
+                <div className="absolute inset-0 animate-spin-slow opacity-50">
+                  <div className="w-full h-[1px] bg-primary/50 absolute top-1/2 transform -translate-y-1/2"></div>
+                  <div className="h-full w-[1px] bg-primary/50 absolute left-1/2 transform -translate-x-1/2"></div>
                 </div>
               </div>
-              {/* Sacred geometry patterns */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-full absolute animate-spin-slow">
-                  <div className="w-full h-1 bg-primary/40 absolute top-1/2 transform -translate-y-1/2"></div>
-                  <div className="h-full w-1 bg-primary/40 absolute left-1/2 transform -translate-x-1/2"></div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-6 border-2 border-primary rounded-lg bg-black/70 max-w-md mb-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/20 rounded-bl-full"></div>
-              <h3 className="text-lg font-bold text-primary mb-3">Ancient Transmission Received</h3>
-              <p className="text-white mb-3">
-                {"The artifact has revealed hidden knowledge to you, connecting your consciousness to the ancient wisdom of the Apkallu."}
-              </p>
-              <div className="text-xs text-primary/80 italic mt-4">
-                Translation complete • Knowledge transfer successful • Memory fragments recovered
-              </div>
-            </div>
-            
-            <button 
-              onClick={() => setIsUnlocked(false)}
-              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition"
-            >
-              Reset Artifact
-            </button>
+            )}
           </div>
+          
+          {/* Control prompts */}
+          <div className="absolute bottom-0 left-0 right-0 text-center text-xs text-white/60 bg-black/50 p-1">
+            Drag to rotate • Scroll to zoom {isUnlocked ? "• Click hotspots to explore" : ""}
+          </div>
+        </div>
+        
+        {/* Description and unlock button */}
+        <div className="p-4 border border-primary/30 rounded-lg bg-black/50 max-w-md mb-4">
+          <p className="text-center text-sm text-white">
+            {isUnlocked 
+              ? "The artifact has been activated, revealing its ancient secrets. The intricate patterns suggest advanced mathematical knowledge and cosmic awareness."
+              : description
+            }
+          </p>
+        </div>
+        
+        {!isUnlocked ? (
+          <button 
+            onClick={unlockArtifact}
+            className="px-4 py-2 bg-primary/80 text-primary-foreground rounded-md hover:bg-primary/90 transition"
+          >
+            Activate Artifact
+          </button>
         ) : (
-          /* Locked State */
-          <div className="flex flex-col items-center">
-            <div className="w-64 h-64 bg-black/40 border border-primary/30 rounded-full mb-8 flex items-center justify-center">
-              <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
-                <div className="w-16 h-16 bg-primary/40 rounded-full"></div>
-              </div>
-            </div>
-            <div className="p-4 border border-primary/30 rounded-lg bg-black/50 max-w-md mb-4">
-              <p className="text-center text-sm text-white">{description}</p>
-            </div>
-            <button 
-              onClick={() => setShowUnlockPrompt(true)}
-              className="px-4 py-2 bg-primary/80 text-primary-foreground rounded-md hover:bg-primary/90 transition"
-            >
-              Attempt to Unlock
-            </button>
-          </div>
+          <button 
+            onClick={() => setIsUnlocked(false)}
+            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition"
+          >
+            Reset Artifact
+          </button>
         )}
       </div>
       
-      {/* Artifact Info */}
+      {/* Artifact Info Sidebar */}
       <div className="absolute top-4 left-4 p-4 rounded-lg bg-black/60 text-white max-w-md">
         <h2 className="text-xl font-semibold text-primary">{name}</h2>
-        <p className="text-sm mt-2">{description}</p>
+        <p className="text-sm mt-1">Origin: Unknown • Age: Estimated 12,000+ years</p>
       </div>
       
-      {/* Instructions */}
-      <div className="absolute bottom-4 right-4 p-3 rounded-lg bg-black/60 text-white text-xs">
-        <p>• Click and drag to rotate</p>
-        <p>• Scroll to zoom in/out</p>
-        <p>• Click on glowing points to interact</p>
-      </div>
-      
-      {/* Unlock Prompt */}
+      {/* Unlock Prompt Modal - no longer needed as we're allowing direct access */}
       {showUnlockPrompt && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-          <div className="bg-background border border-primary p-6 rounded-lg max-w-md">
-            <h3 className="text-lg font-semibold mb-2">Unlock Artifact</h3>
-            <p className="mb-4">
-              This artifact requires a <span className="text-primary font-semibold">{requiredItemName}</span> to activate. 
-              {hasRequiredItem ? " You have this item in your inventory." : " You do not have this item."}
-            </p>
-            <div className="flex justify-end gap-2">
-              <button 
-                className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
-                onClick={() => setShowUnlockPrompt(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-md ${hasRequiredItem 
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/80' 
-                  : 'bg-primary/50 text-primary-foreground cursor-not-allowed'}`}
-                onClick={unlockArtifact}
-                disabled={!hasRequiredItem}
-              >
-                Unlock
-              </button>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full border border-primary/30">
+            <h3 className="text-lg font-semibold text-primary mb-4">Activate Artifact</h3>
+            
+            <div className="space-y-4">
+              <p>This ancient device appears to be activating in your presence...</p>
+              
+              <div className="flex justify-between">
+                <button 
+                  className="px-4 py-2 bg-muted text-muted-foreground rounded-md hover:bg-muted/80"
+                  onClick={() => setShowUnlockPrompt(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80"
+                  onClick={unlockArtifact}
+                >
+                  Continue Activation
+                </button>
+              </div>
             </div>
           </div>
         </div>
