@@ -159,13 +159,15 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
               </Button>
             </Link>
           </div>
-          <Button 
-            className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            onClick={onClose}
-          >
-            <Sparkles className="mr-2 h-4 w-4" />
-            Begin My Journey
-          </Button>
+          <Link to="/">
+            <Button 
+              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              onClick={onClose}
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              Begin My Journey
+            </Button>
+          </Link>
         </DialogFooter>
       </DialogContent>
     </Dialog>
