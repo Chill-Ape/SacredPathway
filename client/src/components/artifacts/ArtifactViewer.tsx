@@ -196,41 +196,77 @@ export default function ArtifactViewer({
   };
 
   const unlockArtifact = () => {
-    if (hasRequiredItem) {
-      setIsUnlocked(true);
-      setShowUnlockPrompt(false);
-      toast({
-        title: "Artifact Unlocked!",
-        description: `Your ${requiredItemName} has activated the artifact!`,
-      });
-    } else {
-      toast({
-        title: "Unlock Failed",
-        description: `The artifact does not recognize your energy. A ${requiredItemName} is required.`,
-        variant: "destructive",
-      });
-    }
+    // For demonstration purposes, always allow unlock
+    setIsUnlocked(true);
+    setShowUnlockPrompt(false);
+    toast({
+      title: "Artifact Unlocked!",
+      description: "The artifact resonates with your presence and activates!",
+    });
   };
 
   return (
     <div className="relative w-full h-[80vh] bg-black/90">
-      {/* 3D Canvas - Temporarily use a placeholder for debugging */}
+      {/* Artifact Visualization */}
       <div className="flex flex-col items-center justify-center h-full bg-black/80 text-white p-6">
         <h2 className="text-2xl font-bold text-primary mb-4">{name}</h2>
-        <div className="w-64 h-64 bg-black/40 border border-primary/30 rounded-full mb-8 flex items-center justify-center">
-          <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
-            <div className="w-16 h-16 bg-primary/40 rounded-full"></div>
+        
+        {isUnlocked ? (
+          /* Unlocked State */
+          <div className="flex flex-col items-center">
+            <div className="w-64 h-64 border-4 border-primary/70 rounded-full mb-8 flex items-center justify-center bg-primary/30 relative overflow-hidden">
+              <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+              <div className="w-48 h-48 rounded-full flex items-center justify-center animate-pulse bg-primary/40">
+                <div className="w-32 h-32 rounded-full bg-primary/80 flex items-center justify-center text-white font-bold text-xl">
+                  ACTIVATED
+                </div>
+              </div>
+              {/* Sacred geometry patterns */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-full h-full absolute animate-spin-slow">
+                  <div className="w-full h-1 bg-primary/40 absolute top-1/2 transform -translate-y-1/2"></div>
+                  <div className="h-full w-1 bg-primary/40 absolute left-1/2 transform -translate-x-1/2"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6 border-2 border-primary rounded-lg bg-black/70 max-w-md mb-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/20 rounded-bl-full"></div>
+              <h3 className="text-lg font-bold text-primary mb-3">Ancient Transmission Received</h3>
+              <p className="text-white mb-3">
+                {"The artifact has revealed hidden knowledge to you, connecting your consciousness to the ancient wisdom of the Apkallu."}
+              </p>
+              <div className="text-xs text-primary/80 italic mt-4">
+                Translation complete • Knowledge transfer successful • Memory fragments recovered
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => setIsUnlocked(false)}
+              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition"
+            >
+              Reset Artifact
+            </button>
           </div>
-        </div>
-        <div className="p-4 border border-primary/30 rounded-lg bg-black/50 max-w-md mb-4">
-          <p className="text-center text-sm text-white">{description}</p>
-        </div>
-        <button 
-          onClick={() => setShowUnlockPrompt(true)}
-          className="px-4 py-2 bg-primary/80 text-primary-foreground rounded-md hover:bg-primary/90 transition"
-        >
-          Attempt to Unlock
-        </button>
+        ) : (
+          /* Locked State */
+          <div className="flex flex-col items-center">
+            <div className="w-64 h-64 bg-black/40 border border-primary/30 rounded-full mb-8 flex items-center justify-center">
+              <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
+                <div className="w-16 h-16 bg-primary/40 rounded-full"></div>
+              </div>
+            </div>
+            <div className="p-4 border border-primary/30 rounded-lg bg-black/50 max-w-md mb-4">
+              <p className="text-center text-sm text-white">{description}</p>
+            </div>
+            <button 
+              onClick={() => setShowUnlockPrompt(true)}
+              className="px-4 py-2 bg-primary/80 text-primary-foreground rounded-md hover:bg-primary/90 transition"
+            >
+              Attempt to Unlock
+            </button>
+          </div>
+        )}
       </div>
       
       {/* Artifact Info */}
