@@ -9,7 +9,8 @@ import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 import BookReader, { Book } from '@/components/books/BookReader';
 
-import apkalluScrollImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png';
+// Using public path instead of direct import for better performance
+const apkalluScrollImage = '/assets/epic_of_apkallu.jpg';
 import { apkalluBookData } from '@/data/apkalluBookData';
 
 export default function EpicOfApkallu() {

@@ -7,7 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 // Import book images directly using Vite's asset handling 
 import firstCodexImage from '@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png';
 import akashicCompendiumImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png';
-import epicOfApkalluImage from '@assets/2249d467-9b21-4ed9-930f-5f8fd7bf6aab.png';
+// Using public path instead of direct import for better performance
+const epicOfApkalluImage = '/assets/epic_of_apkallu.jpg';
 // For Book of Thoth, importing from client assets directly
 // @ts-ignore
 import bookOfThothImage from '../assets/ancient_tablet_dark.png';
