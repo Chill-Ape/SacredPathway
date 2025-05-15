@@ -1,10 +1,46 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Component, ErrorInfo, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, PerspectiveCamera, Environment, ContactShadows, Text } from '@react-three/drei';
 import { Perf } from 'r3f-perf';
 import * as THREE from 'three';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
+
+// Error boundary for catching React Three Fiber errors
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(_: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("3D Rendering error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center w-full h-full bg-black/80 text-white p-6">
+          <h2 className="text-xl font-bold text-primary mb-2">3D Viewer Unavailable</h2>
+          <p className="text-center mb-4">
+            The artifact viewer encountered an error. Try refreshing the page or using a different browser.
+          </p>
+          <div className="p-6 border border-primary/30 rounded-lg bg-black/50 max-w-md">
+            <p className="text-sm text-muted-foreground">
+              This ancient technology requires modern computational powers to render properly.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Define the artifact model
 const ArtifactModel = ({ 
@@ -129,13 +165,13 @@ export default function ArtifactViewer({
   requiredItemId,
   requiredItemName,
 }: ArtifactViewerProps) {
-  const { inventory } = useInventory();
+  const { inventory = [] } = useInventory() || { inventory: [] };
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [showUnlockPrompt, setShowUnlockPrompt] = useState(false);
   const { toast } = useToast();
 
   // Check if the user has the required item
-  const hasRequiredItem = requiredItemId 
+  const hasRequiredItem = requiredItemId && inventory && inventory.length > 0
     ? inventory.some((item: any) => item.id === parseInt(requiredItemId))
     : false;
 
@@ -178,58 +214,24 @@ export default function ArtifactViewer({
 
   return (
     <div className="relative w-full h-[80vh] bg-black/90">
-      {/* 3D Canvas */}
-      <Canvas shadows>
-        {/* Performance monitor - remove in production */}
-        {process.env.NODE_ENV === 'development' && <Perf position="top-left" />}
-        
-        {/* Camera */}
-        <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={45} />
-        
-        {/* Controls */}
-        <OrbitControls 
-          enablePan={false}
-          minPolarAngle={Math.PI / 4}
-          maxPolarAngle={Math.PI / 1.5}
-          minDistance={3}
-          maxDistance={8}
-        />
-        
-        {/* Lighting */}
-        <ambientLight intensity={0.2} />
-        <spotLight 
-          position={[5, 10, 5]} 
-          angle={0.3} 
-          penumbra={1} 
-          intensity={1} 
-          castShadow 
-        />
-        <spotLight 
-          position={[-5, 10, 5]} 
-          angle={0.3} 
-          penumbra={1} 
-          intensity={0.5} 
-          castShadow 
-          color="#3a7dd4" 
-        />
-        
-        {/* Environment & Shadows */}
-        <Environment preset="night" />
-        <ContactShadows 
-          position={[0, -1.5, 0]}
-          opacity={0.4}
-          scale={10}
-          blur={2}
-          far={1.5}
-        />
-        
-        {/* Artifact Model */}
-        <ArtifactModel 
-          artifactId={artifactId}
-          onHotspotClick={handleHotspotClick}
-          isUnlocked={isUnlocked}
-        />
-      </Canvas>
+      {/* 3D Canvas - Temporarily use a placeholder for debugging */}
+      <div className="flex flex-col items-center justify-center h-full bg-black/80 text-white p-6">
+        <h2 className="text-2xl font-bold text-primary mb-4">{name}</h2>
+        <div className="w-64 h-64 bg-black/40 border border-primary/30 rounded-full mb-8 flex items-center justify-center">
+          <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
+            <div className="w-16 h-16 bg-primary/40 rounded-full"></div>
+          </div>
+        </div>
+        <div className="p-4 border border-primary/30 rounded-lg bg-black/50 max-w-md mb-4">
+          <p className="text-center text-sm text-white">{description}</p>
+        </div>
+        <button 
+          onClick={() => setShowUnlockPrompt(true)}
+          className="px-4 py-2 bg-primary/80 text-primary-foreground rounded-md hover:bg-primary/90 transition"
+        >
+          Attempt to Unlock
+        </button>
+      </div>
       
       {/* Artifact Info */}
       <div className="absolute top-4 left-4 p-4 rounded-lg bg-black/60 text-white max-w-md">
