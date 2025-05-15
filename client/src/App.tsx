@@ -36,6 +36,7 @@ import { AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { AuthProvider } from "@/hooks/use-auth";
 import { InventoryProvider } from "@/hooks/use-inventory";
+import { CraftingProvider } from "@/hooks/use-crafting";
 import { ProtectedRoute } from "@/lib/protected-route";
 
 function App() {

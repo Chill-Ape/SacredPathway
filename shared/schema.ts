@@ -14,6 +14,7 @@ export const users = pgTable("users", {
   manaBalance: integer("mana_balance").notNull().default(0),
   stripeCustomerId: text("stripe_customer_id"),
   profilePicture: text("profile_picture").default("/assets/default_avatar.svg"),
+  isAdmin: boolean("is_admin").default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -264,8 +265,9 @@ export const craftingRecipes = pgTable("crafting_recipes", {
   resultItemAttributes: jsonb("result_item_attributes"),
   ingredients: jsonb("ingredients").notNull(), // Array of {itemName, quantity} objects
   requiredLevel: integer("required_level").default(1),
-  craftingTime: integer("crafting_time").default(0), // In seconds
+  craftingTimeMinutes: integer("crafting_time_minutes").default(5), // In minutes
   manaPrice: integer("mana_price").default(0),
+  isPublic: boolean("is_public").default(false), // Whether recipe is visible to all users without discovery
   isDiscovered: boolean("is_discovered").default(false), // Default recipes are discoverable, rare ones need to be found
   createdAt: timestamp("created_at").defaultNow(),
 });
