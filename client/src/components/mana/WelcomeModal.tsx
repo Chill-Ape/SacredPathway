@@ -90,6 +90,19 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
                   <p className="text-sm text-gray-600">Access deeper levels of knowledge with your Mana.</p>
                 </div>
               </div>
+              <div className="flex items-start gap-3">
+                <svg className="h-5 w-5 text-blue-600 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 3L9 21"></path>
+                  <path d="M15 3L15 21"></path>
+                  <path d="M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"></path>
+                  <path d="M3 9H21"></path>
+                  <path d="M3 15H21"></path>
+                </svg>
+                <div>
+                  <p className="font-medium">Sacred Crafting</p>
+                  <p className="text-sm text-gray-600">Combine items to craft powerful artifacts in the Sacred Crafting Chamber.</p>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -118,16 +131,34 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
         </div>
         
         <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
-          <Link to="/oracle" className="w-full sm:w-auto">
-            <Button 
-              variant="outline" 
-              className="w-full sm:w-auto"
-              onClick={onClose}
-            >
-              <PenTool className="mr-2 h-4 w-4" />
-              Ask the Oracle
-            </Button>
-          </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+            <Link to="/oracle" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={onClose}
+              >
+                <PenTool className="mr-2 h-4 w-4" />
+                Ask the Oracle
+              </Button>
+            </Link>
+            <Link to="/crafting" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={onClose}
+              >
+                <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 3L9 21"></path>
+                  <path d="M15 3L15 21"></path>
+                  <path d="M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"></path>
+                  <path d="M3 9H21"></path>
+                  <path d="M3 15H21"></path>
+                </svg>
+                Try Crafting
+              </Button>
+            </Link>
+          </div>
           <Button 
             className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             onClick={onClose}
