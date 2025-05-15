@@ -950,10 +950,143 @@ export class MemStorage implements IStorage {
       // Then initialize default scrolls
       await this.initializeDefaultScrolls();
       
+      // Initialize default crafting recipes
+      await this.initializeDefaultCraftingRecipes();
+      
       console.log("MemStorage: Finished initializing default data");
     } catch (error) {
       console.error("MemStorage: Error initializing data:", error);
     }
+  }
+  
+  // Initialize default crafting recipes
+  private async initializeDefaultCraftingRecipes() {
+    // Get all existing recipes
+    const existingRecipes = await this.getAllCraftingRecipes();
+    
+    // Only initialize if none exist
+    if (existingRecipes.length > 0) {
+      console.log(`MemStorage: Crafting recipes already exist (${existingRecipes.length}), skipping initialization`);
+      return;
+    }
+    
+    console.log("MemStorage: Initializing default crafting recipes");
+    
+    // Define default recipes
+    const recipes = [
+      {
+        name: "Sacred Offering",
+        description: "A simple offering to initiate the sacred rites.",
+        isPublic: true,
+        resultItemName: "Sacred Offering",
+        resultItemType: "ritual_item",
+        resultItemDescription: "A carefully crafted offering combining herbs and sacred symbols.",
+        resultItemImageUrl: "/images/items/sacred_offering.svg",
+        resultItemRarity: "common",
+        resultItemQuantity: 1,
+        resultItemAttributes: {
+          power: 1,
+          uses: 1
+        },
+        ingredients: [
+          { itemName: "Dried Herbs", quantity: 2 },
+          { itemName: "Parchment", quantity: 1 }
+        ],
+        craftingTimeMinutes: 2
+      },
+      {
+        name: "Ceremonial Incense",
+        description: "Aromatic incense used in sacred ceremonies to purify spaces.",
+        isPublic: true,
+        resultItemName: "Ceremonial Incense",
+        resultItemType: "ritual_item",
+        resultItemDescription: "Fragrant incense that creates a sacred atmosphere when burned.",
+        resultItemImageUrl: "/images/items/incense.svg",
+        resultItemRarity: "common",
+        resultItemQuantity: 3,
+        resultItemAttributes: {
+          purification: 2,
+          duration: "30 minutes"
+        },
+        ingredients: [
+          { itemName: "Dried Herbs", quantity: 3 },
+          { itemName: "Sacred Resin", quantity: 1 }
+        ],
+        craftingTimeMinutes: 5
+      },
+      {
+        name: "Divination Runes",
+        description: "A set of simple runes for basic divination practices.",
+        isPublic: false,
+        resultItemName: "Divination Runes",
+        resultItemType: "tool",
+        resultItemDescription: "A set of stone runes inscribed with ancient symbols for divination rituals.",
+        resultItemImageUrl: "/images/items/runes.svg",
+        resultItemRarity: "uncommon",
+        resultItemQuantity: 1,
+        resultItemAttributes: {
+          insight: 3,
+          accuracy: 2
+        },
+        ingredients: [
+          { itemName: "Polished Stones", quantity: 7 },
+          { itemName: "Pigment", quantity: 1 },
+          { itemName: "Sacred Scroll", quantity: 1 }
+        ],
+        craftingTimeMinutes: 15
+      },
+      {
+        name: "Protection Amulet",
+        description: "An amulet that wards off negative energies and provides spiritual protection.",
+        isPublic: false,
+        resultItemName: "Protection Amulet",
+        resultItemType: "jewelry",
+        resultItemDescription: "A powerful amulet that creates a shield of energetic protection around the wearer.",
+        resultItemImageUrl: "/images/items/amulet.svg",
+        resultItemRarity: "rare",
+        resultItemQuantity: 1,
+        resultItemAttributes: {
+          protection: 5,
+          durability: "permanent"
+        },
+        ingredients: [
+          { itemName: "Silver Chain", quantity: 1 },
+          { itemName: "Crystal", quantity: 1 },
+          { itemName: "Sacred Symbol", quantity: 1 },
+          { itemName: "Blessed Oil", quantity: 1 }
+        ],
+        craftingTimeMinutes: 30
+      },
+      {
+        name: "Alchemical Infusion",
+        description: "A powerful alchemical mixture that enhances spiritual awareness.",
+        isPublic: false,
+        resultItemName: "Alchemical Infusion",
+        resultItemType: "potion",
+        resultItemDescription: "A luminescent liquid that temporarily enhances spiritual perception when consumed.",
+        resultItemImageUrl: "/images/items/potion.svg",
+        resultItemRarity: "rare",
+        resultItemQuantity: 2,
+        resultItemAttributes: {
+          perception: 4,
+          duration: "1 hour"
+        },
+        ingredients: [
+          { itemName: "Pure Water", quantity: 2 },
+          { itemName: "Rare Herbs", quantity: 3 },
+          { itemName: "Crystal Dust", quantity: 1 },
+          { itemName: "Essence of Light", quantity: 1 }
+        ],
+        craftingTimeMinutes: 45
+      }
+    ];
+    
+    // Create all recipes
+    for (const recipe of recipes) {
+      await this.createCraftingRecipe(recipe);
+    }
+    
+    console.log("MemStorage: Created default crafting recipes:", recipes.length);
   }
 
   // USER METHODS

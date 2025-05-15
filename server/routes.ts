@@ -1360,6 +1360,306 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // CRAFTING SYSTEM ROUTES
+  
+  // Get all crafting recipes
+  app.get("/api/crafting/recipes", async (req: Request, res: Response) => {
+    try {
+      const recipes = await storage.getAllCraftingRecipes();
+      
+      // If the user is authenticated, mark recipes as discovered or not
+      if (req.isAuthenticated()) {
+        const userId = req.user.id;
+        const discoveries = await storage.getDiscoveredRecipes(userId);
+        const discoveredIds = discoveries.map(recipe => recipe.id);
+        
+        // Mark recipes that the user has discovered
+        const recipesWithDiscoveryState = recipes.map(recipe => ({
+          ...recipe,
+          isDiscovered: discoveredIds.includes(recipe.id)
+        }));
+        
+        res.json(recipesWithDiscoveryState);
+      } else {
+        // For unauthenticated users, only return public recipes without discovery info
+        const publicRecipes = recipes.filter(recipe => recipe.isPublic !== false);
+        res.json(publicRecipes);
+      }
+    } catch (error) {
+      console.error("Error fetching crafting recipes:", error);
+      res.status(500).json({ message: "Failed to fetch crafting recipes" });
+    }
+  });
+  
+  // Get only discovered recipes for current user
+  app.get("/api/user/crafting/recipes", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const recipes = await storage.getDiscoveredRecipes(req.user.id);
+      res.json(recipes);
+    } catch (error) {
+      console.error("Error fetching discovered recipes:", error);
+      res.status(500).json({ message: "Failed to fetch discovered recipes" });
+    }
+  });
+  
+  // Get a specific recipe by ID
+  app.get("/api/crafting/recipes/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid recipe ID" });
+      }
+      
+      const recipe = await storage.getCraftingRecipeById(id);
+      if (!recipe) {
+        return res.status(404).json({ message: "Recipe not found" });
+      }
+      
+      // Check if the recipe is public or if user has discovered it
+      if (recipe.isPublic === false && req.isAuthenticated()) {
+        const isDiscovered = await storage.isRecipeDiscovered(req.user.id, id);
+        if (!isDiscovered) {
+          return res.status(403).json({ message: "Recipe not yet discovered" });
+        }
+      } else if (recipe.isPublic === false && !req.isAuthenticated()) {
+        return res.status(403).json({ message: "Authentication required to view this recipe" });
+      }
+      
+      res.json(recipe);
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
+      res.status(500).json({ message: "Failed to fetch recipe" });
+    }
+  });
+  
+  // Create a new crafting recipe (admin only)
+  app.post("/api/crafting/recipes", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated() || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    
+    try {
+      const recipeData = insertCraftingRecipeSchema.parse(req.body);
+      const newRecipe = await storage.createCraftingRecipe(recipeData);
+      res.status(201).json(newRecipe);
+    } catch (error) {
+      console.error("Error creating recipe:", error);
+      res.status(500).json({ message: "Failed to create recipe" });
+    }
+  });
+  
+  // Discover a recipe
+  app.post("/api/user/crafting/discover/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const recipeId = parseInt(req.params.id);
+      if (isNaN(recipeId)) {
+        return res.status(400).json({ message: "Invalid recipe ID" });
+      }
+      
+      // Check if recipe exists
+      const recipe = await storage.getCraftingRecipeById(recipeId);
+      if (!recipe) {
+        return res.status(404).json({ message: "Recipe not found" });
+      }
+      
+      // Record the discovery
+      const discovery = await storage.discoverRecipe(req.user.id, recipeId);
+      if (!discovery) {
+        return res.status(400).json({ message: "Failed to discover recipe" });
+      }
+      
+      res.status(201).json({
+        message: "Recipe discovered",
+        recipe,
+        discoveredAt: discovery.discoveredAt
+      });
+    } catch (error) {
+      console.error("Error discovering recipe:", error);
+      res.status(500).json({ message: "Failed to discover recipe" });
+    }
+  });
+  
+  // Check if a user has all required ingredients for a recipe
+  app.get("/api/user/crafting/check-ingredients/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const recipeId = parseInt(req.params.id);
+      if (isNaN(recipeId)) {
+        return res.status(400).json({ message: "Invalid recipe ID" });
+      }
+      
+      const result = await storage.checkIngredients(req.user.id, recipeId);
+      res.json(result);
+    } catch (error) {
+      console.error("Error checking ingredients:", error);
+      res.status(500).json({ message: "Failed to check ingredients" });
+    }
+  });
+  
+  // Start crafting an item (add to crafting queue)
+  app.post("/api/user/crafting/start", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const { recipeId } = req.body;
+      
+      if (!recipeId) {
+        return res.status(400).json({ message: "Recipe ID is required" });
+      }
+      
+      // Parse and validate crafting request
+      const parsedRecipeId = parseInt(recipeId);
+      if (isNaN(parsedRecipeId)) {
+        return res.status(400).json({ message: "Invalid recipe ID" });
+      }
+      
+      // Check if recipe exists
+      const recipe = await storage.getCraftingRecipeById(parsedRecipeId);
+      if (!recipe) {
+        return res.status(404).json({ message: "Recipe not found" });
+      }
+      
+      // Check if user has discovered this recipe
+      const isDiscovered = await storage.isRecipeDiscovered(req.user.id, parsedRecipeId);
+      if (!isDiscovered && recipe.isPublic !== true) {
+        return res.status(403).json({ message: "You haven't discovered this recipe yet" });
+      }
+      
+      // Check if user has required ingredients
+      const { hasIngredients, missingItems } = await storage.checkIngredients(req.user.id, parsedRecipeId);
+      if (!hasIngredients) {
+        return res.status(400).json({ 
+          message: "Missing required ingredients", 
+          missingItems 
+        });
+      }
+      
+      // Use the ingredients (consume them from inventory)
+      const ingredientsUsed = await storage.useIngredients(req.user.id, parsedRecipeId);
+      if (!ingredientsUsed) {
+        return res.status(400).json({ message: "Failed to use ingredients" });
+      }
+      
+      // Calculate completion time
+      const startedAt = new Date();
+      const completionTime = recipe.craftingTimeMinutes || 5; // Default to 5 minutes if not specified
+      const completesAt = new Date(startedAt.getTime() + completionTime * 60 * 1000);
+      
+      // Add to crafting queue
+      const queueItem = await storage.addToCraftingQueue({
+        userId: req.user.id,
+        recipeId: parsedRecipeId,
+        completesAt
+      });
+      
+      res.status(201).json({
+        message: "Crafting started",
+        queueItem,
+        completesAt
+      });
+    } catch (error) {
+      console.error("Error starting crafting:", error);
+      res.status(500).json({ message: "Failed to start crafting" });
+    }
+  });
+  
+  // Get user's crafting queue
+  app.get("/api/user/crafting/queue", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const queueItems = await storage.getUserCraftingQueue(req.user.id);
+      
+      // For each queue item, include recipe details
+      const detailedQueue = await Promise.all(queueItems.map(async (item) => {
+        const recipe = await storage.getCraftingRecipeById(item.recipeId);
+        return {
+          ...item,
+          recipe: recipe || { name: "Unknown Recipe" }
+        };
+      }));
+      
+      res.json(detailedQueue);
+    } catch (error) {
+      console.error("Error fetching crafting queue:", error);
+      res.status(500).json({ message: "Failed to fetch crafting queue" });
+    }
+  });
+  
+  // Claim a completed crafting item
+  app.post("/api/user/crafting/claim/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const queueId = parseInt(req.params.id);
+      if (isNaN(queueId)) {
+        return res.status(400).json({ message: "Invalid queue ID" });
+      }
+      
+      // Check if the queue item exists and belongs to the user
+      const queueItem = await storage.getQueueItemById(queueId);
+      if (!queueItem) {
+        return res.status(404).json({ message: "Crafting queue item not found" });
+      }
+      
+      if (queueItem.userId !== req.user.id) {
+        return res.status(403).json({ message: "You don't have permission to claim this item" });
+      }
+      
+      // Check if the item is completed
+      if (!queueItem.isCompleted) {
+        // Check if it's time to complete it
+        const now = new Date();
+        if (now < queueItem.completesAt) {
+          return res.status(400).json({ 
+            message: "Crafting not yet complete", 
+            completesAt: queueItem.completesAt,
+            remainingTime: queueItem.completesAt.getTime() - now.getTime()
+          });
+        }
+        
+        // Mark as completed
+        await storage.updateQueueItemStatus(queueId, true);
+      }
+      
+      // Check if already claimed
+      if (queueItem.isClaimed) {
+        return res.status(400).json({ message: "Item already claimed" });
+      }
+      
+      // Claim the item
+      const newItem = await storage.claimCraftedItem(queueId);
+      if (!newItem) {
+        return res.status(400).json({ message: "Failed to claim crafted item" });
+      }
+      
+      res.json({
+        message: "Crafted item claimed",
+        item: newItem
+      });
+    } catch (error) {
+      console.error("Error claiming crafted item:", error);
+      res.status(500).json({ message: "Failed to claim crafted item" });
+    }
+  });
+  
   return httpServer;
 }
 
