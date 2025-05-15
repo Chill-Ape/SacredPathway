@@ -28,7 +28,7 @@ const CRYSTAL_COLLECTION = [
     name: "Quartz Crystal",
     description: "A clear quartz crystal known for its amplifying energy. It's believed to enhance clarity of thought and spiritual connection.",
     type: "crystal",
-    imageUrl: "/assets/crystals/quartz.png",
+    imageUrl: "/client/src/assets/crystals/quartz.png",
     rarity: "common",
     attributes: { energy: "amplifying", element: "universal" }
   },
@@ -36,7 +36,7 @@ const CRYSTAL_COLLECTION = [
     name: "Fire Crystal",
     description: "A vibrant red crystal that emanates warmth. Associated with passion, courage, and the transformative power of fire.",
     type: "crystal",
-    imageUrl: "/assets/crystals/fire.png",
+    imageUrl: "/client/src/assets/crystals/fire.png",
     rarity: "uncommon",
     attributes: { energy: "transformative", element: "fire" }
   },
@@ -44,7 +44,7 @@ const CRYSTAL_COLLECTION = [
     name: "Green Crystal",
     description: "An emerald-green crystal connected to growth and healing. It resonates with the heart and natural life force.",
     type: "crystal", 
-    imageUrl: "/assets/crystals/green.png",
+    imageUrl: "/client/src/assets/crystals/green.png",
     rarity: "uncommon",
     attributes: { energy: "healing", element: "earth" }
   },
@@ -52,7 +52,7 @@ const CRYSTAL_COLLECTION = [
     name: "Blue Cluster Crystal",
     description: "A cluster of blue crystals that vibrate with communicative energy. They enhance intuition and clarity of expression.",
     type: "crystal",
-    imageUrl: "/assets/crystals/blue _cluster.png",
+    imageUrl: "/client/src/assets/crystals/blue _cluster.png",
     rarity: "rare",
     attributes: { energy: "communicative", element: "water", form: "cluster" }
   },
@@ -60,7 +60,7 @@ const CRYSTAL_COLLECTION = [
     name: "Sky Blue Crystal",
     description: "A translucent sky-blue crystal that connects to higher realms of consciousness. It aids in spiritual insight and elevating awareness.",
     type: "crystal",
-    imageUrl: "/assets/crystals/sky_blue.png",
+    imageUrl: "/client/src/assets/crystals/sky_blue.png",
     rarity: "rare",
     attributes: { energy: "elevating", element: "air" }
   },
@@ -68,7 +68,7 @@ const CRYSTAL_COLLECTION = [
     name: "Obsidian Crystal",
     description: "A dark, protective stone formed from volcanic glass. It shields against negative energies and grounds spiritual experiences.",
     type: "crystal",
-    imageUrl: "/assets/crystals/obsidian.png",
+    imageUrl: "/client/src/assets/crystals/obsidian.png",
     rarity: "uncommon",
     attributes: { energy: "protective", element: "earth", origin: "volcanic" }
   }
@@ -1481,7 +1481,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (existingCrystal) {
         // Update quantity if user already has this crystal
-        await storage.updateItemQuantity(existingCrystal.id, existingCrystal.quantity + 1);
+        const currentQuantity = existingCrystal.quantity || 0;
+        await storage.updateItemQuantity(existingCrystal.id, currentQuantity + 1);
       } else {
         // Add crystal to user's inventory
         await storage.addInventoryItem({
