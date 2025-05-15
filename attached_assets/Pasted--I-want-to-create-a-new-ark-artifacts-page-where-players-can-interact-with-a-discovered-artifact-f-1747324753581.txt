@@ -1,0 +1,71 @@
+❝ I want to create a new /ark/artifacts page where players can interact with a discovered artifact from the Ark in a highly immersive, realistic way. This is a key sacred object in the narrative. It should feel like the user is uncovering, inspecting, and unlocking something ancient and powerful.
+
+🧩 Core Features & Vision:
+🔁 1. 3D Artifact Viewer
+Display the artifact in full 3D — rendered in real-time
+
+Users can:
+
+Rotate the object (drag or mouse movement)
+
+Zoom in/out (mouse wheel or pinch)
+
+Click or tap on parts to trigger responses (glow, unlocks, info popups)
+
+Artifact should be realistic in shading, texture, and shadow (hyper-realistic vibe)
+
+Use react-three-fiber + drei + PBR materials for high fidelity
+
+🔓 2. Interactive Unlock Mechanics
+Allow user to use a specific item from their inventory (e.g., “Obsidian Key” or “Glyph Lens”) to activate or reveal hidden parts of the artifact
+
+If the user has the required item:
+
+Trigger an animation (panel slides, glyphs glow, parts expand)
+
+Reveal a lore transmission, blueprint, or new crafting recipe
+
+If they don’t have the item, display a mystical response like:
+
+“The artifact does not recognize your energy. A key is required.”
+
+🧬 3. Component-Based UI
+Break page into clear sections:
+
+Top bar: Artifact name, class (e.g., ARK-T3 Relic), discovered location
+
+Main view: 3D interactive component
+
+Sidebar (or overlay): inventory item selection to interact with artifact
+
+Optional lore panel that slides open when something is unlocked
+
+🪐 4. Immersive Styling
+Background should resemble an ancient vault or digital relic chamber
+
+Add ambient glow, dust, or rune shimmer effects (using Framer Motion or GLSL)
+
+Use ancient fonts, glowing sigils, sound cues for unlocks
+
+🛠 Tech Stack Suggestions:
+react-three-fiber + @react-three/drei for 3D rendering
+
+Framer Motion or GSAP for animation triggers
+
+Zustand or Context API for inventory + user state
+
+Tailwind CSS or styled-components for sacred UI
+
+🧪 Initial Task List:
+Build base layout for /ark/artifacts
+
+Load 1 demo artifact model (e.g., .glb or .gltf) with PBR materials
+
+Implement rotation, zoom, and part-click detection
+
+Set up a dummy inventory with a placeholder item to trigger the unlock state
+
+Style the page to feel like a sacred digital vault
+
+Let me know if you need the 3D model, artifact metadata JSON, or lore unlock text. ❞
+
