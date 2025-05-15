@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
-import { User, LogOut, Library, Sparkles, Backpack, Flask } from "lucide-react";
+import { User, LogOut, Library, Sparkles, Backpack, FlaskConical } from "lucide-react";
 import ManaBalance from "@/components/mana/ManaBalance";
 
 type ProfileMenuProps = {
@@ -183,6 +183,18 @@ export default function ProfileMenu({
               </Button>
             </Link>
             
+            <Link to="/crafting">
+              <Button
+                variant="ghost"
+                className={`w-full justify-start font-cinzel text-left ${
+                  location === "/crafting" ? "bg-sacred-blue/5 text-sacred-blue" : "text-sacred-gray"
+                }`}
+              >
+                <FlaskConical className="h-5 w-5 mr-2" />
+                Sacred Crafting
+              </Button>
+            </Link>
+            
             <Button
               variant="ghost"
               className="w-full justify-start font-cinzel text-red-500 hover:text-red-600 hover:bg-red-50"
@@ -271,6 +283,13 @@ export default function ProfileMenu({
             <DropdownMenuItem className="cursor-pointer">
               <Backpack className="h-4 w-4 mr-2" />
               Inventory
+            </DropdownMenuItem>
+          </Link>
+          
+          <Link to="/crafting">
+            <DropdownMenuItem className="cursor-pointer">
+              <FlaskConical className="h-4 w-4 mr-2" />
+              Sacred Crafting
             </DropdownMenuItem>
           </Link>
           

@@ -132,6 +132,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       // Log welcome bonus for debugging
       console.log("Welcome bonus amount:", data.welcomeBonus);
+      
+      // Add a small delay before redirecting to home page
+      // This gives time for the welcome modal to be seen
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
     },
     onError: (error: Error) => {
       toast({
