@@ -886,6 +886,9 @@ export class MemStorage implements IStorage {
   private manaTransactions: Map<number, ManaTransaction>;
   private manaPackages: Map<number, ManaPackage>;
   private inventoryItems: Map<number, InventoryItem>; // New: for inventory items
+  private craftingRecipes: Map<number, CraftingRecipe>; // For crafting recipes
+  private userRecipes: Map<string, UserRecipe>; // key in format "userId-recipeId"
+  private craftingQueue: Map<number, CraftingQueueItem>; // For crafting queue
   private oracleUsageBySession: Map<string, Map<string, number>>; // Track Oracle usage per session per date
   sessionStore: session.Store;
   
@@ -896,7 +899,9 @@ export class MemStorage implements IStorage {
   private currentContactMessageId: number;
   private currentManaTransactionId: number;
   private currentManaPackageId: number;
-  private currentInventoryItemId: number; // New: for tracking inventory item IDs
+  private currentInventoryItemId: number;
+  private currentCraftingRecipeId: number;
+  private currentCraftingQueueId: number;
 
   constructor() {
     this.users = new Map();
@@ -908,6 +913,9 @@ export class MemStorage implements IStorage {
     this.manaTransactions = new Map();
     this.manaPackages = new Map();
     this.inventoryItems = new Map();
+    this.craftingRecipes = new Map();
+    this.userRecipes = new Map();
+    this.craftingQueue = new Map();
     this.oracleUsageBySession = new Map();
     
     // Initialize robust session store with explicit configuration
@@ -926,6 +934,8 @@ export class MemStorage implements IStorage {
     this.currentManaTransactionId = 1;
     this.currentManaPackageId = 1;
     this.currentInventoryItemId = 1;
+    this.currentCraftingRecipeId = 1;
+    this.currentCraftingQueueId = 1;
     
     // Initialize data in an async way
     this.initializeData();
@@ -1319,6 +1329,236 @@ export class MemStorage implements IStorage {
       }
     }
     return items;
+  }
+  
+  // Crafting methods implementation
+  async getAllCraftingRecipes(): Promise<CraftingRecipe[]> {
+    return Array.from(this.craftingRecipes.values());
+  }
+
+  async getDiscoveredRecipes(userId: number): Promise<CraftingRecipe[]> {
+    const recipes: CraftingRecipe[] = [];
+    
+    // Get all user recipe discoveries
+    for (const [key, userRecipe] of this.userRecipes.entries()) {
+      if (userRecipe.userId === userId) {
+        const recipe = this.craftingRecipes.get(userRecipe.recipeId);
+        if (recipe) {
+          recipes.push(recipe);
+        }
+      }
+    }
+    
+    return recipes;
+  }
+
+  async getCraftingRecipeById(recipeId: number): Promise<CraftingRecipe | undefined> {
+    return this.craftingRecipes.get(recipeId);
+  }
+
+  async createCraftingRecipe(recipe: InsertCraftingRecipe): Promise<CraftingRecipe> {
+    const id = this.currentCraftingRecipeId++;
+    const createdAt = new Date();
+    
+    const newRecipe: CraftingRecipe = {
+      ...recipe,
+      id,
+      createdAt
+    };
+    
+    this.craftingRecipes.set(id, newRecipe);
+    return newRecipe;
+  }
+
+  async discoverRecipe(userId: number, recipeId: number): Promise<UserRecipe | undefined> {
+    // Check if already discovered
+    const alreadyDiscovered = await this.isRecipeDiscovered(userId, recipeId);
+    if (alreadyDiscovered) {
+      // Get the existing user recipe
+      const key = `${userId}-${recipeId}`;
+      return this.userRecipes.get(key);
+    }
+    
+    // Get the recipe to verify it exists
+    const recipe = await this.getCraftingRecipeById(recipeId);
+    if (!recipe) {
+      return undefined;
+    }
+    
+    // Create user-recipe relation
+    const userRecipe: UserRecipe = {
+      userId,
+      recipeId,
+      discoveredAt: new Date()
+    };
+    
+    const key = `${userId}-${recipeId}`;
+    this.userRecipes.set(key, userRecipe);
+    
+    return userRecipe;
+  }
+
+  async isRecipeDiscovered(userId: number, recipeId: number): Promise<boolean> {
+    const key = `${userId}-${recipeId}`;
+    return this.userRecipes.has(key);
+  }
+  
+  // Crafting queue methods
+  async getUserCraftingQueue(userId: number): Promise<CraftingQueueItem[]> {
+    const queueItems: CraftingQueueItem[] = [];
+    
+    for (const item of this.craftingQueue.values()) {
+      if (item.userId === userId) {
+        queueItems.push(item);
+      }
+    }
+    
+    return queueItems;
+  }
+
+  async addToCraftingQueue(queueItem: InsertCraftingQueueItem): Promise<CraftingQueueItem> {
+    const id = this.currentCraftingQueueId++;
+    const startedAt = new Date();
+    
+    const newQueueItem: CraftingQueueItem = {
+      ...queueItem,
+      id,
+      startedAt,
+      isCompleted: false,
+      isClaimed: false
+    };
+    
+    this.craftingQueue.set(id, newQueueItem);
+    return newQueueItem;
+  }
+
+  async getQueueItemById(queueId: number): Promise<CraftingQueueItem | undefined> {
+    return this.craftingQueue.get(queueId);
+  }
+
+  async updateQueueItemStatus(queueId: number, isCompleted: boolean): Promise<CraftingQueueItem | undefined> {
+    const queueItem = this.craftingQueue.get(queueId);
+    
+    if (!queueItem) {
+      return undefined;
+    }
+    
+    queueItem.isCompleted = isCompleted;
+    this.craftingQueue.set(queueId, queueItem);
+    
+    return queueItem;
+  }
+
+  async claimCraftedItem(queueId: number): Promise<InventoryItem | undefined> {
+    // Get the queue item
+    const queueItem = await this.getQueueItemById(queueId);
+    if (!queueItem || !queueItem.isCompleted || queueItem.isClaimed) {
+      return undefined;
+    }
+    
+    // Get the recipe
+    const recipe = await this.getCraftingRecipeById(queueItem.recipeId);
+    if (!recipe) {
+      return undefined;
+    }
+    
+    // Mark as claimed
+    queueItem.isClaimed = true;
+    this.craftingQueue.set(queueId, queueItem);
+    
+    // Add item to inventory
+    const newItem = await this.addInventoryItem({
+      userId: queueItem.userId,
+      name: recipe.resultItemName,
+      description: recipe.resultItemDescription,
+      type: recipe.resultItemType,
+      imageUrl: recipe.resultItemImageUrl,
+      rarity: recipe.resultItemRarity,
+      quantity: recipe.resultItemQuantity,
+      isEquipped: false,
+      usesLeft: null,
+      attributes: recipe.resultItemAttributes
+    });
+    
+    return newItem;
+  }
+  
+  // Ingredient checking and consumption
+  async checkIngredients(userId: number, recipeId: number): Promise<{hasIngredients: boolean, missingItems?: string[]}> {
+    // Get the recipe
+    const recipe = await this.getCraftingRecipeById(recipeId);
+    if (!recipe) {
+      return { hasIngredients: false, missingItems: ["Recipe not found"] };
+    }
+    
+    // Get user's inventory
+    const inventory = await this.getUserInventory(userId);
+    
+    // Check if user has all required ingredients
+    const ingredients = recipe.ingredients as {itemName: string, quantity: number}[];
+    const missingItems: string[] = [];
+    
+    for (const ingredient of ingredients) {
+      const userItem = inventory.find(item => item.name === ingredient.itemName);
+      
+      if (!userItem || (userItem.quantity || 0) < ingredient.quantity) {
+        missingItems.push(ingredient.itemName);
+      }
+    }
+    
+    return {
+      hasIngredients: missingItems.length === 0,
+      missingItems: missingItems.length > 0 ? missingItems : undefined
+    };
+  }
+  
+  async useIngredients(userId: number, recipeId: number): Promise<boolean> {
+    // Check if user has the ingredients
+    const { hasIngredients } = await this.checkIngredients(userId, recipeId);
+    if (!hasIngredients) {
+      return false;
+    }
+    
+    // Get the recipe
+    const recipe = await this.getCraftingRecipeById(recipeId);
+    if (!recipe) {
+      return false;
+    }
+    
+    // Get user's inventory
+    const inventory = await this.getUserInventory(userId);
+    
+    // Consume the ingredients
+    const ingredients = recipe.ingredients as {itemName: string, quantity: number}[];
+    
+    try {
+      for (const ingredient of ingredients) {
+        const userItem = inventory.find(item => item.name === ingredient.itemName);
+        
+        if (!userItem) {
+          throw new Error(`Item ${ingredient.itemName} not found in inventory`);
+        }
+        
+        const newQuantity = (userItem.quantity || 0) - ingredient.quantity;
+        
+        if (newQuantity < 0) {
+          throw new Error(`Not enough quantity of ${ingredient.itemName}`);
+        }
+        
+        if (newQuantity === 0) {
+          // Remove the item if quantity becomes zero
+          await this.removeInventoryItem(userItem.id);
+        } else {
+          // Update the quantity
+          await this.updateItemQuantity(userItem.id, newQuantity);
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error using ingredients:", error);
+      return false;
+    }
   }
   
   // Oracle usage tracking methods
