@@ -141,13 +141,9 @@ export default function ArkContents() {
   const [, setLocation] = useLocation();
   const [isLoaded, setIsLoaded] = useState(false);
   
+  // Simulate the vault door opening effect only on initial load
   useEffect(() => {
-    // Simulate the vault door opening effect
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 800);
-    
-    return () => clearTimeout(timer);
+    setIsLoaded(true);
   }, []);
 
   const categories = [
