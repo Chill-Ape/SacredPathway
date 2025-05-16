@@ -16,6 +16,7 @@ import MyScrolls from "@/pages/MyScrolls";
 import Admin from "@/pages/Admin";
 import ManageMana from "@/pages/ManageMana";
 import Inventory from "@/pages/Inventory";
+import InventoryGrid from "@/pages/InventoryGrid";
 import Crafting from "@/pages/Crafting";
 
 import Simulation from "@/pages/Simulation";
