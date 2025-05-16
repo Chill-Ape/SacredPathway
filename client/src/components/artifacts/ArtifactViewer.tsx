@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
-import CSS3DModel from './CSS3DModel';
-import ArtifactModel3D from './ArtifactModel3D';
+import SimpleArtifactViewer from './SimpleArtifactViewer';
 
 interface ArtifactViewerProps {
   artifactId: string;
@@ -67,18 +66,10 @@ export default function ArtifactViewer({
     <div className="relative w-full h-[80vh] bg-black/90">
       {/* 3D Artifact Viewer */}
       <div className="w-full h-full">
-        {artifactId === "artifact-1" ? (
-          <ArtifactModel3D 
-            modelPath="/models/artifact.glb" 
-            isUnlocked={isUnlocked}
-            onHotspotClick={handleHotspotClick}
-          />
-        ) : (
-          <CSS3DModel 
-            isUnlocked={isUnlocked}
-            onHotspotClick={handleHotspotClick}
-          />
-        )}
+        <SimpleArtifactViewer 
+          isUnlocked={isUnlocked}
+          onHotspotClick={handleHotspotClick}
+        />
       </div>
       
       {/* Artifact Info */}
