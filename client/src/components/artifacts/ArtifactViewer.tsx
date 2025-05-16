@@ -70,7 +70,7 @@ export default function ArtifactViewer({
         <div className="absolute inset-0 z-0 bg-[url('/assets/sacred_geometry.svg')] opacity-5 bg-repeat"></div>
         <div className="absolute inset-0 z-0 bg-gradient-radial from-transparent to-black/40"></div>
         
-        <SimpleArtifactViewer 
+        <ImprovedArtifactViewer 
           isUnlocked={isUnlocked}
           onHotspotClick={handleHotspotClick}
         />
