@@ -147,7 +147,7 @@ export default function GridInventoryItem({
       <HoverCardTrigger asChild>
         <div 
           className={`
-            relative aspect-square overflow-hidden cursor-pointer
+            relative w-full aspect-square overflow-hidden cursor-pointer
             transition-all duration-300 ease-in-out
             ${isHovering ? 'scale-[1.03] z-10' : 'scale-100 z-0'}
             ${shadow}

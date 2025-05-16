@@ -70,9 +70,10 @@ export default function InventoryGrid({
       
       {/* Item grid with fade-in animation */}
       <div className={`
-        grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5
+        grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4
         transition-opacity duration-700 ease-in-out
         ${isLoaded ? 'opacity-100' : 'opacity-0'}
+        p-2
       `}>
         {items.map((item, index) => (
           <div 

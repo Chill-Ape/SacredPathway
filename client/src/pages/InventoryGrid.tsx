@@ -326,13 +326,14 @@ export default function InventoryGrid() {
         <meta name="description" content="Browse your mystical artifacts and relics in the Akashic Archive" />
       </Helmet>
       
-      {/* Full-screen background with texture */}
+      {/* Page-specific background with texture */}
       <div 
-        className="min-h-screen pt-16 pb-12 px-0 overflow-hidden"
+        className="min-h-[calc(100vh-64px)] pt-8 pb-12 px-0 overflow-hidden"
         style={{
           backgroundImage: `url(${inventoryBgSrc})`,
           backgroundSize: '200px 200px',
           backgroundRepeat: 'repeat',
+          backgroundAttachment: 'local'
         }}
       >
         {/* Game-like inventory frame */}
@@ -359,7 +360,6 @@ export default function InventoryGrid() {
               <div className="relative px-2 py-1">
                 <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
                   Arcane Repository
-                  <span className="absolute -top-3 -right-6 text-xs text-amber-400/80 font-normal rotate-12 italic">Grid View</span>
                 </h1>
                 <p className="text-sm text-sacred-white/70 font-serif italic">
                   Manage your sacred artifacts and mystical relics
@@ -402,16 +402,6 @@ export default function InventoryGrid() {
               </div>
               
               <div className="flex space-x-3 self-end mb-2 z-10">
-                <Link href="/inventory">
-                  <Button 
-                    variant="outline"
-                    className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10 font-serif 
-                              shadow-md hover:shadow-sacred-gold/20"
-                  >
-                    <ListIcon className="h-4 w-4 mr-2" />
-                    Scroll View
-                  </Button>
-                </Link>
                 <Button 
                   onClick={() => setIsAddItemDialogOpen(true)}
                   className="bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
