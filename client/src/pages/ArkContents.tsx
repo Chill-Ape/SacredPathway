@@ -3,15 +3,11 @@ import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Eye } from "lucide-react";
 import { Helmet } from "react-helmet";
-// Import images directly using relative paths
-// @ts-ignore
-import ancientTabletImage from '../assets/ancient_tablet_dark.png';
-// @ts-ignore
-import artifactImage from '../assets/artifact_1.png';
-// @ts-ignore
-import scrollImage from '../assets/scroll_1.jpg';
-// @ts-ignore
-import bookImage from '../assets/book_1.png';
+// Using public path for better performance
+const ancientTabletImage = '/assets/ancient_tablet_dark.png';
+const artifactImage = '/assets/artifact_1.png';
+const scrollImage = '/assets/scroll_1.jpg';
+const bookImage = '/assets/book_1.png';
 
 type CategoryCardProps = { 
   id: string;

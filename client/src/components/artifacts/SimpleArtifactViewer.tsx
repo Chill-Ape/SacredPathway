@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import artifactImage from '@/assets/artifact_1.png';
+// Use public path for better performance
+const artifactImage = '/assets/artifact_1.png';
 
 interface SimpleArtifactViewerProps {
   isUnlocked: boolean;

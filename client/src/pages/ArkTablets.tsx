@@ -10,10 +10,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
-// Import tablet images using relative paths
-import clayTabletImage from '../assets/clay_tablet_3.png';  
-import emeraldTabletImage from '../assets/ancient_tablets_green.png';
-import crystalTabletImage from '../assets/crystal_tablet.png';
+// Using public path for better performance
+const clayTabletImage = '/assets/clay_tablet_3.png';  
+const emeraldTabletImage = '/assets/ancient_tablets_green.png';
+const crystalTabletImage = '/assets/crystal_tablet.png';
 
 // Simple component for a tablet item card
 const TabletCard = ({ 

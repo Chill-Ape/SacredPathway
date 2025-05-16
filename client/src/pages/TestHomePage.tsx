@@ -7,12 +7,12 @@ import { Book, Scroll, Tablet, Archive, Volume2, VolumeX } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { Slider } from '@/components/ui/slider';
 
-// Import assets
-import tabletImage from '../assets/crystal_tablet.png';
-import scrollImage from '../assets/scroll_1.jpg';
-import bookImage from '../assets/book_1.png';
-import artifactImage from '../assets/artifact_1.png';
-import sacredSymbol from '../assets/sacred_symbol.png';
+// Import assets using public paths for better performance
+const tabletImage = '/assets/crystal_tablet.png';
+const scrollImage = '/assets/scroll_1.jpg';
+const bookImage = '/assets/book_1.png';
+const artifactImage = '/assets/artifact_1.png';
+const sacredSymbol = '/assets/sacred_symbol.png';
 
 // Category card for the archive sections
 const ArchiveCard = ({ 

@@ -9,9 +9,8 @@ import firstCodexImage from '@assets/ChatGPT Image Apr 27, 2025, 06_09_01 PM.png
 import akashicCompendiumImage from '@assets/ChatGPT Image Apr 24, 2025, 07_12_38 PM.png';
 // Using public path instead of direct import for better performance
 const epicOfApkalluImage = '/assets/epic_of_apkallu.jpg';
-// For Book of Thoth, importing from client assets directly
-// @ts-ignore
-import bookOfThothImage from '../assets/ancient_tablet_dark.png';
+// Using public path for better performance
+const bookOfThothImage = '/assets/ancient_tablet_dark.png';
 
 // Completely static version of the page with NO DATA FETCHING to eliminate refresh issues
 export default function ArkBooks() {

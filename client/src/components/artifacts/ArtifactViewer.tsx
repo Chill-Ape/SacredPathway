@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
 import SimpleArtifactViewer from './SimpleArtifactViewer';
+import Artifact3DModel from './Artifact3DModel';
 
 interface ArtifactViewerProps {
   artifactId: string;
@@ -66,10 +67,17 @@ export default function ArtifactViewer({
     <div className="relative w-full h-[80vh] bg-black/90">
       {/* 3D Artifact Viewer */}
       <div className="w-full h-full">
-        <SimpleArtifactViewer 
-          isUnlocked={isUnlocked}
-          onHotspotClick={handleHotspotClick}
-        />
+        {artifactId === "artifact-1" ? (
+          <Artifact3DModel
+            isUnlocked={isUnlocked}
+            onHotspotClick={handleHotspotClick}
+          />
+        ) : (
+          <SimpleArtifactViewer 
+            isUnlocked={isUnlocked}
+            onHotspotClick={handleHotspotClick}
+          />
+        )}
       </div>
       
       {/* Artifact Info */}
