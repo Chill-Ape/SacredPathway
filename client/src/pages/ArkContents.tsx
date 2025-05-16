@@ -3,9 +3,9 @@ import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Eye } from "lucide-react";
 import { Helmet } from "react-helmet";
-// Using public path for better performance
+// Using public path for better performance with fallbacks
 const ancientTabletImage = '/assets/ancient_tablet_dark.png';
-const artifactImage = '/assets/artifact_1.png';
+const artifactImage = '/assets/artifact_1.png'; 
 const scrollImage = '/assets/scroll_1.jpg';
 const bookImage = '/assets/book_1.png';
 
@@ -70,7 +70,23 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                 className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 onError={(e) => {
                   console.log("Setting fallback image for:", title);
-                  e.currentTarget.src = "/assets/sacred_symbol.svg"; // Fallback image
+                  // Use appropriate default images based on category type
+                  switch(id) {
+                    case "artifacts":
+                      e.currentTarget.src = "/assets/default_artifact.svg";
+                      break;
+                    case "tablets":
+                      e.currentTarget.src = "/assets/sample_tablet.svg";
+                      break;
+                    case "scrolls":
+                      e.currentTarget.src = "/assets/default_scroll.svg";
+                      break;
+                    case "books":
+                      e.currentTarget.src = "/assets/default_books.svg";
+                      break;
+                    default:
+                      e.currentTarget.src = "/assets/sacred_symbol.svg";
+                  }
                 }}
               />
               
@@ -152,8 +168,8 @@ export default function ArkContents() {
       title: "Artifacts",
       description: "Ancient devices of mysterious origin",
       poeticDescription: "Remnants of impossible technology. Echoes of forgotten stars.",
-      // Using the imported artifact image
-      imagePath: artifactImage,
+      // Using direct path to artifact image with fallback
+      imagePath: "/assets/artifact_1.png",
       glyphPath: "/assets/sacred_symbol.svg", 
       linkTo: "/ark/artifacts",
       delay: 0.4
@@ -163,8 +179,8 @@ export default function ArkContents() {
       title: "Tablets",
       description: "Stone records of forbidden knowledge",
       poeticDescription: "Inscribed in crystal. Memory carved in vibration.",
-      // Using the imported ancient tablet image
-      imagePath: ancientTabletImage,
+      // Using direct path to tablet image
+      imagePath: "/assets/ancient_tablet_dark.png",
       glyphPath: "/assets/sacred_geometry.svg",
       linkTo: "/ark/tablets",
       delay: 0.6
@@ -174,8 +190,8 @@ export default function ArkContents() {
       title: "Scrolls",
       description: "Parchments containing arcane wisdom",
       poeticDescription: "Unfurled secrets. Language of the keepers.",
-      // Using the imported scroll image
-      imagePath: scrollImage,
+      // Using direct path to scroll image
+      imagePath: "/assets/scroll_1.jpg",
       glyphPath: "/assets/sacred_geometry_2.svg",
       linkTo: "/ark/scrolls",
       delay: 0.8
@@ -185,8 +201,8 @@ export default function ArkContents() {
       title: "Books",
       description: "Tomes of collected mystical teachings",
       poeticDescription: "Bound chronicles. Whispers from the ages.",
-      // Using the imported book image
-      imagePath: bookImage,
+      // Using direct path to book image
+      imagePath: "/assets/book_1.png",
       glyphPath: "/assets/sacred_geometry_3.svg",
       linkTo: "/ark/books",
       delay: 1.0
