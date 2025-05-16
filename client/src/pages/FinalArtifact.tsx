@@ -1,15 +1,15 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'wouter';
-import SimpleModelViewer from '@/components/artifacts/SimpleModelViewer';
+import BurgerModelViewer from '@/components/artifacts/BurgerModelViewer';
 import { ChevronLeft } from 'lucide-react';
 
 export default function FinalArtifact() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pb-16">
       <Helmet>
-        <title>Mystical Artifact | Akashic Archive</title>
-        <meta name="description" content="Explore the ancient artifact with interactive 3D viewing capabilities" />
+        <title>Burger 3D Model | Akashic Archive</title>
+        <meta name="description" content="Interactive 3D burger model demonstrating model loading capabilities" />
       </Helmet>
       
       <div className="container mx-auto px-4 pt-8">
@@ -22,7 +22,7 @@ export default function FinalArtifact() {
         
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
-            <SimpleModelViewer />
+            <BurgerModelViewer />
           </div>
           
           <div className="space-y-6">
