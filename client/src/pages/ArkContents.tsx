@@ -3,11 +3,11 @@ import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Eye } from "lucide-react";
 import { Helmet } from "react-helmet";
-// Using public path for better performance with fallbacks
-const ancientTabletImage = '/assets/ancient_tablet_dark.png';
-const artifactImage = '/assets/artifact_1.png'; 
-const scrollImage = '/assets/scroll_1.jpg';
-const bookImage = '/assets/book_1.png';
+// Imports for images from their correct locations in src
+import ancientTabletImageSrc from '../assets/images/ancient_tablet_dark.png';
+import artifactImageSrc from '../assets/images/artifact_1.png';
+import scrollImageSrc from '../assets/images/scroll_1.jpg';
+import bookImageSrc from '../assets/images/book_1.png';
 
 type CategoryCardProps = { 
   id: string;
@@ -168,8 +168,8 @@ export default function ArkContents() {
       title: "Artifacts",
       description: "Ancient devices of mysterious origin",
       poeticDescription: "Remnants of impossible technology. Echoes of forgotten stars.",
-      // Using the public directory path
-      imagePath: "/assets/artifact_1.png",
+      // Using imported image
+      imagePath: artifactImageSrc,
       glyphPath: "/assets/sacred_symbol.svg", 
       linkTo: "/ark/artifacts",
       delay: 0.4
@@ -179,8 +179,8 @@ export default function ArkContents() {
       title: "Tablets",
       description: "Stone records of forbidden knowledge",
       poeticDescription: "Inscribed in crystal. Memory carved in vibration.",
-      // Using public directory path
-      imagePath: "/assets/ancient_tablet_dark.png",
+      // Using imported image
+      imagePath: ancientTabletImageSrc,
       glyphPath: "/assets/sacred_geometry.svg",
       linkTo: "/ark/tablets",
       delay: 0.6
@@ -190,8 +190,8 @@ export default function ArkContents() {
       title: "Scrolls",
       description: "Parchments containing arcane wisdom",
       poeticDescription: "Unfurled secrets. Language of the keepers.",
-      // Using public directory path
-      imagePath: "/assets/scroll_1.jpg",
+      // Using imported image
+      imagePath: scrollImageSrc,
       glyphPath: "/assets/sacred_geometry_2.svg",
       linkTo: "/ark/scrolls",
       delay: 0.8
@@ -201,8 +201,8 @@ export default function ArkContents() {
       title: "Books",
       description: "Tomes of collected mystical teachings",
       poeticDescription: "Bound chronicles. Whispers from the ages.",
-      // Using public directory path
-      imagePath: "/assets/book_1.png",
+      // Using imported image
+      imagePath: bookImageSrc,
       glyphPath: "/assets/sacred_geometry_3.svg",
       linkTo: "/ark/books",
       delay: 1.0
