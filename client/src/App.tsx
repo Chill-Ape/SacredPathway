@@ -33,6 +33,7 @@ import FinalArtifact from "@/pages/FinalArtifact";
 import BurgerModel from "@/pages/BurgerModel";
 import BasicBurgerViewer from "@/pages/BasicBurgerViewer";
 import SimpleBurgerPage from "@/pages/SimpleBurgerPage";
+import StandaloneModelViewer from "@/pages/StandaloneModelViewer";
 // Import the deployment-optimized landing page
 import DeploymentReadyPage from "./DeploymentReadyPage";
 import EpicOfApkallu from "@/pages/EpicOfApkallu";

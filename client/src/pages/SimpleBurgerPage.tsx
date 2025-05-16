@@ -89,18 +89,39 @@ export default function SimpleBurgerPage() {
                 
                 // Hide the loading indicator
                 document.getElementById('loading').style.display = 'none';
+                
+                console.log('All model paths failed, showing fallback cube.');
+              }
+              
+              // Try using fetch to check if the model file exists
+              async function fetchModelBlob(url: string) {
+                try {
+                  const response = await fetch(url);
+                  if (!response.ok) {
+                    throw new Error("Failed to fetch " + url + ": " + response.status);
+                  }
+                  const blob = await response.blob();
+                  return URL.createObjectURL(blob);
+                } catch (error) {
+                  console.error("Fetch error:", error);
+                  return null;
+                }
               }
               
               // Try to load the 3D model
               const loader = new THREE.GLTFLoader();
               
               const modelPaths = [
+                '/burger_models/uploads_files_2465920_burger_merged.glb',
                 '/burger_models/burger.glb',
                 '/basic-models/burger.glb',
                 '/burger_model.glb',
                 '/3d_burger.glb',
                 '/burger_direct.glb',
-                '/client/src/assets/3d objects/uploads_files_2465920_burger_merged.glb'
+                '/client/src/assets/3d objects/uploads_files_2465920_burger_merged.glb',
+                '/public/burger_models/uploads_files_2465920_burger_merged.glb',
+                '/public/3d_burger.glb',
+                './burger_models/uploads_files_2465920_burger_merged.glb'
               ];
               
               let currentPathIndex = 0;
@@ -196,12 +217,11 @@ export default function SimpleBurgerPage() {
       </Helmet>
       
       <div className="container mx-auto px-4 py-8">
-        <Link href="/ark/artifacts">
-          <a className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6">
-            <ChevronLeft className="h-5 w-5 mr-1" />
-            Back to Artifacts
-          </a>
-        </Link>
+        <div className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 cursor-pointer" 
+             onClick={() => window.location.href = '/ark/artifacts'}>
+          <ChevronLeft className="h-5 w-5 mr-1" />
+          Back to Artifacts
+        </div>
         
         <h1 className="text-3xl font-bold text-center text-white mb-8">Simple Burger 3D Viewer</h1>
         
@@ -212,7 +232,7 @@ export default function SimpleBurgerPage() {
               ref={iframeRef}
               className="w-full h-full"
               title="3D Burger Viewer" 
-              sandbox="allow-scripts"
+              sandbox="allow-scripts allow-same-origin"
             />
           </div>
           
