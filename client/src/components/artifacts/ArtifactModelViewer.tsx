@@ -211,24 +211,40 @@ export default function ArtifactModelViewer({ isUnlocked, onHotspotClick }: Arti
         try {
           // Try to load the model from various locations
           const gltf = await new Promise<any>((resolve, reject) => {
-            // First try the model in the public folder
+            // Try from the root of the public folder
             loader.load(
-              '/models/3d_artifact.glb', 
+              '/3d_artifact.glb', 
               resolve,
-              undefined, 
+              (xhr) => {
+                console.log(`Loading model: ${(xhr.loaded / xhr.total) * 100}% loaded`);
+              }, 
               () => {
-                // If failed, try from assets with spaces encoded
+                // If failed, try from models folder
                 loader.load(
-                  '/assets/3d_objects/3d_artifact.glb',
+                  '/models/3d_artifact.glb',
                   resolve,
-                  undefined,
+                  (xhr) => {
+                    console.log(`Loading model: ${(xhr.loaded / xhr.total) * 100}% loaded`);
+                  },
                   () => {
-                    // Final attempt with original path
+                    // Try with encoded path
                     loader.load(
-                      '/assets/3d objects/3d_artifact.glb',
+                      '/assets/3d_objects/3d_artifact.glb',
                       resolve,
-                      undefined,
-                      (error) => reject(error)
+                      (xhr) => {
+                        console.log(`Loading model: ${(xhr.loaded / xhr.total) * 100}% loaded`);
+                      },
+                      () => {
+                        // Final attempt with original path
+                        loader.load(
+                          '/assets/3d objects/3d_artifact.glb',
+                          resolve,
+                          (xhr) => {
+                            console.log(`Loading model: ${(xhr.loaded / xhr.total) * 100}% loaded`);
+                          },
+                          (error) => reject(error)
+                        );
+                      }
                     );
                   }
                 );
@@ -239,30 +255,34 @@ export default function ArtifactModelViewer({ isUnlocked, onHotspotClick }: Arti
           // We successfully loaded the model
           const model = gltf.scene;
           
-          // Scale and position the model
-          model.scale.set(1, 1, 1);
+          // We'll adjust the model specifically for your CGTrader model
+          console.log("Successfully loaded your CGTrader model!");
           
-          // Enhance model materials
+          // Proper model positioning and scaling for your specific model
+          model.position.set(0, -0.5, 0); // Center it vertically
+          model.rotation.set(0, 0, 0);    // Reset rotation
+          model.scale.set(1.5, 1.5, 1.5); // Scale appropriately
+          
+          // Enhance model materials but preserve the original appearance
           model.traverse((node: any) => {
             if (node.isMesh) {
+              // Enable shadows
               node.castShadow = true;
               node.receiveShadow = true;
               
               if (node.material) {
-                // Enhance material properties
-                if (node.material.metalness !== undefined) {
-                  node.material.metalness = 0.8;
-                }
-                if (node.material.roughness !== undefined) {
-                  node.material.roughness = 0.2;
-                }
+                // Preserve the original material properties
+                // Just enhance them slightly for better rendering
                 
-                // Make crystals glow when unlocked
-                if (isUnlocked && 
-                    (node.name.toLowerCase().includes('crystal') || 
-                     node.name.toLowerCase().includes('gem'))) {
-                  node.material.emissive = new THREE.Color(0xc2a64b);
-                  node.material.emissiveIntensity = 0.5;
+                // If the model is unlocked, add some subtle glow effects
+                if (isUnlocked) {
+                  // For crystal or gem parts, add a subtle golden glow
+                  if (node.name.toLowerCase().includes('crystal') || 
+                      node.name.toLowerCase().includes('gem') ||
+                      node.name.toLowerCase().includes('glow')) {
+                    node.material.emissive = new THREE.Color(0xc2a64b);
+                    node.material.emissiveIntensity = 0.3;
+                  }
                 }
               }
             }
