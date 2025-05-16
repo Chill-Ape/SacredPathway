@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
-import BasicModelViewer from './BasicModelViewer';
+import PureThreeViewer from './PureThreeViewer';
 
 interface ArtifactViewerProps {
   artifactId: string;
@@ -69,7 +69,7 @@ export default function ArtifactViewer({
     <div className="relative w-full h-[80vh] bg-black/90">
       {/* 3D Artifact Viewer */}
       <div className="w-full h-full">
-        <BasicModelViewer 
+        <PureThreeViewer 
           isUnlocked={isUnlocked}
           onHotspotClick={handleHotspotClick}
         />
