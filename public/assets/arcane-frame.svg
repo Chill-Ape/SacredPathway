@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="magical-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="rgba(138, 43, 226, 0.5)" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feComposite in="glow" in2="SourceGraphic" operator="over"/>
+    </filter>
+    <linearGradient id="arcane-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4B0082;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8A2BE2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4B0082;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="arcane-pattern" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Outer Frame with magical glow -->
+  <rect x="0" y="0" width="100" height="100" rx="8" ry="8" fill="url(#arcane-gradient)" filter="url(#magical-glow)" />
+  
+  <!-- Pattern overlay -->
+  <rect x="0" y="0" width="100" height="100" rx="8" ry="8" fill="url(#arcane-pattern)" />
+  
+  <!-- Inner Frame -->
+  <rect x="5" y="5" width="90" height="90" rx="4" ry="4" fill="#220033" stroke="#8A2BE2" stroke-width="1" />
+  
+  <!-- Mystical runes in corners -->
+  <circle cx="12" cy="12" r="5" fill="none" stroke="#CA89FF" stroke-width="1">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="88" cy="12" r="5" fill="none" stroke="#CA89FF" stroke-width="1">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" begin="0.5s" />
+  </circle>
+  <circle cx="12" cy="88" r="5" fill="none" stroke="#CA89FF" stroke-width="1">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" begin="1s" />
+  </circle>
+  <circle cx="88" cy="88" r="5" fill="none" stroke="#CA89FF" stroke-width="1">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" begin="1.5s" />
+  </circle>
+</svg>

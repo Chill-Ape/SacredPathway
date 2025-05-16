@@ -312,25 +312,37 @@ export default function InventoryGrid() {
       
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1">Akashic Inventory</h1>
-            <p className="text-sm text-muted-foreground">Manage your sacred artifacts and mystical items</p>
+          <div className="z-10 relative">
+            <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1">
+              Arcane Repository
+              <span className="absolute -top-3 -right-4 text-xs text-amber-400/80 font-normal rotate-12 italic">Grid View</span>
+            </h1>
+            <p className="text-sm text-sacred-white/70 font-serif italic">
+              Manage your sacred artifacts and mystical relics
+            </p>
+            
+            {/* Decorative underline */}
+            <div className="h-0.5 w-48 mt-2 bg-gradient-to-r from-transparent via-sacred-gold/70 to-transparent"></div>
           </div>
-          <div className="flex space-x-3">
+          
+          <div className="flex space-x-3 z-10">
             <Link href="/inventory">
               <Button 
                 variant="outline"
-                className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10"
+                className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10 font-serif 
+                          shadow-md hover:shadow-sacred-gold/20"
               >
                 <ListIcon className="h-4 w-4 mr-2" />
-                List View
+                Scroll View
               </Button>
             </Link>
             <Button 
               onClick={() => setIsAddItemDialogOpen(true)}
-              className="bg-sacred-gold hover:bg-sacred-gold/90 text-sacred-dark"
+              className="bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
+                        hover:from-sacred-gold hover:to-amber-600
+                        text-sacred-dark font-serif font-medium shadow-md hover:shadow-sacred-gold/20"
             >
-              Add New Item
+              Add New Artifact
             </Button>
           </div>
         </div>
@@ -340,19 +352,34 @@ export default function InventoryGrid() {
           onClose={() => setIsAddItemDialogOpen(false)} 
         />
         
-        <div className="bg-gradient-to-r from-sacred-dark to-sacred-dark-lighter p-6 rounded-xl shadow-lg mb-8">
-          <Tabs defaultValue="all" className="w-full">
+        {/* Stylized container with border glints */}
+        <div className="relative bg-gradient-to-r from-sacred-dark to-sacred-dark-lighter 
+                      p-8 rounded-xl shadow-xl mb-8 border border-sacred-gold/30
+                      overflow-hidden">
+          {/* Corner decorative elements */}
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-xl opacity-70"></div>
+          <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-xl opacity-70"></div>
+          <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-xl opacity-70"></div>
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-xl opacity-70"></div>
+          
+          {/* Magical ambient elements */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/5 blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-amber-500/5 blur-3xl"></div>
+          
+          <Tabs defaultValue="all" className="w-full relative z-10">
             <div className="overflow-x-auto pb-2">
-              <TabsList className="mb-6 bg-sacred-dark-lightest border border-sacred-gold/20">
+              <TabsList className="mb-6 bg-sacred-dark-lighter/70 border border-sacred-gold/20 p-1 rounded-lg shadow-inner backdrop-blur-sm">
                 <TabsTrigger 
                   value="all" 
-                  className="data-[state=active]:bg-sacred-gold/10 data-[state=active]:text-sacred-gold"
+                  className="data-[state=active]:bg-sacred-gold/10 data-[state=active]:text-sacred-gold
+                            data-[state=active]:shadow-md rounded-md font-serif"
                 >
                   All Items ({items?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger 
                   value="equipped"
-                  className="data-[state=active]:bg-sacred-blue/10 data-[state=active]:text-sacred-blue"
+                  className="data-[state=active]:bg-sacred-blue/10 data-[state=active]:text-sacred-blue
+                            data-[state=active]:shadow-md rounded-md font-serif"
                 >
                   Equipped ({equippedItems?.length || 0})
                 </TabsTrigger>
@@ -363,7 +390,8 @@ export default function InventoryGrid() {
                     <TabsTrigger 
                       key={type} 
                       value={type}
-                      className="data-[state=active]:bg-sacred-secondary/10 data-[state=active]:text-sacred-secondary"
+                      className="data-[state=active]:bg-sacred-secondary/10 data-[state=active]:text-sacred-secondary
+                                data-[state=active]:shadow-md rounded-md font-serif"
                     >
                       {getItemTypeDisplayName(type)} ({count})
                     </TabsTrigger>
