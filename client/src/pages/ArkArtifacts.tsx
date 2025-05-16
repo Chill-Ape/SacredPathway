@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { Link } from 'wouter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from '@/hooks/use-auth';
 import ArtifactViewer from '@/components/artifacts/ArtifactViewer';
+import { Button } from '@/components/ui/button';
 
 export default function ArkArtifacts() {
   const { user } = useAuth();
@@ -33,10 +35,18 @@ export default function ArkArtifacts() {
       <h1 className="text-3xl font-bold mb-8 text-center text-primary">The Ark of Artifacts</h1>
       
       <div className="bg-black/30 p-8 rounded-lg">
-        <p className="text-center mb-8 text-white/80">
+        <p className="text-center mb-4 text-white/80">
           These ancient artifacts have been recovered from various archaeological sites around the world. 
           Each contains fragments of a forgotten technology and wisdom from a previous age.
         </p>
+        
+        <div className="flex justify-center mb-8">
+          <Link href="/final-artifact">
+            <Button className="bg-blue-700 hover:bg-blue-600 text-white">
+              View Full 3D Crystal Artifact
+            </Button>
+          </Link>
+        </div>
         
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-3 mb-8">
