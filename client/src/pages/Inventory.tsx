@@ -449,7 +449,7 @@ function InventoryContent() {
                 Equipped ({equippedItems?.length || 0})
               </TabsTrigger>
               {Object.values(ITEM_TYPES).map((type) => {
-                const count = items?.filter(item => item.type === type).length || 0;
+                const count = items?.filter((item: InventoryItem) => item.type === type).length || 0;
                 if (count === 0) return null;
                 return (
                   <TabsTrigger 
@@ -495,7 +495,7 @@ function InventoryContent() {
           {Object.values(ITEM_TYPES).map((type) => (
             <TabsContent key={type} value={type}>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {items?.filter(item => item.type === type).map((item: InventoryItem) => (
+                {items?.filter((item: InventoryItem) => item.type === type).map((item: InventoryItem) => (
                   <InventoryItemCard key={item.id} item={item} />
                 ))}
               </div>

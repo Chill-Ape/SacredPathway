@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { InventoryItem } from "@/hooks/use-inventory";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -72,7 +72,7 @@ function getRarityColors(rarity: string | null): { border: string; glow: string;
 }
 
 // Default placeholder image when no image is available
-const defaultItemImage = "/assets/default_item.png";
+const defaultItemImage = "/assets/default_item.svg";
 
 interface GridInventoryItemProps {
   item: InventoryItem;
@@ -142,16 +142,9 @@ export default function GridInventoryItem({
           </div>
           
           {/* Name Tooltip on Hover */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="absolute inset-x-0 bottom-0 px-2 py-1 bg-black/60 backdrop-blur-sm">
-                <p className="text-xs text-white font-medium truncate">{item.name}</p>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>{item.name}</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className="absolute inset-x-0 bottom-0 px-2 py-1 bg-black/60 backdrop-blur-sm">
+            <p className="text-xs text-white font-medium truncate">{item.name}</p>
+          </div>
         </div>
       </HoverCardTrigger>
       
