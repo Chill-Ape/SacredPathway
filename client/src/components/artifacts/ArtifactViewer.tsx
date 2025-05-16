@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
-import ImprovedArtifactViewer from './ImprovedArtifactViewer';
-import ThreeArtifactViewer from './ThreeArtifactViewer';
+import FallbackArtifactViewer from './FallbackArtifactViewer';
 
 interface ArtifactViewerProps {
   artifactId: string;
@@ -42,6 +41,9 @@ export default function ArtifactViewer({
       case 'bottom-left':
         hotspotInfo = "The metal composition shows traces of materials not naturally occurring on Earth. Its creation method remains a mystery.";
         break;
+      case 'crystal':
+        hotspotInfo = "A crystalline formation that appears to channel energy. It resonates at a frequency that affects human consciousness.";
+        break;
       default:
         hotspotInfo = "This section contains unknown symbols.";
     }
@@ -67,10 +69,7 @@ export default function ArtifactViewer({
     <div className="relative w-full h-[80vh] bg-black/90">
       {/* 3D Artifact Viewer */}
       <div className="w-full h-full">
-        <div className="absolute inset-0 z-0 bg-[url('/assets/sacred_geometry.svg')] opacity-5 bg-repeat"></div>
-        <div className="absolute inset-0 z-0 bg-gradient-radial from-transparent to-black/40"></div>
-        
-        <ImprovedArtifactViewer 
+        <Advanced3DViewer 
           isUnlocked={isUnlocked}
           onHotspotClick={handleHotspotClick}
         />
