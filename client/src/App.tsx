@@ -25,6 +25,7 @@ import ArkArtifacts from "@/pages/ArkArtifacts";
 import ArkTablets from "@/pages/ArkTablets";
 import ArkScrolls from "@/pages/ArkScrolls";
 import ArkBooks from "@/pages/ArkBooks";
+import ArtifactDebug from "@/pages/ArtifactDebug";
 import TabletDetail from "@/pages/TabletDetail";
 import TestHomePage from "@/pages/TestHomePage";
 // Import the deployment-optimized landing page
@@ -86,6 +87,7 @@ function App() {
                     <Route path="/ark/tablets/:id" component={TabletDetail} />
                     <Route path="/ark/scrolls" component={ArkScrolls} />
                     <Route path="/ark/books" component={ArkBooks} />
+                    <Route path="/artifact-debug" component={ArtifactDebug} />
                     {/* Route already handled in the conditional at the top */}
                     <ProtectedRoute 
                       path="/profile" 
