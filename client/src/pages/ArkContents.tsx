@@ -168,8 +168,8 @@ export default function ArkContents() {
       title: "Artifacts",
       description: "Ancient devices of mysterious origin",
       poeticDescription: "Remnants of impossible technology. Echoes of forgotten stars.",
-      // Using direct path to artifact image with fallback
-      imagePath: "/assets/artifact_1.png",
+      // Using the correct path to artifact image
+      imagePath: "/assets/images/artifact_1.png",
       glyphPath: "/assets/sacred_symbol.svg", 
       linkTo: "/ark/artifacts",
       delay: 0.4
@@ -179,8 +179,8 @@ export default function ArkContents() {
       title: "Tablets",
       description: "Stone records of forbidden knowledge",
       poeticDescription: "Inscribed in crystal. Memory carved in vibration.",
-      // Using direct path to tablet image
-      imagePath: "/assets/ancient_tablet_dark.png",
+      // Using correct path to tablet image
+      imagePath: "/assets/images/ancient_tablet_dark.png",
       glyphPath: "/assets/sacred_geometry.svg",
       linkTo: "/ark/tablets",
       delay: 0.6
@@ -190,8 +190,8 @@ export default function ArkContents() {
       title: "Scrolls",
       description: "Parchments containing arcane wisdom",
       poeticDescription: "Unfurled secrets. Language of the keepers.",
-      // Using direct path to scroll image
-      imagePath: "/assets/scroll_1.jpg",
+      // Using correct path to scroll image
+      imagePath: "/assets/images/scroll_1.jpg",
       glyphPath: "/assets/sacred_geometry_2.svg",
       linkTo: "/ark/scrolls",
       delay: 0.8
@@ -201,8 +201,8 @@ export default function ArkContents() {
       title: "Books",
       description: "Tomes of collected mystical teachings",
       poeticDescription: "Bound chronicles. Whispers from the ages.",
-      // Using direct path to book image
-      imagePath: "/assets/book_1.png",
+      // Using correct path to book image
+      imagePath: "/assets/images/book_1.png",
       glyphPath: "/assets/sacred_geometry_3.svg",
       linkTo: "/ark/books",
       delay: 1.0
