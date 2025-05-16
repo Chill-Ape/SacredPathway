@@ -14,12 +14,13 @@ export default function DirectModelViewer({ isUnlocked, onHotspotClick }: Direct
   const [isLoading, setIsLoading] = useState(true);
   const [modelStats, setModelStats] = useState<string | null>(null);
 
-  // Define our model paths to try - prioritize the correct paths first
+  // Define our model paths to try - prioritize the new custom artifact model
   const modelPaths = [
-    '/assets/3d_objects/3d_artifact.glb', // Correct path in public folder
-    '/3d_artifact.glb',                  // Direct path from public root
-    '/models/3d_artifact.glb',           // Also exists in models folder
-    '/cgtrader/model.glb',               // The copy we made
+    '/assets/3d_objects/custom_artifact.glb', // Custom artifact model (burger_merged)
+    '/assets/3d_objects/3d_artifact.glb',     // Original path
+    '/3d_artifact.glb',                       // Other possible locations
+    '/models/3d_artifact.glb',
+    '/cgtrader/model.glb',
     '/artifacts/3d_artifact.glb',
     '/files/3d_artifact.glb'
   ];
