@@ -3,6 +3,7 @@ import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
 import SimpleArtifactViewer from './SimpleArtifactViewer';
 import Artifact3DModel from './Artifact3DModel';
+import ThreeArtifactViewer from './ThreeArtifactViewer';
 
 interface ArtifactViewerProps {
   artifactId: string;
@@ -67,17 +68,13 @@ export default function ArtifactViewer({
     <div className="relative w-full h-[80vh] bg-black/90">
       {/* 3D Artifact Viewer */}
       <div className="w-full h-full">
-        {artifactId === "artifact-1" ? (
-          <Artifact3DModel
-            isUnlocked={isUnlocked}
-            onHotspotClick={handleHotspotClick}
-          />
-        ) : (
-          <SimpleArtifactViewer 
-            isUnlocked={isUnlocked}
-            onHotspotClick={handleHotspotClick}
-          />
-        )}
+        <div className="absolute inset-0 z-0 bg-[url('/assets/sacred_geometry.svg')] opacity-5 bg-repeat"></div>
+        <div className="absolute inset-0 z-0 bg-gradient-radial from-transparent to-black/40"></div>
+        
+        <SimpleArtifactViewer 
+          isUnlocked={isUnlocked}
+          onHotspotClick={handleHotspotClick}
+        />
       </div>
       
       {/* Artifact Info */}
