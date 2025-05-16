@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Grid, ListIcon } from "lucide-react";
+import { Loader2, Grid, ListIcon, Scroll, ShieldCheck, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useInventory, InventoryItem } from "@/hooks/use-inventory";
 import { 
@@ -27,6 +27,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Helmet } from "react-helmet";
 import InventoryGridComponent from "@/components/inventory/InventoryGrid";
 import { Link } from "wouter";
+
+// Import game UI assets
+import inventoryFrameSrc from "@/assets/inventory-frame.svg";
+import inventoryBgSrc from "@/assets/inventory-bg.svg";
+import ornateDividerSrc from "@/assets/ornate-divider.svg";
 
 // Constants for item types and rarities
 const ITEM_TYPES = {
@@ -303,146 +308,242 @@ export default function InventoryGrid() {
     );
   }
   
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  
+  // Animation effect when page loads
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
   return (
     <>
       <Helmet>
-        <title>Inventory | Akashic Archive</title>
-        <meta name="description" content="Manage your sacred artifacts and items in the Akashic Archive" />
+        <title>Arcane Repository | Akashic Archive</title>
+        <meta name="description" content="Browse your mystical artifacts and relics in the Akashic Archive" />
       </Helmet>
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-          <div className="z-10 relative">
-            <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1">
-              Arcane Repository
-              <span className="absolute -top-3 -right-4 text-xs text-amber-400/80 font-normal rotate-12 italic">Grid View</span>
-            </h1>
-            <p className="text-sm text-sacred-white/70 font-serif italic">
-              Manage your sacred artifacts and mystical relics
-            </p>
-            
-            {/* Decorative underline */}
-            <div className="h-0.5 w-48 mt-2 bg-gradient-to-r from-transparent via-sacred-gold/70 to-transparent"></div>
-          </div>
+      {/* Full-screen background with texture */}
+      <div 
+        className="min-h-screen pt-16 pb-12 px-0 overflow-hidden"
+        style={{
+          backgroundImage: `url(${inventoryBgSrc})`,
+          backgroundSize: '200px 200px',
+          backgroundRepeat: 'repeat',
+        }}
+      >
+        {/* Game-like inventory frame */}
+        <div 
+          className={`
+            relative container mx-auto px-8 py-8 max-w-7xl
+            transition-all duration-1000 ease-in-out 
+            ${isPageLoaded ? 'opacity-100 transform-none' : 'opacity-0 translate-y-10'}
+          `}
+        >
+          {/* Main ornate frame */}
+          <div className="absolute inset-0" style={{ 
+            backgroundImage: `url(${inventoryFrameSrc})`,
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            pointerEvents: 'none'
+          }}></div>
           
-          <div className="flex space-x-3 z-10">
-            <Link href="/inventory">
-              <Button 
-                variant="outline"
-                className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10 font-serif 
-                          shadow-md hover:shadow-sacred-gold/20"
-              >
-                <ListIcon className="h-4 w-4 mr-2" />
-                Scroll View
-              </Button>
-            </Link>
-            <Button 
-              onClick={() => setIsAddItemDialogOpen(true)}
-              className="bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
-                        hover:from-sacred-gold hover:to-amber-600
-                        text-sacred-dark font-serif font-medium shadow-md hover:shadow-sacred-gold/20"
-            >
-              Add New Artifact
-            </Button>
-          </div>
-        </div>
-        
-        <AddItemForm 
-          isOpen={isAddItemDialogOpen} 
-          onClose={() => setIsAddItemDialogOpen(false)} 
-        />
-        
-        {/* Stylized container with border glints */}
-        <div className="relative bg-gradient-to-r from-sacred-dark to-sacred-dark-lighter 
-                      p-8 rounded-xl shadow-xl mb-8 border border-sacred-gold/30
-                      overflow-hidden">
-          {/* Corner decorative elements */}
-          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-xl opacity-70"></div>
-          <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-xl opacity-70"></div>
-          <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-xl opacity-70"></div>
-          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-xl opacity-70"></div>
-          
-          {/* Magical ambient elements */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/5 blur-3xl"></div>
-          <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-amber-500/5 blur-3xl"></div>
-          
-          <Tabs defaultValue="all" className="w-full relative z-10">
-            <div className="overflow-x-auto pb-2">
-              <TabsList className="mb-6 bg-sacred-dark-lighter/70 border border-sacred-gold/20 p-1 rounded-lg shadow-inner backdrop-blur-sm">
-                <TabsTrigger 
-                  value="all" 
-                  className="data-[state=active]:bg-sacred-gold/10 data-[state=active]:text-sacred-gold
-                            data-[state=active]:shadow-md rounded-md font-serif"
+          {/* Inner content area */}
+          <div className="relative z-10 py-4 px-4">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 px-6">
+              <div className="relative px-2 py-1">
+                <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
+                  Arcane Repository
+                  <span className="absolute -top-3 -right-6 text-xs text-amber-400/80 font-normal rotate-12 italic">Grid View</span>
+                </h1>
+                <p className="text-sm text-sacred-white/70 font-serif italic">
+                  Manage your sacred artifacts and mystical relics
+                </p>
+                
+                {/* Ornate divider */}
+                <div className="relative h-6 w-48 mt-2">
+                  <img src={ornateDividerSrc} alt="" className="absolute h-6 w-full object-contain" />
+                </div>
+                
+                {/* Inventory stats */}
+                <div className="flex space-x-4 mt-4 text-xs text-sacred-white/70 font-serif">
+                  <div className="flex items-center">
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-sacred-gold/10 mr-1">
+                      <Scroll className="h-3 w-3 text-sacred-gold/80" />
+                    </span>
+                    <span>Items: <span className="text-sacred-gold font-medium">{items?.length || 0}</span></span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-sacred-blue/10 mr-1">
+                      <ShieldCheck className="h-3 w-3 text-sacred-blue/80" />
+                    </span>
+                    <span>Equipped: <span className="text-sacred-blue font-medium">{equippedItems?.length || 0}</span></span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-purple-500/10 mr-1">
+                      <Sparkles className="h-3 w-3 text-purple-400/80" />
+                    </span>
+                    <span>Rare+: <span className="text-purple-400 font-medium">
+                      {items?.filter((item: InventoryItem) => 
+                        item.rarity === RARITY_LEVELS.RARE || 
+                        item.rarity === RARITY_LEVELS.EPIC || 
+                        item.rarity === RARITY_LEVELS.LEGENDARY || 
+                        item.rarity === RARITY_LEVELS.MYTHIC || 
+                        item.rarity === RARITY_LEVELS.DIVINE
+                      ).length || 0}
+                    </span></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3 self-end mb-2 z-10">
+                <Link href="/inventory">
+                  <Button 
+                    variant="outline"
+                    className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10 font-serif 
+                              shadow-md hover:shadow-sacred-gold/20"
+                  >
+                    <ListIcon className="h-4 w-4 mr-2" />
+                    Scroll View
+                  </Button>
+                </Link>
+                <Button 
+                  onClick={() => setIsAddItemDialogOpen(true)}
+                  className="bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
+                            hover:from-sacred-gold hover:to-amber-600
+                            text-sacred-dark font-serif font-medium shadow-md hover:shadow-sacred-gold/20"
                 >
-                  All Items ({items?.length || 0})
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="equipped"
-                  className="data-[state=active]:bg-sacred-blue/10 data-[state=active]:text-sacred-blue
-                            data-[state=active]:shadow-md rounded-md font-serif"
-                >
-                  Equipped ({equippedItems?.length || 0})
-                </TabsTrigger>
-                {Object.values(ITEM_TYPES).map((type: string) => {
-                  const count = items?.filter((item: InventoryItem) => item.type === type).length || 0;
-                  if (count === 0) return null;
-                  return (
-                    <TabsTrigger 
-                      key={type} 
-                      value={type}
-                      className="data-[state=active]:bg-sacred-secondary/10 data-[state=active]:text-sacred-secondary
-                                data-[state=active]:shadow-md rounded-md font-serif"
-                    >
-                      {getItemTypeDisplayName(type)} ({count})
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
+                  Add New Artifact
+                </Button>
+              </div>
             </div>
             
-            <TabsContent value="all">
-              <InventoryGridComponent
-                items={items || []}
-                toggleEquip={handleToggleEquip}
-                removeItem={handleRemoveItem}
-                isToggleEquipPending={isToggleEquipPending}
-                isRemovePending={isRemovePending}
-                pendingItemId={pendingItemId}
-              />
-            </TabsContent>
+            <AddItemForm 
+              isOpen={isAddItemDialogOpen} 
+              onClose={() => setIsAddItemDialogOpen(false)} 
+            />
             
-            <TabsContent value="equipped">
-              <InventoryGridComponent
-                items={equippedItems || []}
-                toggleEquip={handleToggleEquip}
-                removeItem={handleRemoveItem}
-                isToggleEquipPending={isToggleEquipPending}
-                isRemovePending={isRemovePending}
-                pendingItemId={pendingItemId}
-                emptyMessage="You have no equipped items. Equip items to enhance your abilities."
-              />
-            </TabsContent>
-            
-            {/* Tabs for each item type */}
-            {Object.values(ITEM_TYPES).map((type: string) => {
-              const typeItems = items?.filter((item: InventoryItem) => item.type === type) || [];
-              if (typeItems.length === 0) return null;
+            {/* Main inventory container */}
+            <div className="relative bg-black/40 backdrop-blur-sm rounded-lg mt-2 mb-8 overflow-hidden"
+                style={{ 
+                  boxShadow: 'inset 0 0 30px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.4)'
+                }}
+            >
+              {/* Ornate corners */}
+              <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-lg"></div>
+              <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-lg"></div>
+              <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-lg"></div>
+              <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-lg"></div>
               
-              return (
-                <TabsContent key={type} value={type}>
+              {/* Magic ambient glows */}
+              <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full radial-pulse bg-purple-800/5 blur-3xl"></div>
+              <div className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full radial-pulse bg-blue-800/5 blur-3xl"></div>
+              
+              <Tabs defaultValue="all" className="w-full relative z-10 p-6">
+                {/* Inventory type tabs */}
+                <div className="overflow-x-auto pb-4">
+                  <div className="relative w-full">
+                    <TabsList className="bg-sacred-dark-lightest/50 border border-sacred-gold/20 p-2 rounded-lg 
+                                       shadow-inner backdrop-blur-sm w-full flex flex-wrap justify-start">
+                      <TabsTrigger 
+                        value="all" 
+                        className="data-[state=active]:bg-sacred-gold/30 data-[state=active]:text-sacred-gold
+                                  data-[state=active]:shadow-lg rounded-md font-serif py-2 px-4 mr-2
+                                  border border-sacred-gold/20 shadow-md backdrop-blur-sm
+                                  transition-all duration-300"
+                      >
+                        <span className="flex items-center">
+                          <span className="mr-1.5 text-lg">⦿</span>
+                          All Items ({items?.length || 0})
+                        </span>
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="equipped"
+                        className="data-[state=active]:bg-sacred-blue/30 data-[state=active]:text-sacred-blue
+                                  data-[state=active]:shadow-lg rounded-md font-serif py-2 px-4 mr-2
+                                  border border-sacred-blue/20 shadow-md backdrop-blur-sm
+                                  transition-all duration-300"
+                      >
+                        <span className="flex items-center">
+                          <ShieldCheck className="h-4 w-4 mr-1.5" />
+                          Equipped ({equippedItems?.length || 0})
+                        </span>
+                      </TabsTrigger>
+                      {Object.values(ITEM_TYPES).map((type: string) => {
+                        const count = items?.filter((item: InventoryItem) => item.type === type).length || 0;
+                        if (count === 0) return null;
+                        return (
+                          <TabsTrigger 
+                            key={type} 
+                            value={type}
+                            className="data-[state=active]:bg-sacred-secondary/30 data-[state=active]:text-sacred-secondary
+                                      data-[state=active]:shadow-lg rounded-md font-serif py-2 px-4 mr-2 mb-2
+                                      border border-sacred-secondary/20 shadow-md backdrop-blur-sm
+                                      transition-all duration-300"
+                          >
+                            <span className="flex items-center">
+                              <span className="mr-1.5 text-lg">◈</span>
+                              {getItemTypeDisplayName(type)} ({count})
+                            </span>
+                          </TabsTrigger>
+                        );
+                      })}
+                    </TabsList>
+                  </div>
+                </div>
+                
+                {/* Tab content - All items */}
+                <TabsContent value="all" className="pt-2 transition-opacity duration-300 ease-in-out">
                   <InventoryGridComponent
-                    items={typeItems}
+                    items={items || []}
                     toggleEquip={handleToggleEquip}
                     removeItem={handleRemoveItem}
                     isToggleEquipPending={isToggleEquipPending}
                     isRemovePending={isRemovePending}
                     pendingItemId={pendingItemId}
-                    emptyMessage={`No ${getItemTypeDisplayName(type).toLowerCase()} items found.`}
                   />
                 </TabsContent>
-              );
-            })}
-          </Tabs>
+                
+                {/* Tab content - Equipped items */}
+                <TabsContent value="equipped" className="pt-2 transition-opacity duration-300 ease-in-out">
+                  <InventoryGridComponent
+                    items={equippedItems || []}
+                    toggleEquip={handleToggleEquip}
+                    removeItem={handleRemoveItem}
+                    isToggleEquipPending={isToggleEquipPending}
+                    isRemovePending={isRemovePending}
+                    pendingItemId={pendingItemId}
+                    emptyMessage="You have no equipped items. Equip items to enhance your abilities."
+                  />
+                </TabsContent>
+                
+                {/* Tabs for each item type */}
+                {Object.values(ITEM_TYPES).map((type: string) => {
+                  const typeItems = items?.filter((item: InventoryItem) => item.type === type) || [];
+                  if (typeItems.length === 0) return null;
+                  
+                  return (
+                    <TabsContent key={type} value={type} className="pt-2 transition-opacity duration-300 ease-in-out">
+                      <InventoryGridComponent
+                        items={typeItems}
+                        toggleEquip={handleToggleEquip}
+                        removeItem={handleRemoveItem}
+                        isToggleEquipPending={isToggleEquipPending}
+                        isRemovePending={isRemovePending}
+                        pendingItemId={pendingItemId}
+                        emptyMessage={`No ${getItemTypeDisplayName(type).toLowerCase()} items found.`}
+                      />
+                    </TabsContent>
+                  );
+                })}
+              </Tabs>
+            </div>
+          </div>
         </div>
       </div>
     </>

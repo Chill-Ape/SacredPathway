@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="parchment-texture" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="#1A0E06"/>
+      <filter id="noise" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0" result="noise"/>
+      </filter>
+      <rect width="100" height="100" filter="url(#noise)" opacity="0.3"/>
+    </pattern>
+    
+    <radialGradient id="dark-vignette" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:0" />
+      <stop offset="90%" style="stop-color:#000000;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.4" />
+    </radialGradient>
+    
+    <filter id="magic-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0.1 0 1 0 0 0 0 0 1 0 0.1 0 0 0 0.3 0" result="coloredBlur"/>
+      <feBlend in="SourceGraphic" in2="coloredBlur" mode="normal"/>
+    </filter>
+  </defs>
+  
+  <!-- Dark background texture -->
+  <rect width="500" height="500" fill="url(#parchment-texture)"/>
+  
+  <!-- Vignette effect -->
+  <rect width="500" height="500" fill="url(#dark-vignette)"/>
+  
+  <!-- Subtle magical glow spots -->
+  <circle cx="100" cy="100" r="50" fill="#4B0082" opacity="0.03" filter="url(#magic-glow)"/>
+  <circle cx="400" cy="400" r="80" fill="#8A2BE2" opacity="0.03" filter="url(#magic-glow)"/>
+  <circle cx="200" cy="350" r="40" fill="#D4AF37" opacity="0.04" filter="url(#magic-glow)"/>
+</svg>
