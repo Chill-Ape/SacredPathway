@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'wouter';
-import FinalModelViewer from '@/components/artifacts/FinalModelViewer';
+import SimpleModelViewer from '@/components/artifacts/SimpleModelViewer';
 import { ChevronLeft } from 'lucide-react';
 
 export default function FinalArtifact() {
@@ -22,7 +22,7 @@ export default function FinalArtifact() {
         
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
-            <FinalModelViewer />
+            <SimpleModelViewer />
           </div>
           
           <div className="space-y-6">
