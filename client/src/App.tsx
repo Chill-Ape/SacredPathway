@@ -28,6 +28,7 @@ import ArkBooks from "@/pages/ArkBooks";
 import ArtifactDebug from "@/pages/ArtifactDebug";
 import TabletDetail from "@/pages/TabletDetail";
 import TestHomePage from "@/pages/TestHomePage";
+import BurgerArtifact from "@/pages/BurgerArtifact";
 // Import the deployment-optimized landing page
 import DeploymentReadyPage from "./DeploymentReadyPage";
 import EpicOfApkallu from "@/pages/EpicOfApkallu";
@@ -88,6 +89,7 @@ function App() {
                     <Route path="/ark/scrolls" component={ArkScrolls} />
                     <Route path="/ark/books" component={ArkBooks} />
                     <Route path="/artifact-debug" component={ArtifactDebug} />
+                    <Route path="/burger-artifact" component={BurgerArtifact} />
                     {/* Route already handled in the conditional at the top */}
                     <ProtectedRoute 
                       path="/profile" 
