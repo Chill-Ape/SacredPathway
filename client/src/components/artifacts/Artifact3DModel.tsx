@@ -154,82 +154,101 @@ export default function Artifact3DModel({ isUnlocked, onHotspotClick }: Artifact
             className="w-full h-full relative"
             style={{ transformStyle: 'preserve-3d' }}
           >
-            {/* Base sphere */}
-            <div
-              className="absolute inset-0 rounded-full bg-gray-800 border border-amber-700/30"
-              style={{ transform: 'translateZ(-20px)' }}
+            {/* Base structure - create a cuboid rather than a sphere */}
+            <div 
+              className="absolute inset-10 bg-gray-800 border border-amber-700/30"
+              style={{ 
+                transform: 'translateZ(-30px) rotateX(45deg) rotateY(45deg)',
+                boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.8)'
+              }}
             ></div>
             
-            {/* Deep layer with texture */}
+            {/* Secondary structure */}
             <div
-              className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center"
-              style={{ transform: 'translateZ(-15px)' }}
-            >
-              <div className="w-[95%] h-[95%] rounded-full bg-gradient-radial from-amber-900/40 to-gray-900/70 border border-amber-700/20"></div>
-            </div>
-            
-            {/* Middle texture layer */}
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{ transform: 'translateZ(-5px)' }}
+              className="absolute inset-16 bg-gray-900 border border-amber-600/20 overflow-hidden"
+              style={{ 
+                transform: 'translateZ(-20px) rotateX(45deg) rotateY(45deg)',
+                boxShadow: 'inset 0 0 15px rgba(193, 145, 30, 0.1)'
+              }}
             >
               <div 
-                className="w-[90%] h-[90%] rounded-full"
+                className="absolute inset-0"
                 style={{ 
                   backgroundImage: "url('/assets/sacred_geometry.svg')",
-                  backgroundSize: '120%',
+                  backgroundSize: '80%',
                   backgroundPosition: 'center',
                   opacity: 0.2
                 }}
               ></div>
             </div>
             
-            {/* Main artifact sphere */}
+            {/* Center pyramid */}
             <div
-              className="absolute inset-2 rounded-full overflow-hidden flex items-center justify-center"
-              style={{ transform: 'translateZ(0px)' }}
+              className="absolute left-1/2 top-1/4 w-1/2 h-1/2 bg-gradient-to-b from-amber-700/30 to-gray-900"
+              style={{ 
+                transform: 'translateX(-50%) translateY(25%) translateZ(10px) rotateX(210deg)',
+                clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
+                boxShadow: '0 5px 20px rgba(0, 0, 0, 0.5)'
+              }}
+            ></div>
+            
+            {/* Central orb */}
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ transform: 'translateZ(15px)' }}
             >
               <div 
-                className={`w-full h-full rounded-full bg-gradient-radial from-amber-700/40 to-gray-900 border border-amber-500/30 relative ${
-                  isUnlocked ? 'shadow-[0_0_15px_5px_rgba(193,145,30,0.2)]' : ''
+                className={`w-1/3 h-1/3 rounded-full bg-gradient-radial from-amber-500/30 to-gray-900 border border-amber-500/40 ${
+                  isUnlocked ? 'animate-pulse' : ''
                 }`}
-              >
-                {/* Etchings/patterns */}
-                <div 
-                  className="absolute inset-0 opacity-30"
-                  style={{ 
-                    backgroundImage: "url('/assets/sacred_geometry_2.svg')",
-                    backgroundSize: '100%',
-                    backgroundPosition: 'center',
-                    transform: 'rotate(45deg)',
-                  }}
-                ></div>
-                <div 
-                  className="absolute inset-0 opacity-20"
-                  style={{ 
-                    backgroundImage: "url('/assets/sacred_geometry_3.svg')",
-                    backgroundSize: '120%',
-                    backgroundPosition: 'center',
-                    transform: 'rotate(-30deg)',
-                  }}
-                ></div>
-              </div>
+                style={{
+                  boxShadow: isUnlocked 
+                    ? '0 0 25px 5px rgba(193, 145, 30, 0.3)' 
+                    : '0 0 15px rgba(0, 0, 0, 0.5)'
+                }}
+              ></div>
             </div>
             
-            {/* Surface details */}
+            {/* Orbiting ring */}
             <div
-              className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center pointer-events-none"
-              style={{ transform: 'translateZ(5px)' }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              style={{ 
+                transform: `translateZ(5px) rotateX(75deg) rotateY(${rotation.y / 2}deg)`,
+              }}
             >
-              <div className={`w-[60%] h-[60%] rounded-full border border-amber-500/20 ${
-                isUnlocked ? 'opacity-60' : 'opacity-30'
-              }`}></div>
+              <div 
+                className={`w-3/4 h-3/4 rounded-full border-2 border-amber-700/20 ${
+                  isUnlocked ? 'border-amber-500/40' : ''
+                }`}
+                style={{
+                  boxShadow: isUnlocked 
+                    ? '0 0 10px rgba(193, 145, 30, 0.2)' 
+                    : 'none'
+                }}
+              ></div>
             </div>
             
-            {/* Highlight overlay */}
+            {/* Secondary ring */}
             <div
-              className="absolute top-[15%] left-[15%] w-[25%] h-[25%] rounded-full bg-gradient-radial from-amber-50/10 to-transparent pointer-events-none"
-              style={{ transform: 'translateZ(10px)' }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              style={{ 
+                transform: `translateZ(8px) rotateX(60deg) rotateY(${-rotation.y / 3}deg)`,
+              }}
+            >
+              <div 
+                className={`w-2/3 h-2/3 rounded-full border border-amber-600/30 ${
+                  isUnlocked ? 'border-amber-400/30' : ''
+                }`}
+              ></div>
+            </div>
+            
+            {/* Light effects */}
+            <div
+              className="absolute top-1/4 left-1/4 w-1/8 h-1/8 rounded-full bg-amber-300/50 pointer-events-none blur-sm"
+              style={{ 
+                transform: 'translateZ(20px)',
+                filter: 'blur(5px)'
+              }}
             ></div>
             
             {/* Glow effect when unlocked */}
