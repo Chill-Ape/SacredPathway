@@ -149,55 +149,93 @@ export default function Artifact3DModel({ isUnlocked, onHotspotClick }: Artifact
           }}
           onMouseDown={handleMouseDown}
         >
-          {/* The artifact model using layered images for 3D effect */}
+          {/* Enhanced 3D artifact using multiple elements for depth */}
           <div 
             className="w-full h-full relative"
             style={{ transformStyle: 'preserve-3d' }}
           >
-            {/* Base layer */}
+            {/* Base sphere */}
             <div
-              className="absolute inset-0 rounded-full overflow-hidden"
-              style={{ transform: 'translateZ(-10px)' }}
+              className="absolute inset-0 rounded-full bg-gray-800 border border-amber-700/30"
+              style={{ transform: 'translateZ(-20px)' }}
+            ></div>
+            
+            {/* Deep layer with texture */}
+            <div
+              className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center"
+              style={{ transform: 'translateZ(-15px)' }}
             >
-              <img 
-                src="/assets/artifact_1.png" 
-                alt="Artifact base" 
-                className="w-full h-full object-contain"
-              />
+              <div className="w-[95%] h-[95%] rounded-full bg-gradient-radial from-amber-900/40 to-gray-900/70 border border-amber-700/20"></div>
             </div>
             
-            {/* Mid layer */}
+            {/* Middle texture layer */}
             <div
-              className="absolute inset-0 rounded-full overflow-hidden"
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ transform: 'translateZ(-5px)' }}
+            >
+              <div 
+                className="w-[90%] h-[90%] rounded-full"
+                style={{ 
+                  backgroundImage: "url('/assets/sacred_geometry.svg')",
+                  backgroundSize: '120%',
+                  backgroundPosition: 'center',
+                  opacity: 0.2
+                }}
+              ></div>
+            </div>
+            
+            {/* Main artifact sphere */}
+            <div
+              className="absolute inset-2 rounded-full overflow-hidden flex items-center justify-center"
               style={{ transform: 'translateZ(0px)' }}
             >
-              <img 
-                src="/assets/artifact_1.png" 
-                alt="Artifact mid" 
-                className={`w-full h-full object-contain ${
-                  isUnlocked ? 'brightness-110 saturate-125' : 'brightness-100 saturate-100'
+              <div 
+                className={`w-full h-full rounded-full bg-gradient-radial from-amber-700/40 to-gray-900 border border-amber-500/30 relative ${
+                  isUnlocked ? 'shadow-[0_0_15px_5px_rgba(193,145,30,0.2)]' : ''
                 }`}
-              />
+              >
+                {/* Etchings/patterns */}
+                <div 
+                  className="absolute inset-0 opacity-30"
+                  style={{ 
+                    backgroundImage: "url('/assets/sacred_geometry_2.svg')",
+                    backgroundSize: '100%',
+                    backgroundPosition: 'center',
+                    transform: 'rotate(45deg)',
+                  }}
+                ></div>
+                <div 
+                  className="absolute inset-0 opacity-20"
+                  style={{ 
+                    backgroundImage: "url('/assets/sacred_geometry_3.svg')",
+                    backgroundSize: '120%',
+                    backgroundPosition: 'center',
+                    transform: 'rotate(-30deg)',
+                  }}
+                ></div>
+              </div>
             </div>
             
-            {/* Top layer with enhanced glow */}
+            {/* Surface details */}
             <div
-              className="absolute inset-0 rounded-full overflow-hidden"
-              style={{ transform: 'translateZ(10px)' }}
+              className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center pointer-events-none"
+              style={{ transform: 'translateZ(5px)' }}
             >
-              <img 
-                src="/assets/artifact_1.png" 
-                alt="Artifact top" 
-                className={`w-full h-full object-contain opacity-60 ${
-                  isUnlocked ? 'brightness-200 saturate-150 mix-blend-screen' : 'brightness-120 saturate-110 mix-blend-normal opacity-40'
-                }`}
-              />
+              <div className={`w-[60%] h-[60%] rounded-full border border-amber-500/20 ${
+                isUnlocked ? 'opacity-60' : 'opacity-30'
+              }`}></div>
             </div>
+            
+            {/* Highlight overlay */}
+            <div
+              className="absolute top-[15%] left-[15%] w-[25%] h-[25%] rounded-full bg-gradient-radial from-amber-50/10 to-transparent pointer-events-none"
+              style={{ transform: 'translateZ(10px)' }}
+            ></div>
             
             {/* Glow effect when unlocked */}
             {isUnlocked && (
               <div 
-                className="absolute inset-0 rounded-full bg-amber-500/20 mix-blend-overlay animate-pulse"
+                className="absolute inset-0 rounded-full bg-amber-500/10 mix-blend-overlay animate-pulse pointer-events-none"
                 style={{ transform: 'translateZ(15px)' }}
               ></div>
             )}
