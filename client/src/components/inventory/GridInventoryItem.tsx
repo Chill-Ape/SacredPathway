@@ -5,6 +5,14 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Button } from "@/components/ui/button";
 import { Loader2, ShieldCheck, Trash2, Sparkles } from "lucide-react";
 
+// Import frame assets directly
+import stoneFrameSrc from "@/assets/stone-frame.svg";
+import itemFrameSrc from "@/assets/item-frame.svg";
+import arcaneFrameSrc from "@/assets/arcane-frame.svg";
+import parchmentBgSrc from "@/assets/parchment-bg.svg";
+import equippedRingSrc from "@/assets/equipped-ring.svg";
+import lockedItemSrc from "@/assets/locked-item.svg";
+
 // Rarity levels
 const RARITY_LEVELS = {
   COMMON: "common", 
@@ -18,13 +26,13 @@ const RARITY_LEVELS = {
 
 // Item frames by rarity
 const RARITY_FRAMES = {
-  [RARITY_LEVELS.COMMON]: "/assets/stone-frame.svg",
-  [RARITY_LEVELS.UNCOMMON]: "/assets/stone-frame.svg",
-  [RARITY_LEVELS.RARE]: "/assets/item-frame.svg",
-  [RARITY_LEVELS.EPIC]: "/assets/item-frame.svg",
-  [RARITY_LEVELS.LEGENDARY]: "/assets/arcane-frame.svg",
-  [RARITY_LEVELS.MYTHIC]: "/assets/arcane-frame.svg",
-  [RARITY_LEVELS.DIVINE]: "/assets/arcane-frame.svg",
+  [RARITY_LEVELS.COMMON]: stoneFrameSrc,
+  [RARITY_LEVELS.UNCOMMON]: stoneFrameSrc,
+  [RARITY_LEVELS.RARE]: itemFrameSrc,
+  [RARITY_LEVELS.EPIC]: itemFrameSrc,
+  [RARITY_LEVELS.LEGENDARY]: arcaneFrameSrc,
+  [RARITY_LEVELS.MYTHIC]: arcaneFrameSrc,
+  [RARITY_LEVELS.DIVINE]: arcaneFrameSrc,
 };
 
 // Function to get color based on rarity for both border and glow
@@ -99,9 +107,9 @@ function getRarityColors(rarity: string | null): { border: string; glow: string;
 
 // Default placeholder image when no image is available
 const defaultItemImage = "/assets/default_item.svg";
-const equippedRingImage = "/assets/equipped-ring.svg";
-const lockedItemImage = "/assets/locked-item.svg";
-const parchmentBg = "/assets/parchment-bg.svg";
+const equippedRingImage = equippedRingSrc;
+const lockedItemImage = lockedItemSrc;
+const parchmentBg = parchmentBgSrc;
 
 interface GridInventoryItemProps {
   item: InventoryItem;

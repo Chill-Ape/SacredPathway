@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="stone-texture" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.15" numOctaves="3" result="noise"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0" result="noise"/>
+      <feComposite operator="in" in="noise" in2="SourceGraphic" result="noisy-image"/>
+    </filter>
+    <linearGradient id="stone-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A4A4A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#6D6D6D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4A4A4A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Frame -->
+  <rect x="0" y="0" width="100" height="100" rx="8" ry="8" fill="url(#stone-gradient)" filter="url(#stone-texture)" />
+  
+  <!-- Inner Frame -->
+  <rect x="5" y="5" width="90" height="90" rx="4" ry="4" fill="#2E2E2E" stroke="#1A1A1A" stroke-width="1" />
+  
+  <!-- Decorative corners - simpler stone-like accents -->
+  <rect x="5" y="5" width="12" height="12" rx="2" ry="2" fill="#5A5A5A" stroke="#1A1A1A" stroke-width="1" />
+  <rect x="83" y="5" width="12" height="12" rx="2" ry="2" fill="#5A5A5A" stroke="#1A1A1A" stroke-width="1" />
+  <rect x="5" y="83" width="12" height="12" rx="2" ry="2" fill="#5A5A5A" stroke="#1A1A1A" stroke-width="1" />
+  <rect x="83" y="83" width="12" height="12" rx="2" ry="2" fill="#5A5A5A" stroke="#1A1A1A" stroke-width="1" />
+</svg>
