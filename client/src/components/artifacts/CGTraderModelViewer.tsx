@@ -7,12 +7,11 @@ import {
   PerspectiveCamera,
   Html,
   ContactShadows,
-  useHelper
 } from '@react-three/drei';
 import { Loader2 } from 'lucide-react';
 import * as THREE from 'three';
 
-interface ThreeArtifactViewerProps {
+interface CGTraderModelViewerProps {
   isUnlocked: boolean;
   onHotspotClick: (id: string) => void;
 }
@@ -31,15 +30,12 @@ const HOTSPOTS: Hotspot[] = [
   { id: 'crystal', position: [0.2, 0.4, -0.3], label: 'Crystal Chamber' },
 ];
 
-function ArtifactModel({ isUnlocked, onHotspotClick }: ThreeArtifactViewerProps) {
-  // Load your CGTrader model
-  const { scene, nodes, materials } = useGLTF('/assets/3d objects/3d_artifact.glb');
+// Model component to display your CGTrader artifact
+function Model({ isUnlocked, onHotspotClick }: CGTraderModelViewerProps) {
+  // Load your 3D model from CGTrader
+  const { scene } = useGLTF('/assets/3d objects/3d_artifact.glb');
   const modelRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState<string | null>(null);
-  
-  // Optional: Debug helpers for lights (commented out for now)
-  // const spotlightRef = useRef<THREE.SpotLight>(null);
-  // useHelper(spotlightRef, THREE.SpotLightHelper, 'red')
   
   // Auto-rotate when not interacting
   useFrame((_, delta) => {
@@ -127,7 +123,7 @@ function ArtifactModel({ isUnlocked, onHotspotClick }: ThreeArtifactViewerProps)
   );
 }
 
-export default function ThreeArtifactViewer({ isUnlocked, onHotspotClick }: ThreeArtifactViewerProps) {
+export default function CGTraderModelViewer({ isUnlocked, onHotspotClick }: CGTraderModelViewerProps) {
   return (
     <div className="w-full h-full">
       {/* Background for 3D scene */}
@@ -184,8 +180,8 @@ export default function ThreeArtifactViewer({ isUnlocked, onHotspotClick }: Thre
             </div>
           </Html>
         }>
-          <ArtifactModel isUnlocked={isUnlocked} onHotspotClick={onHotspotClick} />
-          <Environment preset="warehouse" />
+          <Model isUnlocked={isUnlocked} onHotspotClick={onHotspotClick} />
+          <Environment preset="sunset" />
           <ContactShadows 
             position={[0, -1.5, 0]} 
             opacity={0.6} 
