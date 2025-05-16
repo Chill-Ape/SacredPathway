@@ -69,7 +69,7 @@ export default function ArtifactViewer({
     <div className="relative w-full h-[80vh] bg-black/90">
       {/* 3D Artifact Viewer */}
       <div className="w-full h-full">
-        <Advanced3DViewer 
+        <FallbackArtifactViewer 
           isUnlocked={isUnlocked}
           onHotspotClick={handleHotspotClick}
         />
