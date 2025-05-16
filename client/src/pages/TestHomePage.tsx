@@ -402,6 +402,10 @@ const TestHomePage = () => {
 
       {/* Main content */}
       <div className="min-h-screen sacred-simulation-bg py-12 md:py-16">
+        {/* 3D Viewer Navigation for testing */}
+        <div className="container mx-auto px-4 mb-8">
+          <ViewerNavigation />
+        </div>
         {/* Audio controls */}
         <motion.div 
           className="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-slate-900/80 backdrop-blur-sm p-2 rounded-lg border border-amber-600/30"
