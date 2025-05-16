@@ -31,6 +31,7 @@ import TestHomePage from "@/pages/TestHomePage";
 import BurgerArtifact from "@/pages/BurgerArtifact";
 import FinalArtifact from "@/pages/FinalArtifact";
 import BurgerModel from "@/pages/BurgerModel";
+import BasicBurgerViewer from "@/pages/BasicBurgerViewer";
 // Import the deployment-optimized landing page
 import DeploymentReadyPage from "./DeploymentReadyPage";
 import EpicOfApkallu from "@/pages/EpicOfApkallu";
@@ -94,6 +95,7 @@ function App() {
                     <Route path="/burger-artifact" component={BurgerArtifact} />
                     <Route path="/final-artifact" component={FinalArtifact} />
                     <Route path="/burger-model" component={BurgerModel} />
+                    <Route path="/basic-burger" component={BasicBurgerViewer} />
                     {/* Route already handled in the conditional at the top */}
                     <ProtectedRoute 
                       path="/profile" 
