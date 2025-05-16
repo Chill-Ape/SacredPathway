@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Helmet } from "react-helmet";
-import InventoryGrid from "@/components/inventory/InventoryGrid";
+import InventoryGridComponent from "@/components/inventory/InventoryGrid";
 import { Link } from "wouter";
 
 // Constants for item types and rarities
@@ -177,7 +177,7 @@ function AddItemForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                     <SelectValue placeholder="Select rarity" />
                   </SelectTrigger>
                   <SelectContent className="bg-sacred-dark border-sacred-gold/20">
-                    {Object.values(RARITY_LEVELS).map((rarity) => (
+                    {Object.values(RARITY_LEVELS).map((rarity: string) => (
                       <SelectItem key={rarity} value={rarity} className="text-sacred-white">
                         {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
                       </SelectItem>
@@ -357,7 +357,7 @@ export default function InventoryGrid() {
                   Equipped ({equippedItems?.length || 0})
                 </TabsTrigger>
                 {Object.values(ITEM_TYPES).map((type) => {
-                  const count = items?.filter(item => item.type === type).length || 0;
+                  const count = items?.filter((item: InventoryItem) => item.type === type).length || 0;
                   if (count === 0) return null;
                   return (
                     <TabsTrigger 
@@ -373,7 +373,7 @@ export default function InventoryGrid() {
             </div>
             
             <TabsContent value="all">
-              <InventoryGrid
+              <InventoryGridComponent
                 items={items || []}
                 toggleEquip={handleToggleEquip}
                 removeItem={handleRemoveItem}
@@ -384,7 +384,7 @@ export default function InventoryGrid() {
             </TabsContent>
             
             <TabsContent value="equipped">
-              <InventoryGrid
+              <InventoryGridComponent
                 items={equippedItems || []}
                 toggleEquip={handleToggleEquip}
                 removeItem={handleRemoveItem}
@@ -396,13 +396,13 @@ export default function InventoryGrid() {
             </TabsContent>
             
             {/* Tabs for each item type */}
-            {Object.values(ITEM_TYPES).map((type) => {
-              const typeItems = items?.filter(item => item.type === type) || [];
+            {Object.values(ITEM_TYPES).map((type: string) => {
+              const typeItems = items?.filter((item: InventoryItem) => item.type === type) || [];
               if (typeItems.length === 0) return null;
               
               return (
                 <TabsContent key={type} value={type}>
-                  <InventoryGrid
+                  <InventoryGridComponent
                     items={typeItems}
                     toggleEquip={handleToggleEquip}
                     removeItem={handleRemoveItem}
