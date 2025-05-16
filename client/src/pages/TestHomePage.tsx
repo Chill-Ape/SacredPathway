@@ -402,9 +402,15 @@ const TestHomePage = () => {
 
       {/* Main content */}
       <div className="min-h-screen sacred-simulation-bg py-12 md:py-16">
-        {/* 3D Viewer Navigation for testing */}
+        {/* 3D Viewer Navigation Link */}
         <div className="container mx-auto px-4 mb-8">
-          <ViewerNavigation />
+          <div className="text-center">
+            <Link href="/viewer-navigation">
+              <a className="inline-block px-4 py-2 bg-amber-600/80 hover:bg-amber-500/80 text-white rounded-md transition-colors">
+                3D Model Viewer Test Pages
+              </a>
+            </Link>
+          </div>
         </div>
         {/* Audio controls */}
         <motion.div 

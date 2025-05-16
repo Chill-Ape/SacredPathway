@@ -34,6 +34,7 @@ import BurgerModel from "@/pages/BurgerModel";
 import BasicBurgerViewer from "@/pages/BasicBurgerViewer";
 import SimpleBurgerPage from "@/pages/SimpleBurgerPage";
 import StandaloneModelViewer from "@/pages/StandaloneModelViewer";
+import ViewerNavPage from "@/pages/ViewerNavPage";
 // Import the deployment-optimized landing page
 import DeploymentReadyPage from "./DeploymentReadyPage";
 import EpicOfApkallu from "@/pages/EpicOfApkallu";
@@ -100,6 +101,7 @@ function App() {
                     <Route path="/basic-burger" component={BasicBurgerViewer} />
                     <Route path="/simple-burger" component={SimpleBurgerPage} />
                     <Route path="/standalone-model" component={StandaloneModelViewer} />
+                    <Route path="/viewer-navigation" component={ViewerNavPage} />
                     {/* Route already handled in the conditional at the top */}
                     <ProtectedRoute 
                       path="/profile" 
