@@ -63,6 +63,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="/copy-model-script.js"></script>
 </head>
 <body>
   <div id="loading">
@@ -127,13 +128,28 @@
     // Try to load the 3D model
     const loader = new THREE.GLTFLoader();
     
+    // Check session storage for model URLs created by the copy script
+    function getStoredModelUrls() {
+      const storedUrls = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && key.startsWith('burger_model_')) {
+          storedUrls.push(sessionStorage.getItem(key));
+        }
+      }
+      return storedUrls;
+    }
+    
     const modelPaths = [
+      // First try direct references to uploaded file
       '/burger_models/uploads_files_2465920_burger_merged.glb',
       '/public/burger_models/uploads_files_2465920_burger_merged.glb',
       '/3d_burger.glb',
       '/public/3d_burger.glb',
       '/burger_models/burger.glb',
-      '/burger_model.glb'
+      '/burger_model.glb',
+      // Then add any URLs found in session storage from the copy script
+      ...getStoredModelUrls()
     ];
     
     let currentPathIndex = 0;

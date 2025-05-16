@@ -99,6 +99,7 @@ function App() {
                     <Route path="/burger-model" component={BurgerModel} />
                     <Route path="/basic-burger" component={BasicBurgerViewer} />
                     <Route path="/simple-burger" component={SimpleBurgerPage} />
+                    <Route path="/standalone-model" component={StandaloneModelViewer} />
                     {/* Route already handled in the conditional at the top */}
                     <ProtectedRoute 
                       path="/profile" 
