@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useInventory } from '@/hooks/use-inventory';
 import { useToast } from '@/hooks/use-toast';
-import SimpleArtifactViewer from './SimpleArtifactViewer';
-import Artifact3DModel from './Artifact3DModel';
+import ImprovedArtifactViewer from './ImprovedArtifactViewer';
 import ThreeArtifactViewer from './ThreeArtifactViewer';
 
 interface ArtifactViewerProps {
