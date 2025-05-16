@@ -10,9 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
+import { Loader2, Grid } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { InventoryProvider, useInventory, InventoryItem } from "@/hooks/use-inventory";
+import { Link } from "wouter";
 import { 
   Dialog, 
   DialogContent, 
@@ -407,12 +408,23 @@ function InventoryContent() {
           <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1">Akashic Inventory</h1>
           <p className="text-sm text-muted-foreground">Manage your sacred artifacts and mystical items</p>
         </div>
-        <Button 
-          onClick={() => setIsAddItemDialogOpen(true)}
-          className="bg-sacred-gold hover:bg-sacred-gold/90 text-sacred-dark"
-        >
-          Add New Item
-        </Button>
+        <div className="flex space-x-3">
+          <Link href="/inventory-grid">
+            <Button 
+              variant="outline"
+              className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10"
+            >
+              <Grid className="h-4 w-4 mr-2" />
+              Grid View
+            </Button>
+          </Link>
+          <Button 
+            onClick={() => setIsAddItemDialogOpen(true)}
+            className="bg-sacred-gold hover:bg-sacred-gold/90 text-sacred-dark"
+          >
+            Add New Item
+          </Button>
+        </div>
       </div>
       
       <AddItemForm 

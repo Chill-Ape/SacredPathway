@@ -356,7 +356,7 @@ export default function InventoryGrid() {
                 >
                   Equipped ({equippedItems?.length || 0})
                 </TabsTrigger>
-                {Object.values(ITEM_TYPES).map((type) => {
+                {Object.values(ITEM_TYPES).map((type: string) => {
                   const count = items?.filter((item: InventoryItem) => item.type === type).length || 0;
                   if (count === 0) return null;
                   return (
