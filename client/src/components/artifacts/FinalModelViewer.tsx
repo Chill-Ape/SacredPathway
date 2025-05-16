@@ -59,12 +59,14 @@ export default function FinalModelViewer() {
     pointLight.position.set(-2, 1, 3);
     scene.add(pointLight);
     
-    // Load Model - try multiple paths
+    // Load Model - try the exact paths where we know the files exist
     const loader = new GLTFLoader();
     const modelPaths = [
+      '/3d_burger.glb',     // Added newest copy
+      '/burger_direct.glb', // Directly in public root
       '/burger_model.glb',
-      '/assets/3d_objects/uploads_files_2465920_burger_merged.glb',
-      'client/src/assets/3d objects/uploads_files_2465920_burger_merged.glb'
+      '/assets/3d_objects/custom_artifact.glb', 
+      '/assets/3d_objects/3d_artifact.glb'
     ];
     
     const loadModel = async () => {
@@ -75,10 +77,15 @@ export default function FinalModelViewer() {
           console.log(`Attempting to load model from ${path}...`);
           
           // Add proper type annotations
+          console.log(`Starting promise for ${path}...`);
           const gltf = await new Promise<any>((resolve, reject) => {
+            console.log(`Inside Promise: Loading ${path}...`);
             loader.load(
               path, 
-              (gltf: any) => resolve(gltf),
+              (gltf: any) => {
+                console.log(`Success callback for ${path} - got data:`, gltf ? 'Yes' : 'No');
+                resolve(gltf);
+              },
               (xhr: { loaded: number; total: number }) => {
                 const percentComplete = xhr.loaded / xhr.total * 100;
                 console.log(`${path}: ${percentComplete}% loaded`);
@@ -88,6 +95,7 @@ export default function FinalModelViewer() {
                 reject(error);
               }
             );
+            console.log(`Loader.load call completed for ${path} (async operation started)`);
           });
           
           if (modelRef.current) {
