@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Grid, ListIcon, Scroll, ShieldCheck, Sparkles } from "lucide-react";
+import { Loader2, Scroll, ShieldCheck, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useInventory, InventoryItem } from "@/hooks/use-inventory";
 import { 
@@ -26,11 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Helmet } from "react-helmet";
 import InventoryGridComponent from "@/components/inventory/InventoryGrid";
-import { Link } from "wouter";
 
-// Import game UI assets
-import inventoryFrameSrc from "@/assets/inventory-frame.svg";
-import inventoryBgSrc from "@/assets/inventory-bg.svg";
+// Import minimal divider
 import ornateDividerSrc from "@/assets/ornate-divider.svg";
 
 // Constants for item types and rarities
@@ -255,7 +244,7 @@ function AddItemForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
   );
 }
 
-// Main inventory content component
+// Main inventory content component with simplified design
 export default function InventoryGrid() {
   // Define state hooks before any conditional returns
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
@@ -305,7 +294,7 @@ export default function InventoryGrid() {
   
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex justify-center items-center min-h-[50vh]">
         <Loader2 className="h-8 w-8 animate-spin text-sacred-gold" />
       </div>
     );
@@ -326,215 +315,168 @@ export default function InventoryGrid() {
         <meta name="description" content="Browse your mystical artifacts and relics in the Akashic Archive" />
       </Helmet>
       
-      {/* Page background */}
-      <div className="min-h-screen bg-sacred-dark pt-16" 
-           style={{
-             backgroundImage: `url(${inventoryBgSrc})`,
-             backgroundSize: '200px 200px',
-             backgroundRepeat: 'repeat',
-             backgroundAttachment: 'fixed'
-           }}>
-        
-        {/* Main container */}
-        <div className={`
-          max-w-6xl mx-auto p-4 sm:p-6 md:p-8 
-          transition-all duration-700 ease-in-out
-          ${isPageLoaded ? 'opacity-100' : 'opacity-0'}
-        `}>
-          
-          {/* Unified frame with content */}
-          <div className="relative">
-            {/* Ornate frame (background image) */}
-            <div className="absolute inset-0 z-0" 
-                 style={{
-                   backgroundImage: `url(${inventoryFrameSrc})`,
-                   backgroundSize: '100% 100%',
-                   backgroundPosition: 'center',
-                   backgroundRepeat: 'no-repeat'
-                 }}>
+      {/* Simple container with no background frames or complex layouts */}
+      <div className="min-h-screen pt-16 bg-sacred-dark sacred-pattern">
+        <div className="container mx-auto p-4 max-w-6xl">
+          {/* Header */}
+          <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold font-serif text-sacred-gold">
+                Arcane Repository
+              </h1>
+              <p className="text-sm text-sacred-white/70 font-serif italic mt-1">
+                Manage your sacred artifacts and mystical relics
+              </p>
+              
+              {/* Simple ornate divider */}
+              <div className="relative h-4 w-40 mt-2">
+                <img src={ornateDividerSrc} alt="" className="h-full w-full object-contain" />
+              </div>
             </div>
             
-            {/* Content area - well padded to stay within the frame */}
-            <div className="relative z-10 p-6 sm:p-8 md:p-10 lg:p-12 min-h-[80vh]">
-              
-              {/* Header section */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold font-serif text-sacred-gold drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
-                    Arcane Repository
-                  </h1>
-                  <p className="text-sm text-sacred-white/70 font-serif italic mt-1">
-                    Manage your sacred artifacts and mystical relics
-                  </p>
-                  
-                  {/* Ornate divider */}
-                  <div className="relative h-5 w-40 sm:w-48 mt-2">
-                    <img src={ornateDividerSrc} alt="" className="h-full w-full object-contain" />
-                  </div>
-                </div>
-                
-                <Button 
-                  onClick={() => setIsAddItemDialogOpen(true)}
-                  className="mt-4 sm:mt-0 bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
-                            hover:from-sacred-gold hover:to-amber-600
-                            text-sacred-dark font-serif font-medium"
-                >
-                  Add New Artifact
-                </Button>
-              </div>
-              
-              {/* Stats bar */}
-              <div className="flex flex-wrap gap-3 mb-6 text-xs sm:text-sm text-sacred-white/70 font-serif">
-                <div className="flex items-center bg-sacred-dark-lighter/50 rounded-md px-2 py-1">
-                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-sacred-gold/10 mr-1">
-                    <Scroll className="h-3 w-3 text-sacred-gold/80" />
-                  </span>
-                  <span>Items: <span className="text-sacred-gold font-medium">{items?.length || 0}</span></span>
-                </div>
-                <div className="flex items-center bg-sacred-dark-lighter/50 rounded-md px-2 py-1">
-                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-sacred-blue/10 mr-1">
-                    <ShieldCheck className="h-3 w-3 text-sacred-blue/80" />
-                  </span>
-                  <span>Equipped: <span className="text-sacred-blue font-medium">{equippedItems?.length || 0}</span></span>
-                </div>
-                <div className="flex items-center bg-sacred-dark-lighter/50 rounded-md px-2 py-1">
-                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-purple-500/10 mr-1">
-                    <Sparkles className="h-3 w-3 text-purple-400/80" />
-                  </span>
-                  <span>Rare+: <span className="text-purple-400 font-medium">
-                    {items?.filter(item => 
-                      item.rarity === RARITY_LEVELS.RARE || 
-                      item.rarity === RARITY_LEVELS.EPIC || 
-                      item.rarity === RARITY_LEVELS.LEGENDARY || 
-                      item.rarity === RARITY_LEVELS.MYTHIC || 
-                      item.rarity === RARITY_LEVELS.DIVINE
-                    ).length || 0}
-                  </span></span>
-                </div>
-              </div>
-              
-              {/* Item add dialog */}
-              <AddItemForm 
-                isOpen={isAddItemDialogOpen} 
-                onClose={() => setIsAddItemDialogOpen(false)} 
-              />
-              
-              {/* Main inventory container */}
-              <div className="bg-black/50 backdrop-blur-sm rounded-lg border border-sacred-gold/20 overflow-hidden">
-                {/* Corner decorations */}
-                <div className="absolute top-[180px] left-10 w-8 h-8 border-t-2 border-l-2 border-sacred-gold/30 rounded-tl-lg"></div>
-                <div className="absolute top-[180px] right-10 w-8 h-8 border-t-2 border-r-2 border-sacred-gold/30 rounded-tr-lg"></div>
-                <div className="absolute bottom-10 left-10 w-8 h-8 border-b-2 border-l-2 border-sacred-gold/30 rounded-bl-lg"></div>
-                <div className="absolute bottom-10 right-10 w-8 h-8 border-b-2 border-r-2 border-sacred-gold/30 rounded-br-lg"></div>
-                
-                {/* Tabs navigation */}
-                <Tabs defaultValue="all" className="p-4 sm:p-6">
-                  <TabsList className="mb-6 bg-sacred-dark-lighter/50 w-full flex flex-nowrap overflow-x-auto sm:flex-wrap border border-sacred-gold/20 p-1.5 rounded-lg">
-                    <TabsTrigger 
-                      value="all" 
-                      className="data-[state=active]:bg-sacred-gold/30 data-[state=active]:text-sacred-gold
-                                rounded-md font-serif py-1.5 px-3 mr-1
-                                border border-sacred-gold/20 shadow-md
-                                transition-all duration-300 flex-none"
-                    >
-                      All Items
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="equipped" 
-                      className="data-[state=active]:bg-sacred-blue/30 data-[state=active]:text-sacred-blue
-                                rounded-md font-serif py-1.5 px-3 mr-1
-                                border border-sacred-gold/20 shadow-md
-                                transition-all duration-300 flex-none"
-                    >
-                      Equipped
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="artifacts" 
-                      className="data-[state=active]:bg-purple-500/30 data-[state=active]:text-purple-400
-                                rounded-md font-serif py-1.5 px-3 mr-1
-                                border border-sacred-gold/20 shadow-md
-                                transition-all duration-300 flex-none"
-                    >
-                      Artifacts
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="keys" 
-                      className="data-[state=active]:bg-green-500/30 data-[state=active]:text-green-400
-                                rounded-md font-serif py-1.5 px-3 mr-1
-                                border border-sacred-gold/20 shadow-md
-                                transition-all duration-300 flex-none"
-                    >
-                      Keys
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="resources" 
-                      className="data-[state=active]:bg-amber-500/30 data-[state=active]:text-amber-400
-                                rounded-md font-serif py-1.5 px-3
-                                border border-sacred-gold/20 shadow-md
-                                transition-all duration-300 flex-none"
-                    >
-                      Resources
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  {/* Tab content */}
-                  <TabsContent value="all" className="m-0">
-                    <InventoryGridComponent 
-                      items={items || []}
-                      toggleEquip={handleToggleEquip}
-                      removeItem={handleRemoveItem}
-                      isToggleEquipPending={isToggleEquipPending}
-                      isRemovePending={isRemovePending}
-                      pendingItemId={pendingItemId}
-                    />
-                  </TabsContent>
-                  <TabsContent value="equipped" className="m-0">
-                    <InventoryGridComponent 
-                      items={equippedItems || []}
-                      toggleEquip={handleToggleEquip}
-                      removeItem={handleRemoveItem}
-                      isToggleEquipPending={isToggleEquipPending}
-                      isRemovePending={isRemovePending}
-                      pendingItemId={pendingItemId}
-                      emptyMessage="You have no equipped items. Equip artifacts to enhance your powers."
-                    />
-                  </TabsContent>
-                  <TabsContent value="artifacts" className="m-0">
-                    <InventoryGridComponent 
-                      items={(items || []).filter(item => item.type === ITEM_TYPES.ARTIFACT)}
-                      toggleEquip={handleToggleEquip}
-                      removeItem={handleRemoveItem}
-                      isToggleEquipPending={isToggleEquipPending}
-                      isRemovePending={isRemovePending}
-                      pendingItemId={pendingItemId}
-                      emptyMessage="No artifact items found. Discover sacred relics on your journey."
-                    />
-                  </TabsContent>
-                  <TabsContent value="keys" className="m-0">
-                    <InventoryGridComponent 
-                      items={(items || []).filter(item => item.type === ITEM_TYPES.KEY)}
-                      toggleEquip={handleToggleEquip}
-                      removeItem={handleRemoveItem}
-                      isToggleEquipPending={isToggleEquipPending}
-                      isRemovePending={isRemovePending}
-                      pendingItemId={pendingItemId}
-                      emptyMessage="No key items found. Seek out keys to unlock hidden knowledge."
-                    />
-                  </TabsContent>
-                  <TabsContent value="resources" className="m-0">
-                    <InventoryGridComponent 
-                      items={(items || []).filter(item => item.type === ITEM_TYPES.RESOURCE)}
-                      toggleEquip={handleToggleEquip}
-                      removeItem={handleRemoveItem}
-                      isToggleEquipPending={isToggleEquipPending}
-                      isRemovePending={isRemovePending}
-                      pendingItemId={pendingItemId}
-                      emptyMessage="No resources found. Gather mystical components for crafting."
-                    />
-                  </TabsContent>
-                </Tabs>
-              </div>
+            <Button 
+              onClick={() => setIsAddItemDialogOpen(true)}
+              className="mt-4 sm:mt-0 bg-sacred-gold hover:bg-sacred-gold/90 text-sacred-dark font-serif"
+            >
+              Add New Artifact
+            </Button>
+          </div>
+          
+          {/* Stats bar */}
+          <div className="flex flex-wrap gap-3 mb-6">
+            <div className="bg-sacred-dark-lightest/50 rounded px-3 py-1 flex items-center">
+              <Scroll className="h-4 w-4 text-sacred-gold mr-2" />
+              <span className="text-sacred-white/80 text-sm">
+                Items: <span className="text-sacred-gold font-medium">{items?.length || 0}</span>
+              </span>
             </div>
+            <div className="bg-sacred-dark-lightest/50 rounded px-3 py-1 flex items-center">
+              <ShieldCheck className="h-4 w-4 text-sacred-blue mr-2" />
+              <span className="text-sacred-white/80 text-sm">
+                Equipped: <span className="text-sacred-blue font-medium">{equippedItems?.length || 0}</span>
+              </span>
+            </div>
+            <div className="bg-sacred-dark-lightest/50 rounded px-3 py-1 flex items-center">
+              <Sparkles className="h-4 w-4 text-purple-400 mr-2" />
+              <span className="text-sacred-white/80 text-sm">
+                Rare+: <span className="text-purple-400 font-medium">
+                  {items?.filter(item => 
+                    ['rare', 'epic', 'legendary', 'mythic', 'divine'].includes(item.rarity)
+                  ).length || 0}
+                </span>
+              </span>
+            </div>
+          </div>
+          
+          {/* Add item dialog */}
+          <AddItemForm 
+            isOpen={isAddItemDialogOpen} 
+            onClose={() => setIsAddItemDialogOpen(false)} 
+          />
+          
+          {/* Main content with tabs - simplified version */}
+          <div className={`
+            transition-opacity duration-500 
+            ${isPageLoaded ? 'opacity-100' : 'opacity-0'}
+          `}>
+            <Tabs defaultValue="all" className="w-full">
+              {/* Tabs list */}
+              <TabsList className="w-full bg-sacred-dark-lightest/40 mb-6 p-1 border border-sacred-gold/20 rounded-lg flex flex-wrap">
+                <TabsTrigger 
+                  value="all" 
+                  className="data-[state=active]:bg-sacred-gold/20 data-[state=active]:text-sacred-gold
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10"
+                >
+                  All Items
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="equipped" 
+                  className="data-[state=active]:bg-sacred-blue/20 data-[state=active]:text-sacred-blue
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10"
+                >
+                  Equipped
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="artifacts" 
+                  className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10"
+                >
+                  Artifacts
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="keys" 
+                  className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10"
+                >
+                  Keys
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="resources" 
+                  className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10"
+                >
+                  Resources
+                </TabsTrigger>
+              </TabsList>
+              
+              {/* Tab content */}
+              <div className="bg-black/20 p-4 rounded-lg border border-sacred-gold/20">
+                <TabsContent value="all" className="m-0">
+                  <InventoryGridComponent 
+                    items={items || []}
+                    toggleEquip={handleToggleEquip}
+                    removeItem={handleRemoveItem}
+                    isToggleEquipPending={isToggleEquipPending}
+                    isRemovePending={isRemovePending}
+                    pendingItemId={pendingItemId}
+                  />
+                </TabsContent>
+                <TabsContent value="equipped" className="m-0">
+                  <InventoryGridComponent 
+                    items={equippedItems || []}
+                    toggleEquip={handleToggleEquip}
+                    removeItem={handleRemoveItem}
+                    isToggleEquipPending={isToggleEquipPending}
+                    isRemovePending={isRemovePending}
+                    pendingItemId={pendingItemId}
+                    emptyMessage="You have no equipped items. Equip artifacts to enhance your powers."
+                  />
+                </TabsContent>
+                <TabsContent value="artifacts" className="m-0">
+                  <InventoryGridComponent 
+                    items={(items || []).filter(item => item.type === ITEM_TYPES.ARTIFACT)}
+                    toggleEquip={handleToggleEquip}
+                    removeItem={handleRemoveItem}
+                    isToggleEquipPending={isToggleEquipPending}
+                    isRemovePending={isRemovePending}
+                    pendingItemId={pendingItemId}
+                    emptyMessage="No artifact items found. Discover sacred relics on your journey."
+                  />
+                </TabsContent>
+                <TabsContent value="keys" className="m-0">
+                  <InventoryGridComponent 
+                    items={(items || []).filter(item => item.type === ITEM_TYPES.KEY)}
+                    toggleEquip={handleToggleEquip}
+                    removeItem={handleRemoveItem}
+                    isToggleEquipPending={isToggleEquipPending}
+                    isRemovePending={isRemovePending}
+                    pendingItemId={pendingItemId}
+                    emptyMessage="No key items found. Seek out keys to unlock hidden knowledge."
+                  />
+                </TabsContent>
+                <TabsContent value="resources" className="m-0">
+                  <InventoryGridComponent 
+                    items={(items || []).filter(item => item.type === ITEM_TYPES.RESOURCE)}
+                    toggleEquip={handleToggleEquip}
+                    removeItem={handleRemoveItem}
+                    isToggleEquipPending={isToggleEquipPending}
+                    isRemovePending={isRemovePending}
+                    pendingItemId={pendingItemId}
+                    emptyMessage="No resources found. Gather mystical components for crafting."
+                  />
+                </TabsContent>
+              </div>
+            </Tabs>
           </div>
         </div>
       </div>
