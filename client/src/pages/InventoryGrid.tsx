@@ -316,7 +316,7 @@ export default function InventoryGrid() {
       </Helmet>
       
       {/* Simple container with white background like the rest of the site */}
-      <div className="min-h-screen pt-16 bg-white sacred-pattern">
+      <div className="min-h-screen pt-16 bg-white">
         <div className="container mx-auto p-4 max-w-6xl">
           {/* Header */}
           <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
