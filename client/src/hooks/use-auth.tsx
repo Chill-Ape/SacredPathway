@@ -108,22 +108,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (userData: RegisterData) => {
-      const res = await apiRequest("POST", "/api/register", userData);
-      return await res.json();
+      // First register the user
+      const registerRes = await apiRequest("POST", "/api/register", userData);
+      const registerData = await registerRes.json();
+      
+      // Then immediately log them in with the same credentials
+      const loginPayload = {
+        username: userData.username,
+        password: userData.password
+      };
+      const loginRes = await apiRequest("POST", "/api/login", loginPayload);
+      const loginData = await loginRes.json();
+      
+      // Return combined data
+      return {
+        ...registerData,
+        loginData
+      };
     },
-    onSuccess: async (data) => {
-      console.log("Registration successful, setting user data:", data);
+    onSuccess: (data) => {
+      console.log("Registration and auto-login successful:", data);
       
       // Store user in localStorage immediately
       localStorage.setItem('akashic_user', JSON.stringify(data.user));
       
       // Update query cache with the user data
-      queryClient.setQueryData(["/api/user"], data);
+      queryClient.setQueryData(["/api/user"], { user: data.user });
       
       // Force refetch of mana balance to show the welcome bonus
       queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
       
-      // Store the new username and show welcome modal
+      // Store the new username for welcome modal
       setNewUsername(data.user.username);
       
       // Log welcome bonus for debugging
@@ -134,27 +149,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
       });
       
-      // Now login the user automatically using the same credentials
-      try {
-        // Automatically log in with the new credentials
-        // This ensures the session is properly established
-        const loginRes = await apiRequest("POST", "/api/login", {
-          username: userData.username,
-          password: userData.password
-        });
-        
-        const loginData = await loginRes.json();
-        console.log("Auto-login after registration successful:", loginData);
-        
-        // After successful login, show the welcome modal
-        setTimeout(() => {
-          setShowWelcomeModal(true);
-        }, 500);
-      } catch (error) {
-        console.error("Auto-login after registration failed:", error);
-        // Still set the welcome modal even if auto-login fails
-        setShowWelcomeModal(true);
-      }
+      // Show the welcome modal
+      setShowWelcomeModal(true);
+      
+      // Navigate to profile page after a short delay
+      setTimeout(() => {
+        window.location.href = '/profile';
+      }, 800);
     },
     onError: (error: Error) => {
       toast({
