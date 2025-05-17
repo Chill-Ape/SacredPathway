@@ -111,8 +111,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await apiRequest("POST", "/api/register", userData);
       return await res.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Registration successful, setting user data:", data);
+      
+      // Store user in localStorage immediately
+      localStorage.setItem('akashic_user', JSON.stringify(data.user));
+      
+      // Update query cache with the user data
       queryClient.setQueryData(["/api/user"], data);
       
       // Force refetch of mana balance to show the welcome bonus
@@ -120,21 +125,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       // Store the new username and show welcome modal
       setNewUsername(data.user.username);
-      setShowWelcomeModal(true);
+      
+      // Log welcome bonus for debugging
+      console.log("Welcome bonus amount:", data.welcomeBonus);
       
       toast({
         title: "Registration successful",
         description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
       });
       
-      // Store user in localStorage immediately to prevent UI flicker
-      localStorage.setItem('akashic_user', JSON.stringify(data.user));
-      
-      // Log welcome bonus for debugging
-      console.log("Welcome bonus amount:", data.welcomeBonus);
-      
-      // Remove automatic redirection to allow users to read the welcome modal
-      // The user can click on one of the buttons in the modal to navigate when ready
+      // Now login the user automatically using the same credentials
+      try {
+        // Automatically log in with the new credentials
+        // This ensures the session is properly established
+        const loginRes = await apiRequest("POST", "/api/login", {
+          username: userData.username,
+          password: userData.password
+        });
+        
+        const loginData = await loginRes.json();
+        console.log("Auto-login after registration successful:", loginData);
+        
+        // After successful login, show the welcome modal
+        setTimeout(() => {
+          setShowWelcomeModal(true);
+        }, 500);
+      } catch (error) {
+        console.error("Auto-login after registration failed:", error);
+        // Still set the welcome modal even if auto-login fails
+        setShowWelcomeModal(true);
+      }
     },
     onError: (error: Error) => {
       toast({
