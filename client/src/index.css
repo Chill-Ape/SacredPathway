@@ -65,8 +65,12 @@
 }
 
 .sacred-pattern {
-  background-color: white;
-  background-image: none;
+  background-color: var(--sacred-dark);
+  background-image: 
+    radial-gradient(rgba(255, 215, 0, 0.05) 2px, transparent 2px),
+    radial-gradient(rgba(255, 215, 0, 0.03) 2px, transparent 2px);
+  background-size: 50px 50px;
+  background-position: 0 0, 25px 25px;
 }
 
 /* Inventory specific animations */

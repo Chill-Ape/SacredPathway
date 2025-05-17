@@ -9,12 +9,15 @@
 
 .inventory-page.sacred-pattern {
   background-color: white !important;
-  background-image: none !important;
+  background-image: 
+    radial-gradient(rgba(212, 175, 55, 0.05) 2px, transparent 2px),
+    radial-gradient(rgba(212, 175, 55, 0.03) 2px, transparent 2px) !important;
+  background-size: 50px 50px !important;
+  background-position: 0 0, 25px 25px !important;
 }
 
 body.inventory-active {
   background-color: white !important;
-  color: black !important;
 }
 
 .inventory-page .container {
@@ -35,7 +38,22 @@ body.inventory-active {
 .inventory-page li,
 .inventory-page a,
 .inventory-page label,
-.inventory-page button {
+.inventory-page button,
+.inventory-page * {
+  color: black !important;
+}
+
+/* Ensure all text is visible */
+.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700 {
+  color: black !important;
+}
+
+[class*="text-gray-"] {
+  color: black !important;
+}
+
+/* Force specific problematic elements to be black */
+.bg-gray-100 span {
   color: black !important;
 }
 
