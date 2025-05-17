@@ -251,16 +251,22 @@ export default function ProfileMenu({
                   alt={`${user.username}'s profile`} 
                   className="h-full w-full object-cover"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    const fallbackElement = e.currentTarget.parentElement?.querySelector('[data-fallback]');
-                    if (fallbackElement) fallbackElement.style.display = 'flex';
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = 'none';
+                    // Find the fallback element and show it
+                    const parent = img.parentElement;
+                    if (parent) {
+                      const fallback = parent.querySelector('[data-fallback]') as HTMLElement;
+                      if (fallback) {
+                        fallback.style.display = 'flex';
+                      }
+                    }
                   }}
                 />
               ) : null}
               <AvatarFallback 
                 data-fallback
                 className="bg-sacred-blue/10 text-sacred-blue font-cinzel"
-                style={{display: user.profilePicture ? 'none' : 'flex'}}
               >
                 {user.username ? user.username[0].toUpperCase() : '?'}
               </AvatarFallback>
