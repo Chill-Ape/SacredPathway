@@ -122,7 +122,7 @@ function App() {
                     />
                     <ProtectedRoute 
                       path="/inventory" 
-                      component={Inventory} 
+                      component={InventoryGrid} 
                     />
                     <ProtectedRoute 
                       path="/inventory-grid" 

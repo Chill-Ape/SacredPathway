@@ -420,8 +420,9 @@ export default function InventoryGrid() {
               onClose={() => setIsAddItemDialogOpen(false)} 
             />
             
-            {/* Main inventory container - reduced margins to contain within frame */}
-            <div className="relative bg-black/40 backdrop-blur-sm rounded-lg mt-2 mb-2 md:mb-4 overflow-hidden"
+            {/* Main inventory container - absolutely positioned to fit within the frame */}
+            <div className="relative bg-black/40 backdrop-blur-sm rounded-lg mt-2 mb-2 md:mb-4 overflow-hidden
+                          max-w-full w-full"
                 style={{ 
                   boxShadow: 'inset 0 0 30px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.4)'
                 }}
