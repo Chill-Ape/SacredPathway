@@ -1,0 +1,48 @@
+/* Global white background style for the entire site */
+
+.sacred-pattern {
+  background-color: white !important;
+  background-image: 
+    radial-gradient(rgba(212, 175, 55, 0.05) 2px, transparent 2px),
+    radial-gradient(rgba(212, 175, 55, 0.03) 2px, transparent 2px) !important;
+  background-size: 50px 50px !important;
+  background-position: 0 0, 25px 25px !important;
+}
+
+/* Make all text black/dark by default */
+body, p, span, div, h1, h2, h3, h4, h5, h6, li, a, button {
+  color: black !important;
+}
+
+/* Preserve specific colors for some UI elements */
+.text-sacred-gold {
+  color: #d4af37 !important;
+}
+
+.text-sacred-blue {
+  color: #1e88e5 !important;
+}
+
+/* Apply white background to cards and containers */
+.bg-card, .card, [class*="bg-sacred-dark"] {
+  background-color: white !important;
+}
+
+/* Fix navbar */
+nav.bg-sacred-dark {
+  background-color: white !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* Fix buttons */
+.bg-sacred-gold {
+  background-color: #d4af37 !important;
+  color: white !important;
+}
+
+/* Fix inputs */
+input, textarea, select {
+  background-color: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: black !important;
+}

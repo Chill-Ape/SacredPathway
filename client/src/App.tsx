@@ -19,6 +19,9 @@ import Inventory from "@/pages/Inventory";
 import InventoryGrid from "@/pages/InventoryGrid";
 import Crafting from "@/pages/Crafting";
 
+// Import white theme CSS
+import "./global-white.css";
+
 import Simulation from "@/pages/Simulation";
 import Landing1 from "@/pages/Landing1";
 import ArkContents from "@/pages/ArkContents";
