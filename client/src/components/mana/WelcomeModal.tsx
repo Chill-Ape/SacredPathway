@@ -23,9 +23,11 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username, 
   const handleClose = () => {
     onClose();
     // Navigate to the specified path after closing
-    setTimeout(() => {
-      window.location.href = navigateAfterClose;
-    }, 300);
+    if (navigateAfterClose) {
+      setTimeout(() => {
+        window.location.href = navigateAfterClose;
+      }, 300);
+    }
   };
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>

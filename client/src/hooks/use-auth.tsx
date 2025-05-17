@@ -147,11 +147,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Log welcome bonus for debugging
       console.log("Welcome bonus amount:", data.welcomeBonus);
       
-      toast({
-        title: "Registration successful",
-        description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
-      });
-      
       // Navigate to home page where the welcome modal will appear
       window.location.href = '/';
     },
