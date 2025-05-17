@@ -132,14 +132,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Store user in localStorage immediately
       localStorage.setItem('akashic_user', JSON.stringify(data.user));
       
+      // Set username for welcome modal
+      setNewUsername(data.user.username);
+      
+      // Set a flag to show welcome modal when router redirects
+      localStorage.setItem('show_welcome_modal', 'true');
+      
       // Update query cache with the user data
       queryClient.setQueryData(["/api/user"], { user: data.user });
       
       // Force refetch of mana balance to show the welcome bonus
       queryClient.invalidateQueries({ queryKey: ['/api/user/mana'] });
-      
-      // Store the new username for welcome modal
-      setNewUsername(data.user.username);
       
       // Log welcome bonus for debugging
       console.log("Welcome bonus amount:", data.welcomeBonus);
@@ -149,10 +152,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
       });
       
-      // Show the welcome modal first
-      setShowWelcomeModal(true);
-      
-      // No automatic redirection - we'll let the modal handle it
+      // Navigate to home page where the welcome modal will appear
+      window.location.href = '/';
     },
     onError: (error: Error) => {
       toast({
@@ -198,6 +199,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (userData?.user) {
       setLocalUser(userData.user);
+      
+      // Check if we have a newly registered user that needs to see the welcome modal
+      const isNewRegistration = localStorage.getItem('show_welcome_modal') === 'true';
+      if (isNewRegistration) {
+        localStorage.removeItem('show_welcome_modal'); // Clear the flag
+        setShowWelcomeModal(true); // Show the welcome modal
+      }
     }
   }, [userData]);
   
