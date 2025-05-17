@@ -324,7 +324,7 @@ export default function InventoryGrid() {
               <h1 className="text-2xl sm:text-3xl font-bold font-serif text-sacred-gold">
                 Arcane Repository
               </h1>
-              <p className="text-sm text-gray-600 font-serif italic mt-1">
+              <p className="text-sm text-sacred-white/70 font-serif italic mt-1">
                 Manage your sacred artifacts and mystical relics
               </p>
               
@@ -344,21 +344,21 @@ export default function InventoryGrid() {
           
           {/* Stats bar */}
           <div className="flex flex-wrap gap-3 mb-6">
-            <div className="bg-gray-100 rounded px-3 py-1 flex items-center border border-gray-200">
+            <div className="bg-sacred-dark-lightest/50 rounded px-3 py-1 flex items-center border border-sacred-gold/10">
               <Scroll className="h-4 w-4 text-sacred-gold mr-2" />
-              <span className="text-gray-700 text-sm">
+              <span className="text-sacred-white/80 text-sm">
                 Items: <span className="text-sacred-gold font-medium">{items?.length || 0}</span>
               </span>
             </div>
-            <div className="bg-gray-100 rounded px-3 py-1 flex items-center border border-gray-200">
+            <div className="bg-sacred-dark-lightest/50 rounded px-3 py-1 flex items-center border border-sacred-gold/10">
               <ShieldCheck className="h-4 w-4 text-sacred-blue mr-2" />
-              <span className="text-gray-700 text-sm">
+              <span className="text-sacred-white/80 text-sm">
                 Equipped: <span className="text-sacred-blue font-medium">{equippedItems?.length || 0}</span>
               </span>
             </div>
-            <div className="bg-gray-100 rounded px-3 py-1 flex items-center border border-gray-200">
+            <div className="bg-sacred-dark-lightest/50 rounded px-3 py-1 flex items-center border border-sacred-gold/10">
               <Sparkles className="h-4 w-4 text-purple-400 mr-2" />
-              <span className="text-gray-700 text-sm">
+              <span className="text-sacred-white/80 text-sm">
                 Rare+: <span className="text-purple-400 font-medium">
                   {items?.filter(item => 
                     ['rare', 'epic', 'legendary', 'mythic', 'divine'].includes(item.rarity)
@@ -381,46 +381,46 @@ export default function InventoryGrid() {
           `}>
             <Tabs defaultValue="all" className="w-full">
               {/* Tabs list */}
-              <TabsList className="w-full bg-gray-100 mb-6 p-1 border border-gray-200 rounded-lg flex flex-wrap">
+              <TabsList className="w-full bg-sacred-dark-lightest/50 mb-6 p-1 border border-sacred-gold/20 rounded-lg flex flex-wrap">
                 <TabsTrigger 
                   value="all" 
-                  className="data-[state=active]:bg-sacred-gold/20 data-[state=active]:text-sacred-gold
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                  className="data-[state=active]:bg-sacred-gold/30 data-[state=active]:text-sacred-gold
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10 text-sacred-white/80"
                 >
                   All Items
                 </TabsTrigger>
                 <TabsTrigger 
                   value="equipped" 
-                  className="data-[state=active]:bg-sacred-blue/20 data-[state=active]:text-sacred-blue
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                  className="data-[state=active]:bg-sacred-blue/30 data-[state=active]:text-sacred-blue
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10 text-sacred-white/80"
                 >
                   Equipped
                 </TabsTrigger>
                 <TabsTrigger 
                   value="artifacts" 
-                  className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                  className="data-[state=active]:bg-purple-500/30 data-[state=active]:text-purple-400
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10 text-sacred-white/80"
                 >
                   Artifacts
                 </TabsTrigger>
                 <TabsTrigger 
                   value="keys" 
-                  className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                  className="data-[state=active]:bg-green-500/30 data-[state=active]:text-green-400
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10 text-sacred-white/80"
                 >
                   Keys
                 </TabsTrigger>
                 <TabsTrigger 
                   value="resources" 
-                  className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                  className="data-[state=active]:bg-amber-500/30 data-[state=active]:text-amber-400
+                            font-serif px-4 py-2 rounded-md border border-sacred-gold/10 text-sacred-white/80"
                 >
                   Resources
                 </TabsTrigger>
               </TabsList>
               
               {/* Tab content */}
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+              <div className="bg-black/20 p-4 rounded-lg border border-sacred-gold/20 shadow-sm">
                 <TabsContent value="all" className="m-0">
                   <InventoryGridComponent 
                     items={items || []}
