@@ -4,6 +4,7 @@
   min-height: 100vh;
   padding-top: 64px; /* Add space for navbar */
   background-image: none !important;
+  color: black !important;
 }
 
 .inventory-page.sacred-pattern {
@@ -13,12 +14,29 @@
 
 body.inventory-active {
   background-color: white !important;
+  color: black !important;
 }
 
 .inventory-page .container {
   padding-top: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Force all text to be black on inventory page */
+.inventory-page p,
+.inventory-page span,
+.inventory-page div,
+.inventory-page h2,
+.inventory-page h3,
+.inventory-page h4,
+.inventory-page h5,
+.inventory-page h6,
+.inventory-page li,
+.inventory-page a,
+.inventory-page label,
+.inventory-page button {
+  color: black !important;
 }
 
 .inventory-heading {
