@@ -246,7 +246,7 @@ export default function OracleChat() {
         </div>
         
         <motion.div 
-          className={`bg-gradient-to-t from-[#0a2a45] to-[#184772] rounded-lg p-4 h-[500px] overflow-y-auto mb-4 border-2 border-oracle-gold/30 shadow-lg ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
+          className={`bg-gradient-to-t from-[#0a2a45] to-[#184772] rounded-lg p-4 h-[500px] overflow-y-auto mb-4 border border-oracle-gold/20 ${isPending ? 'oracle-chatbox-glow-active' : 'oracle-chatbox-glow'}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}

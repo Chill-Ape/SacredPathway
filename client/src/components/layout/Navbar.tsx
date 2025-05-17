@@ -112,7 +112,7 @@ export default function Navbar() {
                   <span 
                     className={`block w-full py-2 font-cinzel hover:bg-gray-50 rounded transition-colors duration-300 cursor-pointer ${
                       location === link.path 
-                        ? 'text-theme-blue font-medium' 
+                        ? 'text-theme-gold font-medium border-l-4 border-theme-gold pl-2' 
                         : 'text-theme-text-primary'
                     }`}
                     onClick={() => setIsMobileMenuOpen(false)}
