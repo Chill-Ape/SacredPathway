@@ -315,8 +315,8 @@ export default function InventoryGrid() {
         <meta name="description" content="Browse your mystical artifacts and relics in the Akashic Archive" />
       </Helmet>
       
-      {/* Simple container with white background like the rest of the site */}
-      <div className="min-h-screen pt-16 bg-white">
+      {/* Simple container with white background and subtle gold pattern */}
+      <div className="min-h-screen pt-16 bg-white sacred-pattern">
         <div className="container mx-auto p-4 max-w-6xl">
           {/* Header */}
           <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
