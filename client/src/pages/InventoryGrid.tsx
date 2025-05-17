@@ -328,18 +328,18 @@ export default function InventoryGrid() {
       
       {/* Page-specific background with texture */}
       <div 
-        className="min-h-[calc(100vh-64px)] pt-8 pb-12 px-0 overflow-hidden"
+        className="min-h-[calc(100vh-64px)] py-4 md:py-8 px-0 overflow-x-hidden"
         style={{
           backgroundImage: `url(${inventoryBgSrc})`,
           backgroundSize: '200px 200px',
           backgroundRepeat: 'repeat',
-          backgroundAttachment: 'local'
+          backgroundAttachment: 'fixed'
         }}
       >
         {/* Game-like inventory frame */}
         <div 
           className={`
-            relative container mx-auto px-8 py-8 max-w-7xl
+            relative container mx-auto px-2 sm:px-4 md:px-6 py-4 md:py-6 max-w-7xl
             transition-all duration-1000 ease-in-out 
             ${isPageLoaded ? 'opacity-100 transform-none' : 'opacity-0 translate-y-10'}
           `}
@@ -356,22 +356,22 @@ export default function InventoryGrid() {
           {/* Inner content area */}
           <div className="relative z-10 py-4 px-4">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 px-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-3 px-3 md:px-6">
               <div className="relative px-2 py-1">
-                <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
+                <h1 className="text-2xl md:text-3xl font-bold font-serif text-sacred-gold mb-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
                   Arcane Repository
                 </h1>
-                <p className="text-sm text-sacred-white/70 font-serif italic">
+                <p className="text-xs md:text-sm text-sacred-white/70 font-serif italic">
                   Manage your sacred artifacts and mystical relics
                 </p>
                 
                 {/* Ornate divider */}
-                <div className="relative h-6 w-48 mt-2">
-                  <img src={ornateDividerSrc} alt="" className="absolute h-6 w-full object-contain" />
+                <div className="relative h-5 md:h-6 w-40 md:w-48 mt-1 md:mt-2">
+                  <img src={ornateDividerSrc} alt="" className="absolute h-full w-full object-contain" />
                 </div>
                 
                 {/* Inventory stats */}
-                <div className="flex space-x-4 mt-4 text-xs text-sacred-white/70 font-serif">
+                <div className="flex flex-wrap gap-2 md:gap-4 mt-3 text-xs text-sacred-white/70 font-serif">
                   <div className="flex items-center">
                     <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-sacred-gold/10 mr-1">
                       <Scroll className="h-3 w-3 text-sacred-gold/80" />
@@ -401,12 +401,13 @@ export default function InventoryGrid() {
                 </div>
               </div>
               
-              <div className="flex space-x-3 self-end mb-2 z-10">
+              <div className="flex space-x-3 self-center md:self-end mt-2 md:mt-0 mb-1 md:mb-2 z-10">
                 <Button 
                   onClick={() => setIsAddItemDialogOpen(true)}
                   className="bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
                             hover:from-sacred-gold hover:to-amber-600
-                            text-sacred-dark font-serif font-medium shadow-md hover:shadow-sacred-gold/20"
+                            text-sacred-dark font-serif font-medium shadow-md hover:shadow-sacred-gold/20
+                            text-sm md:text-base"
                 >
                   Add New Artifact
                 </Button>
@@ -425,43 +426,43 @@ export default function InventoryGrid() {
                 }}
             >
               {/* Ornate corners */}
-              <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-lg"></div>
-              <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-lg"></div>
-              <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-lg"></div>
-              <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-lg"></div>
+              <div className="absolute top-0 left-0 w-10 h-10 md:w-16 md:h-16 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-lg"></div>
+              <div className="absolute top-0 right-0 w-10 h-10 md:w-16 md:h-16 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-lg"></div>
+              <div className="absolute bottom-0 left-0 w-10 h-10 md:w-16 md:h-16 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-lg"></div>
+              <div className="absolute bottom-0 right-0 w-10 h-10 md:w-16 md:h-16 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-lg"></div>
               
               {/* Magic ambient glows */}
-              <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full radial-pulse bg-purple-800/5 blur-3xl"></div>
-              <div className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full radial-pulse bg-blue-800/5 blur-3xl"></div>
+              <div className="absolute top-1/3 left-1/4 w-40 md:w-64 h-40 md:h-64 rounded-full radial-pulse bg-purple-800/5 blur-3xl"></div>
+              <div className="absolute bottom-1/3 right-1/4 w-40 md:w-64 h-40 md:h-64 rounded-full radial-pulse bg-blue-800/5 blur-3xl"></div>
               
-              <Tabs defaultValue="all" className="w-full relative z-10 p-6">
+              <Tabs defaultValue="all" className="w-full relative z-10 p-3 md:p-6">
                 {/* Inventory type tabs */}
-                <div className="overflow-x-auto pb-4">
+                <div className="overflow-x-auto max-w-full pb-2 md:pb-4">
                   <div className="relative w-full">
-                    <TabsList className="bg-sacred-dark-lightest/50 border border-sacred-gold/20 p-2 rounded-lg 
-                                       shadow-inner backdrop-blur-sm w-full flex flex-wrap justify-start">
+                    <TabsList className="bg-sacred-dark-lightest/50 border border-sacred-gold/20 p-1.5 md:p-2 rounded-lg 
+                                       shadow-inner backdrop-blur-sm w-full flex flex-nowrap md:flex-wrap justify-start overflow-x-auto">
                       <TabsTrigger 
                         value="all" 
                         className="data-[state=active]:bg-sacred-gold/30 data-[state=active]:text-sacred-gold
-                                  data-[state=active]:shadow-lg rounded-md font-serif py-2 px-4 mr-2
+                                  data-[state=active]:shadow-lg rounded-md font-serif py-1.5 md:py-2 px-3 md:px-4 mr-1 md:mr-2
                                   border border-sacred-gold/20 shadow-md backdrop-blur-sm
-                                  transition-all duration-300"
+                                  transition-all duration-300 flex-none"
                       >
-                        <span className="flex items-center">
-                          <span className="mr-1.5 text-lg">⦿</span>
-                          All Items ({items?.length || 0})
+                        <span className="flex items-center whitespace-nowrap">
+                          <span className="mr-1 md:mr-1.5 text-base md:text-lg">⦿</span>
+                          <span className="text-xs md:text-sm">All Items ({items?.length || 0})</span>
                         </span>
                       </TabsTrigger>
                       <TabsTrigger 
                         value="equipped"
                         className="data-[state=active]:bg-sacred-blue/30 data-[state=active]:text-sacred-blue
-                                  data-[state=active]:shadow-lg rounded-md font-serif py-2 px-4 mr-2
+                                  data-[state=active]:shadow-lg rounded-md font-serif py-1.5 md:py-2 px-3 md:px-4 mr-1 md:mr-2
                                   border border-sacred-blue/20 shadow-md backdrop-blur-sm
-                                  transition-all duration-300"
+                                  transition-all duration-300 flex-none"
                       >
-                        <span className="flex items-center">
-                          <ShieldCheck className="h-4 w-4 mr-1.5" />
-                          Equipped ({equippedItems?.length || 0})
+                        <span className="flex items-center whitespace-nowrap">
+                          <ShieldCheck className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-1.5" />
+                          <span className="text-xs md:text-sm">Equipped ({equippedItems?.length || 0})</span>
                         </span>
                       </TabsTrigger>
                       {Object.values(ITEM_TYPES).map((type: string) => {
@@ -472,13 +473,13 @@ export default function InventoryGrid() {
                             key={type} 
                             value={type}
                             className="data-[state=active]:bg-sacred-secondary/30 data-[state=active]:text-sacred-secondary
-                                      data-[state=active]:shadow-lg rounded-md font-serif py-2 px-4 mr-2 mb-2
+                                      data-[state=active]:shadow-lg rounded-md font-serif py-1.5 md:py-2 px-3 md:px-4 mr-1 md:mr-2 md:mb-2
                                       border border-sacred-secondary/20 shadow-md backdrop-blur-sm
-                                      transition-all duration-300"
+                                      transition-all duration-300 flex-none"
                           >
-                            <span className="flex items-center">
-                              <span className="mr-1.5 text-lg">◈</span>
-                              {getItemTypeDisplayName(type)} ({count})
+                            <span className="flex items-center whitespace-nowrap">
+                              <span className="mr-1 md:mr-1.5 text-base md:text-lg">◈</span>
+                              <span className="text-xs md:text-sm">{getItemTypeDisplayName(type)} ({count})</span>
                             </span>
                           </TabsTrigger>
                         );

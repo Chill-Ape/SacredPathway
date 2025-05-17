@@ -208,15 +208,15 @@ export default function GridInventoryItem({
           
           {/* Quantity Badge */}
           {item.quantity > 1 && (
-            <div className="absolute bottom-1 right-1 bg-black/70 backdrop-blur-sm text-white text-xs font-bold rounded-full 
-                            w-7 h-7 flex items-center justify-center border border-sacred-gold/30 shadow-md z-10">
+            <div className="absolute bottom-1 right-1 bg-black/70 backdrop-blur-sm text-white text-[10px] md:text-xs font-bold rounded-full 
+                            w-5 h-5 md:w-6 md:h-6 flex items-center justify-center border border-sacred-gold/30 shadow-md z-10">
               {item.quantity}
             </div>
           )}
           
           {/* Rarity Indicator */}
           <div className="absolute top-1 right-1 z-10">
-            <Badge className={`${bg} text-xs font-bold px-2 shadow-md`}>
+            <Badge className={`${bg} text-[10px] md:text-xs font-bold px-1.5 md:px-2 py-0 md:py-0.5 shadow-md`}>
               {item.rarity ? item.rarity.charAt(0).toUpperCase() : "C"}
             </Badge>
           </div>
@@ -225,7 +225,7 @@ export default function GridInventoryItem({
           {(item.rarity === RARITY_LEVELS.MYTHIC || item.rarity === RARITY_LEVELS.DIVINE) && (
             <div className="absolute top-1 left-1 z-10">
               <Sparkles className={`
-                h-5 w-5 
+                h-4 w-4 md:h-5 md:w-5
                 ${item.rarity === RARITY_LEVELS.MYTHIC ? 'text-red-400' : 'text-indigo-400'} 
                 animate-pulse
               `} />
@@ -233,8 +233,8 @@ export default function GridInventoryItem({
           )}
           
           {/* Name label */}
-          <div className="absolute inset-x-0 bottom-0 px-2 py-1 bg-black/60 backdrop-blur-sm z-10">
-            <p className="text-xs text-white font-medium truncate font-serif">{item.name}</p>
+          <div className="absolute inset-x-0 bottom-0 px-1 md:px-2 py-0.5 md:py-1 bg-black/60 backdrop-blur-sm z-10">
+            <p className="text-[10px] md:text-xs text-white font-medium truncate font-serif">{item.name}</p>
           </div>
         </div>
       </HoverCardTrigger>
