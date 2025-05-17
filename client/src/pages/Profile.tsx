@@ -51,17 +51,22 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
   
   // Predefined avatar options with images from the assets folder
   const avatarOptions = [
-    '/assets/sacred_symbol.png', // Set as first (default) option
+    // People avatars (prioritized)
+    '/assets/images/People/dark_wizard.png',
+    '/assets/images/People/female_sage.png',  
+    '/assets/images/People/rugged_warrior.png',
+    '/assets/images/People/wizard.png',
+    '/assets/images/People/young_sage.png',
+    '/assets/images/People/ChatGPT Image Apr 24, 2025, 06_04_06 PM.png',
+    '/assets/images/People/af798402-0599-4531-90f5-39dce7cb096d.png',
+    '/assets/images/People/e18f59a7-bb14-4186-a9f1-3299f84dcaa7.png',
+    '/assets/images/People/ChatGPT Image Apr 21, 2025, 07_08_21 PM.png',
+    
+    // Original symbols and artifacts (as fallbacks)
+    '/assets/sacred_symbol.png',
     '/assets/avatars/sacred_geometry.png',
     '/assets/avatars/mystical_vessel.png',
     '/assets/avatars/crystal_tablet.png',
-    '/assets/avatars/ancient_tablet_dark.png',
-    '/assets/avatars/ancient_tablet_cracked.png',
-    '/assets/avatars/clay_tablet_1.png',
-    '/assets/avatars/clay_tablet_3.png',
-    '/assets/avatars/memory_carriers.png',
-    '/assets/avatars/scroll_1.jpg',
-    '/assets/avatars/IMG_8635.jpg',
   ];
   
   // Handle avatar selection from predefined options
