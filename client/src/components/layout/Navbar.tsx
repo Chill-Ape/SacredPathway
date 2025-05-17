@@ -83,7 +83,7 @@ export default function Navbar() {
               variant="ghost" 
               size="icon"
               onClick={toggleMobileMenu}
-              className="text-theme-blue hover:bg-theme-blue/5"
+              className="text-theme-gold hover:bg-theme-gold/5"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
