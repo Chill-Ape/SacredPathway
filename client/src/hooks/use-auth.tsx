@@ -149,13 +149,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: `Welcome, ${data.user.username}! You've received 50 Mana as a welcome bonus.`,
       });
       
-      // Show the welcome modal
+      // Show the welcome modal first
       setShowWelcomeModal(true);
       
-      // Navigate to profile page after a short delay
-      setTimeout(() => {
-        window.location.href = '/profile';
-      }, 800);
+      // No automatic redirection - we'll let the modal handle it
     },
     onError: (error: Error) => {
       toast({

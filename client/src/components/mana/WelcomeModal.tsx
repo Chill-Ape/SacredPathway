@@ -15,11 +15,20 @@ interface WelcomeModalProps {
   isOpen: boolean;
   onClose: () => void;
   username: string;
+  navigateAfterClose?: string; // Optional URL to navigate to after closing
 }
 
-const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }) => {
+const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username, navigateAfterClose = "/profile" }) => {
+  // Handle closing the modal and navigation
+  const handleClose = () => {
+    onClose();
+    // Navigate to the specified path after closing
+    setTimeout(() => {
+      window.location.href = navigateAfterClose;
+    }, 300);
+  };
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Close button - more prominent for mobile */}
         <div className="absolute top-3 right-3 z-50">
@@ -27,7 +36,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
             variant="secondary"
             size="icon"
             className="h-8 w-8 rounded-full bg-gray-800/90 text-white hover:bg-gray-700 shadow-md border border-gray-600"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close modal"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -123,7 +132,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username }
         <div className="mt-4 mb-2 block sm:hidden">
           <Button 
             className="w-full bg-red-600 hover:bg-red-700 text-white"
-            onClick={onClose}
+            onClick={handleClose}
             size="lg"
           >
             Close This Window
