@@ -145,7 +145,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username, 
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 <PenTool className="mr-2 h-4 w-4" />
                 Ask the Oracle
@@ -155,7 +155,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username, 
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 3L9 21"></path>
@@ -171,7 +171,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, username, 
           <Link to="/">
             <Button 
               className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              onClick={onClose}
+              onClick={handleClose}
             >
               <Sparkles className="mr-2 h-4 w-4" />
               Begin My Journey
