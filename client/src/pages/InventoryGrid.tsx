@@ -354,8 +354,8 @@ export default function InventoryGrid() {
             zIndex: 5
           }}></div>
           
-          {/* Inner content area - slightly inset to stay within the frame */}
-          <div className="relative z-10 py-4 px-4 mx-2 my-2 md:mx-6 md:my-6">
+          {/* Inner content area - significantly inset to stay within the frame */}
+          <div className="relative z-10 py-4 px-4 mx-4 my-4 md:mx-10 md:my-10">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-3 px-3 md:px-6">
               <div className="relative px-2 py-1">

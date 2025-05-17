@@ -148,8 +148,9 @@ export default function GridInventoryItem({
         <div 
           className={`
             relative w-full aspect-square overflow-hidden cursor-pointer
+            transform scale-95
             transition-all duration-300 ease-in-out
-            ${isHovering ? 'scale-[1.03] z-10' : 'scale-100 z-0'}
+            ${isHovering ? 'scale-[1.03] z-10' : 'z-0'}
             ${shadow}
           `}
           style={{
