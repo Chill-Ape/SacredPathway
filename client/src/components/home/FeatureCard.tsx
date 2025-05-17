@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface FeatureCardProps {
   title: string;
@@ -9,49 +10,65 @@ interface FeatureCardProps {
 }
 
 export default function FeatureCard({ title, description, image, delay, href }: FeatureCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  
   return (
     <motion.div
-      className="bg-sacred-white p-6 rounded-lg shadow-md border border-sacred-blue/20 transform hover:-translate-y-1 transition-all duration-300 overflow-hidden h-full"
+      className="relative group rounded-lg overflow-hidden bg-white shadow-md border border-theme-border transform transition-all duration-300"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.02 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        transformOrigin: "center bottom"
+      }}
     >
-      <a href={href} className="block relative">
-        {/* Sacred geometry overlay pattern - adjusted height and style */}
-        <div className="absolute inset-0 w-full h-56 opacity-30 pointer-events-none z-10 mix-blend-overlay flex items-center justify-center">
-          <svg viewBox="0 0 100 100" className="w-4/5 h-4/5 text-sacred-blue">
-            <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="24" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="12" fill="none" stroke="currentColor" strokeWidth="0.5" />
-          </svg>
-        </div>
-        
-        {/* Image with gradient overlay - adjusted dimensions */}
-        <div className="relative h-56 mb-4 rounded overflow-hidden flex items-center justify-center bg-sacred-blue/5">
-          <img 
-            src={image} 
-            alt={title} 
-            className="max-w-[90%] max-h-[90%] object-contain mx-auto"
-            style={{ width: "auto", height: "auto" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-sacred-blue/40 to-transparent"></div>
-        </div>
-        
-        {/* Sacred divider */}
-        <div className="flex items-center justify-center mb-3">
-          <div className="h-px bg-sacred-blue/20 w-8"></div>
-          <div className="mx-2">
-            <svg width="12" height="12" viewBox="0 0 100 100" className="text-sacred-blue/40">
-              <circle cx="50" cy="50" r="50" fill="currentColor" />
-            </svg>
+      <a href={href} className="block">
+        {/* Card content wrapper */}
+        <div className={`transition-all duration-500 ${isHovered ? "scale-[1.05]" : "scale-100"}`}>
+          {/* Image section */}
+          <div className="relative h-56 overflow-hidden">
+            {/* Main image */}
+            <img 
+              src={image} 
+              alt={title} 
+              className="w-full h-full object-cover"
+            />
+            
+            {/* Overlay with gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            
+            {/* Sacred geometry overlay */}
+            <div className={`absolute inset-0 opacity-0 transition-opacity duration-500 ${isHovered ? "opacity-25" : ""}`}>
+              <svg viewBox="0 0 100 100" className="w-full h-full text-theme-gold">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                <circle cx="50" cy="50" r="24" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                <circle cx="50" cy="50" r="12" fill="none" stroke="currentColor" strokeWidth="0.5" />
+              </svg>
+            </div>
           </div>
-          <div className="h-px bg-sacred-blue/20 w-8"></div>
+          
+          {/* Text content section */}
+          <div className="p-5 relative">
+            {/* Golden divider */}
+            <div className="absolute -top-3 left-0 right-0 flex items-center justify-center">
+              <div className="h-px bg-theme-gold w-16"></div>
+              <div className="mx-2 bg-theme-gold rounded-full w-2 h-2"></div>
+              <div className="h-px bg-theme-gold w-16"></div>
+            </div>
+            
+            {/* Title */}
+            <h3 className="text-theme-text-dark text-xl font-bold mb-2 text-center">{title}</h3>
+            
+            {/* Description */}
+            <p className="text-theme-text-secondary text-center">{description}</p>
+          </div>
         </div>
         
-        <h3 className="font-cinzel text-sacred-blue text-xl mb-2 text-center">{title}</h3>
-        <p className="font-raleway text-sacred-gray text-center">{description}</p>
+        {/* Hover effect overlay */}
+        <div className={`absolute inset-0 border-2 border-theme-gold opacity-0 rounded transition-opacity duration-300 ${isHovered ? "opacity-100" : ""}`}></div>
       </a>
     </motion.div>
   );
