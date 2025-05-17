@@ -350,11 +350,12 @@ export default function InventoryGrid() {
             backgroundSize: '100% 100%',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            zIndex: 5
           }}></div>
           
-          {/* Inner content area */}
-          <div className="relative z-10 py-4 px-4">
+          {/* Inner content area - slightly inset to stay within the frame */}
+          <div className="relative z-10 py-4 px-4 mx-2 my-2 md:mx-6 md:my-6">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-3 px-3 md:px-6">
               <div className="relative px-2 py-1">
@@ -419,8 +420,8 @@ export default function InventoryGrid() {
               onClose={() => setIsAddItemDialogOpen(false)} 
             />
             
-            {/* Main inventory container */}
-            <div className="relative bg-black/40 backdrop-blur-sm rounded-lg mt-2 mb-8 overflow-hidden"
+            {/* Main inventory container - reduced margins to contain within frame */}
+            <div className="relative bg-black/40 backdrop-blur-sm rounded-lg mt-2 mb-2 md:mb-4 overflow-hidden"
                 style={{ 
                   boxShadow: 'inset 0 0 30px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.4)'
                 }}
@@ -435,7 +436,7 @@ export default function InventoryGrid() {
               <div className="absolute top-1/3 left-1/4 w-40 md:w-64 h-40 md:h-64 rounded-full radial-pulse bg-purple-800/5 blur-3xl"></div>
               <div className="absolute bottom-1/3 right-1/4 w-40 md:w-64 h-40 md:h-64 rounded-full radial-pulse bg-blue-800/5 blur-3xl"></div>
               
-              <Tabs defaultValue="all" className="w-full relative z-10 p-3 md:p-6">
+              <Tabs defaultValue="all" className="w-full relative z-10 p-2 md:p-4">
                 {/* Inventory type tabs */}
                 <div className="overflow-x-auto max-w-full pb-2 md:pb-4">
                   <div className="relative w-full">
