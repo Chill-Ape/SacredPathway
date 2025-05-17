@@ -327,7 +327,7 @@ export default function InventoryGrid() {
               <h1 className="text-2xl sm:text-3xl font-bold font-serif text-sacred-gold">
                 Arcane Repository
               </h1>
-              <p className="text-sm text-gray-600 font-serif italic mt-1">
+              <p className="text-sm text-gray-700 font-serif italic mt-1">
                 Manage your sacred artifacts and mystical relics
               </p>
               
@@ -388,35 +388,35 @@ export default function InventoryGrid() {
                 <TabsTrigger 
                   value="all" 
                   className="data-[state=active]:bg-sacred-gold/20 data-[state=active]:text-sacred-gold
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
                 >
                   All Items
                 </TabsTrigger>
                 <TabsTrigger 
                   value="equipped" 
                   className="data-[state=active]:bg-sacred-blue/20 data-[state=active]:text-sacred-blue
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
                 >
                   Equipped
                 </TabsTrigger>
                 <TabsTrigger 
                   value="artifacts" 
                   className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
                 >
                   Artifacts
                 </TabsTrigger>
                 <TabsTrigger 
                   value="keys" 
                   className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
                 >
                   Keys
                 </TabsTrigger>
                 <TabsTrigger 
                   value="resources" 
                   className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-gray-700"
+                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
                 >
                   Resources
                 </TabsTrigger>
