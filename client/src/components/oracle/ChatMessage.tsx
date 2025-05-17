@@ -94,14 +94,14 @@ export default function ChatMessage({ isUser, message, loading = false, isNew = 
       <div className={`${
         isUser 
           ? 'bg-oracle-navy/60 shadow-sm border border-oracle-gold/20' 
-          : 'bg-oracle-deep-purple/50 border border-oracle-gold/30'
+          : 'bg-oracle-deep-purple/75 border-2 border-oracle-gold/40'
         } rounded-lg py-3 px-4 max-w-xs md:max-w-md ${!isUser && !loading ? 'animate-oracle-breathe' : ''}`}>
         <p className={`${
           isUser 
-            ? 'font-garamond text-white font-medium' 
-            : 'font-garamond text-oracle-soft-gold'
+            ? 'font-garamond text-white font-medium text-base' 
+            : 'font-garamond text-oracle-soft-gold font-medium text-lg'
           } ${loading ? 'animate-pulse' : ''} ${isTyping && !isUser ? 'oracle-typing' : ''}`}
-          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: isUser ? '0 0 1px rgba(255,255,255,0.5)' : '0 0 1px rgba(218,165,32,0.5)' }}
+          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: isUser ? '0 0 1px rgba(255,255,255,0.8)' : '0 0 2px rgba(255,215,0,0.8)', letterSpacing: '0.02em' }}
         >
           {isUser ? message : displayedText}
           {isTyping && !isUser && <span className="oracle-cursor">|</span>}
