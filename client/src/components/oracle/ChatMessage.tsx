@@ -93,15 +93,21 @@ export default function ChatMessage({ isUser, message, loading = false, isNew = 
       
       <div className={`${
         isUser 
-          ? 'bg-oracle-navy/60 shadow-sm border border-oracle-gold/20' 
-          : 'bg-oracle-deep-purple/75 border-2 border-oracle-gold/40'
+          ? 'bg-oracle-navy/80 shadow-sm border border-oracle-gold/20' 
+          : 'bg-oracle-deep-purple/90 border-2 border-oracle-gold/70'
         } rounded-lg py-3 px-4 max-w-xs md:max-w-md ${!isUser && !loading ? 'animate-oracle-breathe' : ''}`}>
         <p className={`${
           isUser 
-            ? 'font-garamond text-white font-medium text-base' 
-            : 'font-garamond text-oracle-soft-gold font-medium text-lg'
+            ? 'font-garamond text-white font-semibold text-base' 
+            : 'font-garamond text-yellow-300 font-semibold text-lg tracking-wide'
           } ${loading ? 'animate-pulse' : ''} ${isTyping && !isUser ? 'oracle-typing' : ''}`}
-          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: isUser ? '0 0 1px rgba(255,255,255,0.8)' : '0 0 2px rgba(255,215,0,0.8)', letterSpacing: '0.02em' }}
+          style={{ 
+            fontFamily: "'Cormorant Garamond', serif", 
+            letterSpacing: '0.02em',
+            textShadow: isUser 
+              ? '0 0 0 rgba(255,255,255,1)' 
+              : '0 1px 1px rgba(0,0,0,0.5), 0 0 5px rgba(255,215,0,0.2)'
+          }}
         >
           {isUser ? message : displayedText}
           {isTyping && !isUser && <span className="oracle-cursor">|</span>}
