@@ -49,24 +49,20 @@ function ProfilePictureSection({ user, onUpdate }: ProfilePictureSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
-  // Predefined avatar options with images from the assets folder
+  // Dynamically import the avatar images from src/assets
   const avatarOptions = [
-    // People avatars (prioritized)
-    '/assets/images/People/dark_wizard.png',
-    '/assets/images/People/female_sage.png',  
-    '/assets/images/People/rugged_warrior.png',
-    '/assets/images/People/wizard.png',
-    '/assets/images/People/young_sage.png',
-    '/assets/images/People/ChatGPT Image Apr 24, 2025, 06_04_06 PM.png',
-    '/assets/images/People/af798402-0599-4531-90f5-39dce7cb096d.png',
-    '/assets/images/People/e18f59a7-bb14-4186-a9f1-3299f84dcaa7.png',
-    '/assets/images/People/ChatGPT Image Apr 21, 2025, 07_08_21 PM.png',
+    // People avatars (prioritized exactly as requested)
+    '/assets/young_sage.png',
+    '/assets/wizard.png',
+    '/assets/dark_wizard.png',
+    '/assets/female_sage.png',
+    '/assets/rugged_warrior.png',
     
     // Original symbols and artifacts (as fallbacks)
     '/assets/sacred_symbol.png',
-    '/assets/avatars/sacred_geometry.png',
-    '/assets/avatars/mystical_vessel.png',
-    '/assets/avatars/crystal_tablet.png',
+    '/assets/sacred_geometry.png',
+    '/assets/mystical_vessel.png',
+    '/assets/crystal_tablet.png',
   ];
   
   // Handle avatar selection from predefined options
