@@ -22,6 +22,9 @@ import InventoryGridComponent from "@/components/inventory/InventoryGrid";
 // Import minimal divider
 import ornateDividerSrc from "@/assets/ornate-divider.svg";
 
+// Import custom styles for white background
+import "./styles/inventory-white.css";
+
 // Constants for item types and rarities
 const ITEM_TYPES = {
   ARTIFACT: "artifact",
@@ -316,7 +319,7 @@ export default function InventoryGrid() {
       </Helmet>
       
       {/* Container with white background */}
-      <div className="min-h-screen pt-16 bg-white">
+      <div className="inventory-page">
         <div className="container mx-auto p-4 max-w-6xl">
           {/* Header */}
           <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
