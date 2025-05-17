@@ -117,14 +117,26 @@ export default function ProfileMenu({
                     src={user.profilePicture} 
                     alt={`${user.username}'s profile`} 
                     className="h-full w-full object-cover"
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.style.display = 'none';
+                      // Find the fallback element and show it
+                      const parent = img.parentElement;
+                      if (parent) {
+                        const fallback = parent.querySelector('[data-fallback]') as HTMLElement;
+                        if (fallback) {
+                          fallback.style.display = 'flex';
+                        }
+                      }
+                    }}
                   />
-                ) : (
-                  <img 
-                    src="/assets/sacred_symbol.png" 
-                    alt={`${user.username}'s profile`} 
-                    className="h-full w-full object-cover"
-                  />
-                )}
+                ) : null}
+                <AvatarFallback 
+                  data-fallback
+                  className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-xl"
+                >
+                  {user.username ? user.username[0].toUpperCase() : '?'}
+                </AvatarFallback>
               </Avatar>
               <div className="ml-3 text-left">
                 <p className="font-cinzel text-sacred-blue font-medium">{user.username}</p>
@@ -238,14 +250,20 @@ export default function ProfileMenu({
                   src={user.profilePicture} 
                   alt={`${user.username}'s profile`} 
                   className="h-full w-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    const fallbackElement = e.currentTarget.parentElement?.querySelector('[data-fallback]');
+                    if (fallbackElement) fallbackElement.style.display = 'flex';
+                  }}
                 />
-              ) : (
-                <img 
-                  src="/assets/sacred_symbol.png" 
-                  alt={`${user.username}'s profile`} 
-                  className="h-full w-full object-cover"
-                />
-              )}
+              ) : null}
+              <AvatarFallback 
+                data-fallback
+                className="bg-sacred-blue/10 text-sacred-blue font-cinzel"
+                style={{display: user.profilePicture ? 'none' : 'flex'}}
+              >
+                {user.username ? user.username[0].toUpperCase() : '?'}
+              </AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
