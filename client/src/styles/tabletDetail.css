@@ -1,7 +1,7 @@
 .crystal-tablet-background {
   background-color: #111827;
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 80%),
+    radial-gradient(circle at 50% 50%, rgb(4, 56, 139, 0.03) 0%, transparent 80%),
     linear-gradient(rgba(30, 41, 59, 0.8) 1px, transparent 1px),
     linear-gradient(90deg, rgba(30, 41, 59, 0.8) 1px, transparent 1px);
   background-size: 100% 100%, 40px 40px, 40px 40px;

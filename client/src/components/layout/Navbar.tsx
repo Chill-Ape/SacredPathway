@@ -61,9 +61,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-6 text-theme-text-primary text-sm">
             {navLinks.map((link) => (
               <Link key={link.path} to={link.path}>
-                <span className={`font-cinzel hover:text-theme-gold transition-colors duration-300 cursor-pointer ${
+                <span className={`font-cinzel transition-colors duration-300 cursor-pointer ${
                   location === link.path 
-                    ? 'text-theme-gold font-medium border-b-2 border-theme-gold pb-1' 
+                    ? 'text-theme-blue font-medium' 
                     : 'text-theme-text-primary hover:text-theme-blue'
                 }`}>
                   {link.name}
@@ -112,7 +112,7 @@ export default function Navbar() {
                   <span 
                     className={`block w-full py-2 font-cinzel hover:bg-gray-50 rounded transition-colors duration-300 cursor-pointer ${
                       location === link.path 
-                        ? 'text-theme-gold font-medium border-l-4 border-theme-gold pl-2' 
+                        ? 'text-theme-blue font-medium' 
                         : 'text-theme-text-primary'
                     }`}
                     onClick={() => setIsMobileMenuOpen(false)}
