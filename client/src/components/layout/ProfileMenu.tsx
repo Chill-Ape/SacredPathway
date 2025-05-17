@@ -118,14 +118,14 @@ export default function ProfileMenu({
                     alt={`${user.username}'s profile`} 
                     className="h-full w-full object-cover"
                     onError={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      img.style.display = 'none';
-                      // Find the fallback element and show it
-                      const parent = img.parentElement;
+                      // Completely hide the image and show the fallback instead
+                      e.currentTarget.style.display = 'none';
+                      // Force the parent to update the fallback
+                      const parent = e.currentTarget.parentElement;
                       if (parent) {
-                        const fallback = parent.querySelector('[data-fallback]') as HTMLElement;
+                        const fallback = parent.querySelector('[data-fallback]');
                         if (fallback) {
-                          fallback.style.display = 'flex';
+                          fallback.setAttribute('style', 'display: flex !important');
                         }
                       }
                     }}
@@ -251,14 +251,14 @@ export default function ProfileMenu({
                   alt={`${user.username}'s profile`} 
                   className="h-full w-full object-cover"
                   onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.display = 'none';
-                    // Find the fallback element and show it
-                    const parent = img.parentElement;
+                    // Completely hide the image and show the fallback instead
+                    e.currentTarget.style.display = 'none';
+                    // Force the parent to update the fallback
+                    const parent = e.currentTarget.parentElement;
                     if (parent) {
-                      const fallback = parent.querySelector('[data-fallback]') as HTMLElement;
+                      const fallback = parent.querySelector('[data-fallback]');
                       if (fallback) {
-                        fallback.style.display = 'flex';
+                        fallback.setAttribute('style', 'display: flex !important');
                       }
                     }
                   }}
