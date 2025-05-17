@@ -257,6 +257,19 @@ function AddItemForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
 
 // Main inventory content component
 export default function InventoryGrid() {
+  // Define state hooks before any conditional returns
+  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  
+  // Animation effect when page loads
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
   const { user } = useAuth();
   const { 
     items, 
@@ -266,8 +279,6 @@ export default function InventoryGrid() {
     toggleEquipMutation, 
     removeItemMutation 
   } = useInventory();
-  
-  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   
   // Check pending states and get the item id being processed
   const isToggleEquipPending = toggleEquipMutation.isPending;
@@ -307,17 +318,6 @@ export default function InventoryGrid() {
       </div>
     );
   }
-  
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
-  
-  // Animation effect when page loads
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsPageLoaded(true);
-    }, 300);
-    
-    return () => clearTimeout(timer);
-  }, []);
   
   return (
     <>
