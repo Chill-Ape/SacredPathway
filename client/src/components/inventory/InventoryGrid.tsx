@@ -52,30 +52,27 @@ export default function InventoryGrid({
   }
   
   return (
-    <div className="relative p-2 sm:p-3 md:p-4 border border-sacred-gold/20 rounded-lg 
+    <div className="relative p-4 border border-sacred-gold/20 rounded-lg 
                     shadow-inner backdrop-blur-sm 
                     bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] 
-                    from-sacred-dark-lightest via-sacred-dark to-sacred-dark
-                    overflow-hidden">
+                    from-sacred-dark-lightest via-sacred-dark to-sacred-dark">
       {/* Decorative corner accents */}
-      <div className="absolute top-0 left-0 w-6 h-6 md:w-8 md:h-8 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-lg"></div>
-      <div className="absolute top-0 right-0 w-6 h-6 md:w-8 md:h-8 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-lg"></div>
-      <div className="absolute bottom-0 left-0 w-6 h-6 md:w-8 md:h-8 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-lg"></div>
-      <div className="absolute bottom-0 right-0 w-6 h-6 md:w-8 md:h-8 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-lg"></div>
+      <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-lg"></div>
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-lg"></div>
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-lg"></div>
+      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-lg"></div>
       
-      {/* Grid title for larger screens only */}
-      <div className="text-center mb-3 md:mb-4 hidden sm:block">
-        <h3 className="text-sacred-gold font-serif text-lg md:text-xl">Arcane Repository</h3>
-        <div className="w-24 md:w-32 h-0.5 bg-gradient-to-r from-transparent via-sacred-gold/50 to-transparent mx-auto mt-1"></div>
+      {/* Grid title */}
+      <div className="text-center mb-6">
+        <h3 className="text-sacred-gold font-serif text-xl">Arcane Repository</h3>
+        <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-sacred-gold/50 to-transparent mx-auto mt-1"></div>
       </div>
       
-      {/* Item grid with fade-in animation - reduced spacing */}
+      {/* Item grid with fade-in animation */}
       <div className={`
-        grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 
-        gap-1 sm:gap-2 md:gap-3
+        grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5
         transition-opacity duration-700 ease-in-out
         ${isLoaded ? 'opacity-100' : 'opacity-0'}
-        p-1
       `}>
         {items.map((item, index) => (
           <div 

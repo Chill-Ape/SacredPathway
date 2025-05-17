@@ -45,27 +45,23 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-theme-gold/20 font-cinzel tracking-wider">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-sacred-white bg-opacity-90 backdrop-blur-sm border-b border-sacred-blue/10 font-cinzel tracking-wider">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/">
               <div className="flex items-center cursor-pointer">
                 <Logo className="mr-4" />
-                <span className="text-theme-text-dark text-xl font-medium">The Akashic Archive</span>
+                <span className="text-sacred-blue text-xl font-medium">The Akashic Archive</span>
               </div>
             </Link>
           </div>
           
           {/* Desktop navigation */}
-          <div className="hidden md:flex items-center space-x-6 text-theme-text-primary text-sm">
+          <div className="hidden md:flex items-center space-x-8 text-sacred-blue text-sm">
             {navLinks.map((link) => (
               <Link key={link.path} to={link.path}>
-                <span className={`font-cinzel transition-colors duration-300 cursor-pointer ${
-                  location === link.path 
-                    ? 'text-theme-gold font-medium' 
-                    : 'text-theme-text-primary hover:text-theme-gold'
-                }`}>
+                <span className={`font-cinzel hover:text-sacred-blue-light transition-colors duration-300 cursor-pointer ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}>
                   {link.name}
                 </span>
               </Link>
@@ -83,7 +79,7 @@ export default function Navbar() {
               variant="ghost" 
               size="icon"
               onClick={toggleMobileMenu}
-              className="text-theme-gold hover:bg-theme-gold/5"
+              className="text-sacred-blue hover:bg-sacred-blue/5"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
@@ -104,17 +100,13 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white shadow-lg border-b border-theme-gold/10"
+            className="md:hidden bg-sacred-white border-b border-sacred-blue/10"
           >
             <div className="px-2 pt-2 pb-3 space-y-1 font-cinzel text-center">
               {navLinks.map((link) => (
                 <Link key={link.path} to={link.path}>
                   <span 
-                    className={`block w-full py-2 font-cinzel hover:bg-gray-50 rounded transition-colors duration-300 cursor-pointer ${
-                      location === link.path 
-                        ? 'text-theme-gold font-medium border-l-4 border-theme-gold pl-2' 
-                        : 'text-theme-text-primary'
-                    }`}
+                    className={`block w-full py-2 font-cinzel hover:bg-sacred-blue/5 rounded transition-colors duration-300 cursor-pointer ${location === link.path ? 'text-sacred-blue font-medium' : 'text-sacred-gray'}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
@@ -123,7 +115,7 @@ export default function Navbar() {
               ))}
               
               {/* Login/Profile button in mobile menu */}
-              <div className="py-3 border-t border-theme-gold/10 mt-3">
+              <div className="py-3 border-t border-sacred-blue/10 mt-3">
                 <div className="flex justify-center" onClick={() => setIsMobileMenuOpen(false)}>
                   {!isLoading && <ProfileMenu 
                     isMobile={true} 

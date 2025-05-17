@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Scroll, ShieldCheck, Sparkles } from "lucide-react";
+import { Loader2, Grid, ListIcon } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useInventory, InventoryItem } from "@/hooks/use-inventory";
 import { 
@@ -18,12 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Helmet } from "react-helmet";
 import InventoryGridComponent from "@/components/inventory/InventoryGrid";
-
-// Import minimal divider
-import ornateDividerSrc from "@/assets/ornate-divider.svg";
-
-// Import custom styles for white background
-import "./styles/inventory-white.css";
+import { Link } from "wouter";
 
 // Constants for item types and rarities
 const ITEM_TYPES = {
@@ -247,21 +250,8 @@ function AddItemForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
   );
 }
 
-// Main inventory content component with simplified design
+// Main inventory content component
 export default function InventoryGrid() {
-  // Define state hooks before any conditional returns
-  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
-  
-  // Animation effect when page loads
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsPageLoaded(true);
-    }, 300);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
   const { user } = useAuth();
   const { 
     items, 
@@ -271,6 +261,8 @@ export default function InventoryGrid() {
     toggleEquipMutation, 
     removeItemMutation 
   } = useInventory();
+  
+  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   
   // Check pending states and get the item id being processed
   const isToggleEquipPending = toggleEquipMutation.isPending;
@@ -297,7 +289,7 @@ export default function InventoryGrid() {
   
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh]">
+      <div className="flex justify-center items-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-sacred-gold" />
       </div>
     );
@@ -310,177 +302,147 @@ export default function InventoryGrid() {
       </div>
     );
   }
-
+  
   return (
     <>
       <Helmet>
-        <title>Arcane Repository | Akashic Archive</title>
-        <meta name="description" content="Browse your mystical artifacts and relics in the Akashic Archive" />
+        <title>Inventory | Akashic Archive</title>
+        <meta name="description" content="Manage your sacred artifacts and items in the Akashic Archive" />
       </Helmet>
       
-      {/* Container with white background */}
-      <div className="inventory-page">
-        <div className="container mx-auto p-4 max-w-6xl">
-          {/* Header */}
-          <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold font-serif text-sacred-gold">
-                Arcane Repository
-              </h1>
-              <p className="text-sm text-gray-700 font-serif italic mt-1">
-                Manage your sacred artifacts and mystical relics
-              </p>
-              
-              {/* Simple ornate divider */}
-              <div className="relative h-4 w-40 mt-2">
-                <img src={ornateDividerSrc} alt="" className="h-full w-full object-contain" />
-              </div>
-            </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div className="z-10 relative">
+            <h1 className="text-3xl font-bold font-serif text-sacred-gold mb-1">
+              Arcane Repository
+              <span className="absolute -top-3 -right-4 text-xs text-amber-400/80 font-normal rotate-12 italic">Grid View</span>
+            </h1>
+            <p className="text-sm text-sacred-white/70 font-serif italic">
+              Manage your sacred artifacts and mystical relics
+            </p>
             
+            {/* Decorative underline */}
+            <div className="h-0.5 w-48 mt-2 bg-gradient-to-r from-transparent via-sacred-gold/70 to-transparent"></div>
+          </div>
+          
+          <div className="flex space-x-3 z-10">
+            <Link href="/inventory">
+              <Button 
+                variant="outline"
+                className="border-sacred-gold/30 text-sacred-gold hover:bg-sacred-gold/10 font-serif 
+                          shadow-md hover:shadow-sacred-gold/20"
+              >
+                <ListIcon className="h-4 w-4 mr-2" />
+                Scroll View
+              </Button>
+            </Link>
             <Button 
               onClick={() => setIsAddItemDialogOpen(true)}
-              className="mt-4 sm:mt-0 bg-sacred-gold hover:bg-sacred-gold/90 text-sacred-dark font-serif"
+              className="bg-gradient-to-r from-sacred-gold/90 to-amber-600/90
+                        hover:from-sacred-gold hover:to-amber-600
+                        text-sacred-dark font-serif font-medium shadow-md hover:shadow-sacred-gold/20"
             >
               Add New Artifact
             </Button>
           </div>
+        </div>
+        
+        <AddItemForm 
+          isOpen={isAddItemDialogOpen} 
+          onClose={() => setIsAddItemDialogOpen(false)} 
+        />
+        
+        {/* Stylized container with border glints */}
+        <div className="relative bg-gradient-to-r from-sacred-dark to-sacred-dark-lighter 
+                      p-8 rounded-xl shadow-xl mb-8 border border-sacred-gold/30
+                      overflow-hidden">
+          {/* Corner decorative elements */}
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-sacred-gold/40 rounded-tl-xl opacity-70"></div>
+          <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-sacred-gold/40 rounded-tr-xl opacity-70"></div>
+          <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-sacred-gold/40 rounded-bl-xl opacity-70"></div>
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-sacred-gold/40 rounded-br-xl opacity-70"></div>
           
-          {/* Stats bar */}
-          <div className="flex flex-wrap gap-3 mb-6">
-            <div className="bg-gray-100 rounded px-3 py-1 flex items-center border border-sacred-gold/30">
-              <Scroll className="h-4 w-4 text-sacred-gold mr-2" />
-              <span className="text-gray-700 text-sm">
-                Items: <span className="text-sacred-gold font-medium">{items?.length || 0}</span>
-              </span>
-            </div>
-            <div className="bg-gray-100 rounded px-3 py-1 flex items-center border border-sacred-gold/30">
-              <ShieldCheck className="h-4 w-4 text-sacred-blue mr-2" />
-              <span className="text-gray-700 text-sm">
-                Equipped: <span className="text-sacred-blue font-medium">{equippedItems?.length || 0}</span>
-              </span>
-            </div>
-            <div className="bg-gray-100 rounded px-3 py-1 flex items-center border border-sacred-gold/30">
-              <Sparkles className="h-4 w-4 text-purple-400 mr-2" />
-              <span className="text-gray-700 text-sm">
-                Rare+: <span className="text-purple-400 font-medium">
-                  {items?.filter(item => 
-                    ['rare', 'epic', 'legendary', 'mythic', 'divine'].includes(item.rarity)
-                  ).length || 0}
-                </span>
-              </span>
-            </div>
-          </div>
+          {/* Magical ambient elements */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/5 blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-amber-500/5 blur-3xl"></div>
           
-          {/* Add item dialog */}
-          <AddItemForm 
-            isOpen={isAddItemDialogOpen} 
-            onClose={() => setIsAddItemDialogOpen(false)} 
-          />
-          
-          {/* Main content with tabs - simplified version */}
-          <div className={`
-            transition-opacity duration-500 
-            ${isPageLoaded ? 'opacity-100' : 'opacity-0'}
-          `}>
-            <Tabs defaultValue="all" className="w-full">
-              {/* Tabs list */}
-              <TabsList className="w-full bg-gray-100 mb-6 p-1 border border-sacred-gold/30 rounded-lg flex flex-wrap">
+          <Tabs defaultValue="all" className="w-full relative z-10">
+            <div className="overflow-x-auto pb-2">
+              <TabsList className="mb-6 bg-sacred-dark-lighter/70 border border-sacred-gold/20 p-1 rounded-lg shadow-inner backdrop-blur-sm">
                 <TabsTrigger 
                   value="all" 
-                  className="data-[state=active]:bg-sacred-gold/20 data-[state=active]:text-sacred-gold
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
+                  className="data-[state=active]:bg-sacred-gold/10 data-[state=active]:text-sacred-gold
+                            data-[state=active]:shadow-md rounded-md font-serif"
                 >
-                  All Items
+                  All Items ({items?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="equipped" 
-                  className="data-[state=active]:bg-sacred-blue/20 data-[state=active]:text-sacred-blue
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
+                  value="equipped"
+                  className="data-[state=active]:bg-sacred-blue/10 data-[state=active]:text-sacred-blue
+                            data-[state=active]:shadow-md rounded-md font-serif"
                 >
-                  Equipped
+                  Equipped ({equippedItems?.length || 0})
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="artifacts" 
-                  className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
-                >
-                  Artifacts
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="keys" 
-                  className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
-                >
-                  Keys
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="resources" 
-                  className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400
-                            font-serif px-4 py-2 rounded-md border border-gray-200 text-black"
-                >
-                  Resources
-                </TabsTrigger>
+                {Object.values(ITEM_TYPES).map((type: string) => {
+                  const count = items?.filter((item: InventoryItem) => item.type === type).length || 0;
+                  if (count === 0) return null;
+                  return (
+                    <TabsTrigger 
+                      key={type} 
+                      value={type}
+                      className="data-[state=active]:bg-sacred-secondary/10 data-[state=active]:text-sacred-secondary
+                                data-[state=active]:shadow-md rounded-md font-serif"
+                    >
+                      {getItemTypeDisplayName(type)} ({count})
+                    </TabsTrigger>
+                  );
+                })}
               </TabsList>
+            </div>
+            
+            <TabsContent value="all">
+              <InventoryGridComponent
+                items={items || []}
+                toggleEquip={handleToggleEquip}
+                removeItem={handleRemoveItem}
+                isToggleEquipPending={isToggleEquipPending}
+                isRemovePending={isRemovePending}
+                pendingItemId={pendingItemId}
+              />
+            </TabsContent>
+            
+            <TabsContent value="equipped">
+              <InventoryGridComponent
+                items={equippedItems || []}
+                toggleEquip={handleToggleEquip}
+                removeItem={handleRemoveItem}
+                isToggleEquipPending={isToggleEquipPending}
+                isRemovePending={isRemovePending}
+                pendingItemId={pendingItemId}
+                emptyMessage="You have no equipped items. Equip items to enhance your abilities."
+              />
+            </TabsContent>
+            
+            {/* Tabs for each item type */}
+            {Object.values(ITEM_TYPES).map((type: string) => {
+              const typeItems = items?.filter((item: InventoryItem) => item.type === type) || [];
+              if (typeItems.length === 0) return null;
               
-              {/* Tab content */}
-              <div className="bg-gray-50 p-4 rounded-lg border border-sacred-gold/30 shadow-sm">
-                <TabsContent value="all" className="m-0">
-                  <InventoryGridComponent 
-                    items={items || []}
+              return (
+                <TabsContent key={type} value={type}>
+                  <InventoryGridComponent
+                    items={typeItems}
                     toggleEquip={handleToggleEquip}
                     removeItem={handleRemoveItem}
                     isToggleEquipPending={isToggleEquipPending}
                     isRemovePending={isRemovePending}
                     pendingItemId={pendingItemId}
+                    emptyMessage={`No ${getItemTypeDisplayName(type).toLowerCase()} items found.`}
                   />
                 </TabsContent>
-                <TabsContent value="equipped" className="m-0">
-                  <InventoryGridComponent 
-                    items={equippedItems || []}
-                    toggleEquip={handleToggleEquip}
-                    removeItem={handleRemoveItem}
-                    isToggleEquipPending={isToggleEquipPending}
-                    isRemovePending={isRemovePending}
-                    pendingItemId={pendingItemId}
-                    emptyMessage="You have no equipped items. Equip artifacts to enhance your powers."
-                  />
-                </TabsContent>
-                <TabsContent value="artifacts" className="m-0">
-                  <InventoryGridComponent 
-                    items={(items || []).filter(item => item.type === ITEM_TYPES.ARTIFACT)}
-                    toggleEquip={handleToggleEquip}
-                    removeItem={handleRemoveItem}
-                    isToggleEquipPending={isToggleEquipPending}
-                    isRemovePending={isRemovePending}
-                    pendingItemId={pendingItemId}
-                    emptyMessage="No artifact items found. Discover sacred relics on your journey."
-                  />
-                </TabsContent>
-                <TabsContent value="keys" className="m-0">
-                  <InventoryGridComponent 
-                    items={(items || []).filter(item => item.type === ITEM_TYPES.KEY)}
-                    toggleEquip={handleToggleEquip}
-                    removeItem={handleRemoveItem}
-                    isToggleEquipPending={isToggleEquipPending}
-                    isRemovePending={isRemovePending}
-                    pendingItemId={pendingItemId}
-                    emptyMessage="No key items found. Seek out keys to unlock hidden knowledge."
-                  />
-                </TabsContent>
-                <TabsContent value="resources" className="m-0">
-                  <InventoryGridComponent 
-                    items={(items || []).filter(item => item.type === ITEM_TYPES.RESOURCE)}
-                    toggleEquip={handleToggleEquip}
-                    removeItem={handleRemoveItem}
-                    isToggleEquipPending={isToggleEquipPending}
-                    isRemovePending={isRemovePending}
-                    pendingItemId={pendingItemId}
-                    emptyMessage="No resources found. Gather mystical components for crafting."
-                  />
-                </TabsContent>
-              </div>
-            </Tabs>
-          </div>
+              );
+            })}
+          </Tabs>
         </div>
       </div>
     </>
