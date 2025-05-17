@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -37,6 +39,9 @@ type RegisterValues = z.infer<typeof registerSchema>;
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("login");
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [registerError, setRegisterError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -56,12 +61,42 @@ export default function AuthPage() {
     },
   });
 
+  // Clear errors when switching tabs
+  useEffect(() => {
+    setLoginError(null);
+    setRegisterError(null);
+  }, [activeTab]);
+
+  // Monitor mutation errors
+  useEffect(() => {
+    if (loginMutation.isError) {
+      setLoginError((loginMutation.error as any)?.message || "Login failed. Please try again.");
+    }
+    
+    if (registerMutation.isError) {
+      const errorMessage = (registerMutation.error as any)?.message || "Registration failed. Please try again.";
+      setRegisterError(errorMessage);
+      toast({
+        title: "Registration Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    }
+  }, [loginMutation.isError, registerMutation.isError, toast]);
+
   const onLoginSubmit = (values: LoginValues) => {
+    setLoginError(null);
     loginMutation.mutate(values);
   };
 
   const onRegisterSubmit = (values: RegisterValues) => {
-    registerMutation.mutate(values);
+    setRegisterError(null);
+    registerMutation.mutate(values, {
+      onError: (error) => {
+        // Error is already handled in the useEffect above
+        console.error("Registration error:", error);
+      }
+    });
   };
 
   // If already logged in, redirect to home
@@ -105,6 +140,12 @@ export default function AuthPage() {
               </TabsList>
 
               <TabsContent value="login">
+                {loginError && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    <AlertDescription>{loginError}</AlertDescription>
+                  </Alert>
+                )}
                 <Form {...loginForm}>
                   <form
                     onSubmit={loginForm.handleSubmit(onLoginSubmit)}
@@ -168,6 +209,12 @@ export default function AuthPage() {
               </TabsContent>
 
               <TabsContent value="register">
+                {registerError && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    <AlertDescription>{registerError}</AlertDescription>
+                  </Alert>
+                )}
                 <Form {...registerForm}>
                   <form
                     onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
