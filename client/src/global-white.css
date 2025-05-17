@@ -1,7 +1,29 @@
 /* Global white background style for the entire site */
 
+:root {
+  --theme-white: #ffffff;
+  --theme-gold: #d4af37;
+  --theme-gold-dark: #b3951e;
+  --theme-gold-light: rgba(212, 175, 55, 0.8);
+  --theme-blue: #3a7ca5;
+  --theme-blue-dark: #2c5f7f;
+  --theme-blue-light: rgba(58, 124, 165, 0.8);
+  --theme-text-primary: #555555;
+  --theme-text-secondary: #777777;
+  --theme-text-dark: #333333;
+  --theme-text-light: #999999;
+  --theme-border: rgba(212, 175, 55, 0.3);
+}
+
+/* Set consistent backgrounds */
+body, html, .sacred-pattern, [class*="bg-sacred-dark"], .bg-card, .card, .modal, .dialog, 
+.dropdown, .popover, .menu {
+  background-color: var(--theme-white) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* Apply subtle pattern background */
 .sacred-pattern {
-  background-color: white !important;
   background-image: 
     radial-gradient(rgba(212, 175, 55, 0.05) 2px, transparent 2px),
     radial-gradient(rgba(212, 175, 55, 0.03) 2px, transparent 2px) !important;
@@ -9,71 +31,86 @@
   background-position: 0 0, 25px 25px !important;
 }
 
-/* Make all text dark gray by default for a softer, more professional look */
-body, p, span, div, li, a, button {
-  color: #333333 !important;
+/* Consistent text color styling */
+body, p, span, div, li, a, label, small {
+  color: var(--theme-text-primary) !important;
 }
 
-/* Headers should be consistently styled */
-h1, h2, h3, h4, h5, h6 {
-  color: #333333 !important;
-  font-weight: 600 !important;
+/* Input elements */
+input, textarea, select {
+  background-color: var(--theme-white) !important;
+  border: 1px solid var(--theme-border) !important;
+  color: var(--theme-text-primary) !important;
 }
 
-/* Preserve specific colors for some UI elements */
-.text-sacred-gold {
-  color: #d4af37 !important;
-}
-
-.text-sacred-blue {
-  color: #3a7ca5 !important; /* Darker, more professional blue */
-}
-
-/* Apply white background to cards and containers */
-.bg-card, .card, [class*="bg-sacred-dark"] {
-  background-color: white !important;
-}
-
-/* Fix navbar */
-nav.bg-sacred-dark {
-  background-color: white !important;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-/* Style for header in navigation */
-nav a, nav button {
-  color: #333333 !important;
-}
-
-/* Hero section styling */
-.hero-section h1 {
-  color: #333333 !important;
+/* Heading hierarchy */
+h1 {
+  color: var(--theme-text-dark) !important;
   font-weight: 700 !important;
 }
 
-.hero-section p {
-  color: #555555 !important;
+h2, h3 {
+  color: var(--theme-text-dark) !important;
+  font-weight: 600 !important;
 }
 
-/* Buttons styling for better contrast */
-.bg-sacred-gold {
-  background-color: #d4af37 !important;
-  color: white !important;
+h4, h5, h6 {
+  color: var(--theme-text-dark) !important;
+  font-weight: 500 !important;
 }
 
-/* More subtle secondary text */
-.text-gray-500, .text-gray-600, .text-muted {
-  color: #555555 !important;
+/* Theme specific color classes */
+.text-sacred-gold {
+  color: var(--theme-gold) !important;
 }
 
-/* Fix dark text on dark backgrounds */
-[class*="bg-sacred-dark"] * {
-  color: #333333 !important;
+.text-sacred-blue {
+  color: var(--theme-blue) !important;
 }
 
-/* Fix inputs */
-input, textarea, select {
-  background-color: white !important;
-  border: 1px solid rgba(0, 0, 0, 0.2) !important;
-  color: #333333 !important;
+/* Button styling */
+.bg-sacred-gold, button.bg-sacred-gold {
+  background-color: var(--theme-gold) !important;
+  color: var(--theme-white) !important;
 }
+
+.bg-sacred-blue, button.bg-sacred-blue {
+  background-color: var(--theme-blue) !important;
+  color: var(--theme-white) !important;
+}
+
+/* Navigation */
+nav {
+  background-color: var(--theme-white) !important;
+  border-bottom: 1px solid var(--theme-border) !important;
+}
+
+nav a, nav button {
+  color: var(--theme-text-primary) !important;
+}
+
+/* Special text classes - keep consistent */
+.text-gray-300, .text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700, .text-muted,
+[class*="text-gray-"] {
+  color: var(--theme-text-secondary) !important;
+}
+
+/* Hero sections */
+.hero-section h1, .hero h1 {
+  color: var(--theme-text-dark) !important;
+}
+
+.hero-section p, .hero p {
+  color: var(--theme-text-secondary) !important;
+}
+
+/* Override for special UI cases */
+button.text-white {
+  color: var(--theme-white) !important;
+}
+
+/* Cards and containers */
+.card, .bg-card {
+  border: 1px solid var(--theme-border) !important;
+}
+
