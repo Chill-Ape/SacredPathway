@@ -63,8 +63,8 @@ export default function Navbar() {
               <Link key={link.path} to={link.path}>
                 <span className={`font-cinzel transition-colors duration-300 cursor-pointer ${
                   location === link.path 
-                    ? 'text-theme-gold font-medium' 
-                    : 'text-theme-text-primary hover:text-theme-gold'
+                    ? 'text-theme-blue font-medium' 
+                    : 'text-theme-text-primary hover:text-theme-blue'
                 }`}>
                   {link.name}
                 </span>
