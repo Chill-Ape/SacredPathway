@@ -113,30 +113,40 @@ export default function ProfileMenu({
             <div className="flex items-center justify-center mb-3">
               <Avatar className="h-12 w-12 border-2 border-sacred-blue/20">
                 {user.profilePicture ? (
-                  <img 
-                    src={user.profilePicture} 
-                    alt={`${user.username}'s profile`} 
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      // Completely hide the image and show the fallback instead
-                      e.currentTarget.style.display = 'none';
-                      // Force the parent to update the fallback
-                      const parent = e.currentTarget.parentElement;
-                      if (parent) {
-                        const fallback = parent.querySelector('[data-fallback]');
-                        if (fallback) {
-                          fallback.setAttribute('style', 'display: flex !important');
+                  <>
+                    <img 
+                      src={user.profilePicture} 
+                      alt={`${user.username}'s profile`}
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        // Hide failed images completely
+                        e.currentTarget.style.display = 'none';
+                        
+                        // Show the fallback
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          const fallback = parent.querySelector('[data-fallback]');
+                          if (fallback) {
+                            fallback.style.display = 'flex';
+                          }
                         }
-                      }
-                    }}
-                  />
-                ) : null}
-                <AvatarFallback 
-                  data-fallback
-                  className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-xl"
-                >
-                  {user.username ? user.username[0].toUpperCase() : '?'}
-                </AvatarFallback>
+                      }}
+                    />
+                    <AvatarFallback 
+                      data-fallback
+                      style={{ display: 'none' }}
+                      className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-xl"
+                    >
+                      {user.username ? user.username[0].toUpperCase() : '?'}
+                    </AvatarFallback>
+                  </>
+                ) : (
+                  <AvatarFallback 
+                    className="bg-sacred-blue/10 text-sacred-blue font-cinzel text-xl"
+                  >
+                    {user.username ? user.username[0].toUpperCase() : '?'}
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="ml-3 text-left">
                 <p className="font-cinzel text-sacred-blue font-medium">{user.username}</p>
@@ -246,30 +256,40 @@ export default function ProfileMenu({
           >
             <Avatar className="h-8 w-8 border border-sacred-blue/20">
               {user.profilePicture ? (
-                <img 
-                  src={user.profilePicture} 
-                  alt={`${user.username}'s profile`} 
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    // Completely hide the image and show the fallback instead
-                    e.currentTarget.style.display = 'none';
-                    // Force the parent to update the fallback
-                    const parent = e.currentTarget.parentElement;
-                    if (parent) {
-                      const fallback = parent.querySelector('[data-fallback]');
-                      if (fallback) {
-                        fallback.setAttribute('style', 'display: flex !important');
+                <>
+                  <img 
+                    src={user.profilePicture} 
+                    alt={`${user.username}'s profile`}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      // Hide failed images completely
+                      e.currentTarget.style.display = 'none';
+                      
+                      // Show the fallback
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        const fallback = parent.querySelector('[data-fallback]');
+                        if (fallback) {
+                          fallback.style.display = 'flex';
+                        }
                       }
-                    }
-                  }}
-                />
-              ) : null}
-              <AvatarFallback 
-                data-fallback
-                className="bg-sacred-blue/10 text-sacred-blue font-cinzel"
-              >
-                {user.username ? user.username[0].toUpperCase() : '?'}
-              </AvatarFallback>
+                    }}
+                  />
+                  <AvatarFallback 
+                    data-fallback
+                    style={{ display: 'none' }}
+                    className="bg-sacred-blue/10 text-sacred-blue font-cinzel"
+                  >
+                    {user.username ? user.username[0].toUpperCase() : '?'}
+                  </AvatarFallback>
+                </>
+              ) : (
+                <AvatarFallback 
+                  className="bg-sacred-blue/10 text-sacred-blue font-cinzel"
+                >
+                  {user.username ? user.username[0].toUpperCase() : '?'}
+                </AvatarFallback>
+              )}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
